@@ -1,12 +1,12 @@
 #include "../include/WhiteChildren.hpp"
 
-WhiteChildren::WhiteChildren(gd::BitBoardPtr &mother): mother{mother}, positionFiller{true, false}
+WhiteChildren::WhiteChildren(): positionFiller{true, false}
+{}
+std::vector<gd::BitBoardPtr>& WhiteChildren::getMoves(gd::BitBoardPtr mother, std::vector<gd::BitBoardPtr> &childrenRef)
 {
-    getMoves();
-}
-void WhiteChildren::getMoves()
-{
-    for(; bit<63; bit++)
+    this->mother = mother;
+    this->children = childrenRef;
+    for(bit = 0; bit<63; bit++)
     {
         if(mother[gd::whitePiece][bit] == false)
             continue;
@@ -41,7 +41,7 @@ void WhiteChildren::getMoves()
             continue;
         }
     }
-    numberOfChildren = children.size();
+    return children;
 }
     void WhiteChildren::getPawnMoves()
 {
@@ -531,12 +531,8 @@ gd::BitBoardPtr WhiteChildren::copyMotherBitBoard()
         copy[gd::blackKing]   = mother[gd::blackKing];
         return copy;
     }
-WhiteChildren::~WhiteChildren()
+void WhiteChildren::deleteChildren(std::vector<gd::BitBoardPtr> &children)
 {
-        deleteChildren();
-}
-    void WhiteChildren::deleteChildren()
-{
-    for(int i=0; i<numberOfChildren; i++)
+    for(uint8_t i=0; i<children.size(); i++)
         delete[]children[i];
 }

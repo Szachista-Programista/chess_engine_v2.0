@@ -1,12 +1,12 @@
 #include "../include/BlackChildren.hpp"
 
-BlackChildren::BlackChildren(gd::BitBoardPtr &mother): mother{mother}, positionFiller{false, true}
+BlackChildren::BlackChildren(): positionFiller{false, true}
+{}
+std::vector<gd::BitBoardPtr>& BlackChildren::getMoves(gd::BitBoardPtr mother, std::vector<gd::BitBoardPtr> &childrenRef)
 {
-    getMoves();
-}
-void BlackChildren::getMoves()
-{
-    for(; bit<63; bit++)
+    this->mother = mother;
+    this->children = childrenRef;
+    for(bit = 0; bit<63; bit++)
     {
         if(mother[gd::blackPiece][bit] == false)
             continue;
@@ -41,7 +41,7 @@ void BlackChildren::getMoves()
             continue;
         }
     }
-    numberOfChildren = children.size();
+    return children;
 }
     void BlackChildren::getPawnMoves()
 {
@@ -278,51 +278,51 @@ void BlackChildren::getMoves()
     if(bit%8 != 0)
     {
         if(bit/8 != 7)
-            getSlantMoves(gd::whiteBishop, gd::ur);
+            getSlantMoves(gd::blackBishop, gd::ur);
         if(bit/8 != 0)
-            getSlantMoves(gd::whiteBishop, gd::dr);
+            getSlantMoves(gd::blackBishop, gd::dr);
     }
     if(bit%8 != 7)
     {
         if(bit/8 != 0)
-            getSlantMoves(gd::whiteBishop, gd::dl);
+            getSlantMoves(gd::blackBishop, gd::dl);
         if(bit/8 != 7)
-            getSlantMoves(gd::whiteBishop, gd::ul);
+            getSlantMoves(gd::blackBishop, gd::ul);
     }
 }
     void BlackChildren::getRookMoves()
 {
     if(bit%8 != 0)
-        getHorizontalMoves(gd::whiteRook, gd::r);
+        getHorizontalMoves(gd::blackRook, gd::r);
     if(bit/8 != 0)
-        getVerticalMoves(gd::whiteRook, gd::d);
+        getVerticalMoves(gd::blackRook, gd::d);
     if(bit%8 != 7)
-        getHorizontalMoves(gd::whiteRook, gd::l);
+        getHorizontalMoves(gd::blackRook, gd::l);
     if(bit/8 != 7)
-        getVerticalMoves(gd::whiteRook, gd::u);
+        getVerticalMoves(gd::blackRook, gd::u);
 }
     void BlackChildren::getQueenMoves()
 {
     if(bit%8 != 0)
     {
         if(bit/8 != 7)
-            getSlantMoves(gd::whiteQueen, gd::ur);
-        getHorizontalMoves(gd::whiteQueen, gd::r);
+            getSlantMoves(gd::blackQueen, gd::ur);
+        getHorizontalMoves(gd::blackQueen, gd::r);
         if(bit/8 != 0)
-            getSlantMoves(gd::whiteQueen, gd::dr);
+            getSlantMoves(gd::blackQueen, gd::dr);
     }
     if(bit/8 != 0)
-        getVerticalMoves(gd::whiteQueen, gd::d);
+        getVerticalMoves(gd::blackQueen, gd::d);
     if(bit%8 != 7)
     {
         if(bit/8 != 0)
-            getSlantMoves(gd::whiteQueen, gd::dl);
-        getHorizontalMoves(gd::whiteQueen, gd::l);
+            getSlantMoves(gd::blackQueen, gd::dl);
+        getHorizontalMoves(gd::blackQueen, gd::l);
         if(bit/8 != 7)
-            getSlantMoves(gd::whiteQueen, gd::ul);
+            getSlantMoves(gd::blackQueen, gd::ul);
     }
     if(bit/8 != 7)
-        getVerticalMoves(gd::whiteQueen, gd::u);
+        getVerticalMoves(gd::blackQueen, gd::u);
 }
             void BlackChildren::getSlantMoves(gd::BitBoardIndex movedPiece, gd::Movements direction)
 {
@@ -531,12 +531,8 @@ gd::BitBoardPtr BlackChildren::copyMotherBitBoard()
         copy[gd::whiteKing]   = mother[gd::whiteKing];
         return copy;
     }
-BlackChildren::~BlackChildren()
-{
-        deleteChildren();
-}
-    void BlackChildren::deleteChildren()
-{
-    for(int i=0; i<numberOfChildren; i++)
+void BlackChildren::deleteChildren(std::vector<gd::BitBoardPtr> &children)
+{   
+    for(uint8_t i=0; i<children.size(); i++)
         delete[]children[i];
 }

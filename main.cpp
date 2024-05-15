@@ -1,24 +1,9 @@
-#include "include/WhiteChildren.hpp"
-#include "include/BlackChildren.hpp"
+#include "include/SearchTree.hpp"
 
-//#include <future>///////////////
+
 #include <chrono>////////////
 
-
-using namespace std;///////////////
-using namespace std::chrono;/////////////////
-
-
-
-
-
-
-
-
-
-
-
-PositionFiller positionFiller(true, true);
+//using namespace std::chrono;/////////////////
 
 
 gd::BitBoardPtr initializeBitBoardPtr();
@@ -33,39 +18,40 @@ int evaluatePosition(gd::BitBoardPtr &ptr);
 
 int main()
 {
-
-
-
-
     gd::BitBoardPtr x = initializeBitBoardPtr();
     writeChessboard(x);
+    std::cout<<std::endl;
 
 
-    WhiteChildren wc(x);
-    //BlackChildren wc(x);
-    std::cout<<"x"<<(int)wc.numberOfChildren<<"x"<<std::endl;
+/////////////
 
-    for(int i=0; i<wc.numberOfChildren; i++)
-    {
-        //writeBitBoard(wc.children[i][gd::whiteQueen]);
-        //std::cout<<std::endl;
-    }
+    WhiteChildren wc;
+    BlackChildren bc;
 
+    std::vector<gd::BitBoardPtr> wChildren;
+    std::vector<gd::BitBoardPtr> bChildren;
 
+    wChildren = wc.getMoves(x, wChildren);
+    bChildren = bc.getMoves(x, bChildren);
 
+    std::cout<<"BIALY  MA: "<<(wChildren).size()<<" RUCHOW."<<std::endl;
+    std::cout<<"CZARNY MA: "<<bChildren.size()<<" RUCHOW."<<std::endl;
 
+    wc.deleteChildren(wChildren);
+    bc.deleteChildren(bChildren);
+
+    wChildren.clear();
+    bChildren.clear();
 
 /*
     unsigned long long iterations = 0;    auto start = std::chrono::steady_clock::now();    const int time_limit_seconds = 2;
     while (true)
     {
 
-////
     iterations++;    auto current = std::chrono::steady_clock::now(); if (std::chrono::duration_cast<std::chrono::seconds>(current - start).count() >= time_limit_seconds) break;
     }
     std::cout << "Program wykonano przez " << time_limit_seconds << " sekundy." << std::endl << "Liczba wykonanych iteracji: " << iterations << std::endl;
 */
-
     return 0;
 }
 
@@ -87,7 +73,7 @@ gd::BitBoardPtr initializeBitBoardPtr()
         throw x;
     }
     rewriteFileContentToBitBoard(fileContent, bitBoard);
-    positionFiller.fillBitBoard(bitBoard);
+    PositionFiller(true, true).fillBitBoard(bitBoard);
     return bitBoard;
 }
         std::string readChessBoardFile()
@@ -163,8 +149,6 @@ gd::BitBoardPtr initializeBitBoardPtr()
             ptr[gd::extraInfo][56] = 1;
     }
 }
-
-
 void writeChessboard(gd::BitBoardPtr BBPtr)
 {
     gd::ChessBoardPtr CBPtr = rewriteBitBoardTo8x8CharArray(BBPtr);
@@ -229,16 +213,11 @@ void writeBitBoard(const std::bitset<64> &bs)
             std::cout << std::endl;
     }
 }
-
-
 int evaluatePosition(gd::BitBoardPtr &ptr)
 {
     return
      ptr[gd::whitePawn].count() + 3*ptr[gd::whiteKnight].count() + 3*ptr[gd::whiteBishop].count() + 5*ptr[gd::whiteRook].count() + 9*ptr[gd::whiteQueen].count()
     -ptr[gd::blackPawn].count() - 3*ptr[gd::blackKnight].count() - 3*ptr[gd::blackBishop].count() - 5*ptr[gd::blackRook].count() - 9*ptr[gd::blackQueen].count();
 }
-
-
-
 
 
