@@ -8,45 +8,63 @@
 using namespace std;///////////////
 using namespace std::chrono;/////////////////
 
+
+
+
+
+
+
+
+
+
+
 PositionFiller positionFiller(true, true);
 
 
 gd::BitBoardPtr initializeBitBoardPtr();
     gd::BitBoardPtr loadBitBoard();
         std::string readChessBoardFile();
-        void rewriteFileContentToBitBoard(std::string fileContent, gd::BitBoardPtr ptr);
+        void rewriteFileContentToBitBoard(std::string fileContent, gd::BitBoardPtr &ptr);
+    void fillExtraInfo(gd::BitBoardPtr &ptr);
 void writeChessboard(gd::BitBoardPtr BBPtr);
     gd::ChessBoardPtr rewriteBitBoardTo8x8CharArray(gd::BitBoardPtr BBPtr);
-void writeBitSet(const std::bitset<64> &bs);
-bool isWhiteKingChecked(gd::BitBoardPtr ptr);
-bool isBlackKingChecked(gd::BitBoardPtr ptr);
-int evaluatePosition(gd::BitBoardPtr ptr);
+void writeBitBoard(const std::bitset<64> &bs);
+int evaluatePosition(gd::BitBoardPtr &ptr);
 
 int main()
 {
+
+
+
+
     gd::BitBoardPtr x = initializeBitBoardPtr();
     writeChessboard(x);
 
 
-    //WhiteChildren wc(x);
-    BlackChildren wc(x);
-
+    WhiteChildren wc(x);
+    //BlackChildren wc(x);
     std::cout<<"x"<<(int)wc.numberOfChildren<<"x"<<std::endl;
 
+    for(int i=0; i<wc.numberOfChildren; i++)
+    {
+        //writeBitBoard(wc.children[i][gd::whiteQueen]);
+        //std::cout<<std::endl;
+    }
 
 
-    
-   /*
+
+
+
+/*
     unsigned long long iterations = 0;    auto start = std::chrono::steady_clock::now();    const int time_limit_seconds = 2;
     while (true)
     {
-        computeBitBoard(x);
 
+////
     iterations++;    auto current = std::chrono::steady_clock::now(); if (std::chrono::duration_cast<std::chrono::seconds>(current - start).count() >= time_limit_seconds) break;
     }
     std::cout << "Program wykonano przez " << time_limit_seconds << " sekundy." << std::endl << "Liczba wykonanych iteracji: " << iterations << std::endl;
-    */
-
+*/
 
     return 0;
 }
@@ -54,8 +72,7 @@ int main()
 gd::BitBoardPtr initializeBitBoardPtr()
 {
     gd::BitBoardPtr bitBoard = loadBitBoard();
-
-
+    fillExtraInfo(bitBoard);
     return bitBoard;
 }
     gd::BitBoardPtr loadBitBoard()
@@ -99,7 +116,7 @@ gd::BitBoardPtr initializeBitBoardPtr()
     reading.close();
     return content;
 }
-        void rewriteFileContentToBitBoard(std::string fileContent, gd::BitBoardPtr ptr)
+        void rewriteFileContentToBitBoard(std::string fileContent, gd::BitBoardPtr &ptr)
 {
     try
     {
@@ -129,6 +146,25 @@ gd::BitBoardPtr initializeBitBoardPtr()
         throw x;
     }
 }
+    void fillExtraInfo(gd::BitBoardPtr &ptr)
+{
+    if(ptr[gd::whiteKing][3] == true)
+    {
+        if(ptr[gd::whiteRook][7] == true)
+            ptr[gd::extraInfo][7] = 1;
+        if(ptr[gd::whiteRook][0] == true)
+            ptr[gd::extraInfo][0] = 1;
+    }
+    if(ptr[gd::blackKing][59] == true)
+    {
+        if(ptr[gd::blackRook][63] == true)
+            ptr[gd::extraInfo][63] = 1;
+        if(ptr[gd::blackRook][56] == true)
+            ptr[gd::extraInfo][56] = 1;
+    }
+}
+
+
 void writeChessboard(gd::BitBoardPtr BBPtr)
 {
     gd::ChessBoardPtr CBPtr = rewriteBitBoardTo8x8CharArray(BBPtr);
@@ -184,7 +220,7 @@ void writeChessboard(gd::BitBoardPtr BBPtr)
             }
     return CBPtr;
 }
-void writeBitSet(const std::bitset<64> &bs)
+void writeBitBoard(const std::bitset<64> &bs)
 {
     for (int i = 63; i >= 0; i--)
     {
@@ -193,19 +229,16 @@ void writeBitSet(const std::bitset<64> &bs)
             std::cout << std::endl;
     }
 }
-bool isWhiteKingChecked(gd::BitBoardPtr ptr)
-{
-    return (ptr[gd::whiteKing] & ptr[gd::blackCapturedSquare]).any();
-}
-bool isBlackKingChecked(gd::BitBoardPtr ptr)
-{
-    return (ptr[gd::blackKing] & ptr[gd::whiteCapturedSquare]).any();
-}
 
 
-int evaluatePosition(gd::BitBoardPtr ptr)
+int evaluatePosition(gd::BitBoardPtr &ptr)
 {
-    return 
+    return
      ptr[gd::whitePawn].count() + 3*ptr[gd::whiteKnight].count() + 3*ptr[gd::whiteBishop].count() + 5*ptr[gd::whiteRook].count() + 9*ptr[gd::whiteQueen].count()
     -ptr[gd::blackPawn].count() - 3*ptr[gd::blackKnight].count() - 3*ptr[gd::blackBishop].count() - 5*ptr[gd::blackRook].count() - 9*ptr[gd::blackQueen].count();
 }
+
+
+
+
+

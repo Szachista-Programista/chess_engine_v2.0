@@ -17,6 +17,9 @@ const std::bitset<64> SINGLE_RIGHT_EDGE_MASK = 0xfefefefefefefefe;
 const std::bitset<64> DOUBLE_RIGHT_EDGE_MASK = 0xfcfcfcfcfcfcfcfc;
 const std::bitset<64> SINGLE_LEFT_EDGE_MASK  = 0x7f7f7f7f7f7f7f7f;
 const std::bitset<64> DOUBLE_LEFT_EDGE_MASK  = 0x3f3f3f3f3f3f3f3f;
+const std::bitset<64> WHITE_EN_PASSANT_MASK  = 0xffffff00ffffffff;
+const std::bitset<64> BLACK_EN_PASSANT_MASK  = 0xffffffff00ffffff;
+
 
 struct errorType{std::string errorMessage;};
 
@@ -40,8 +43,10 @@ enum BitBoardIndex
     whiteCapturedSquare,
     blackPiece,
     blackCapturedSquare,
+
     anyPiece,
     emptySquare,
+    extraInfo,
     bitBoardSize
 };
 enum BitwiseShift

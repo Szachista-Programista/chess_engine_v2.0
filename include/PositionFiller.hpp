@@ -11,8 +11,8 @@ public:////
 //sproboj stworyc w tej klasie obiekt typu gd::BitBoardPtr zamiast przekazywac go do funkcji
 
 //sproboj podzielic funkcjonalnosc na computeSquareCapturedByWhite / computeSquareCapturedByBlack
-const bool fillWhiteCapturedSquare;
-const bool fillBlackCapturedSquare;
+const bool whiteMove;
+const bool blackMove;
 
 PositionFiller(bool white, bool black);
 void fillBitBoard(gd::BitBoardPtr &ptr);

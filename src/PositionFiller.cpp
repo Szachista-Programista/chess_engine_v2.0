@@ -2,8 +2,7 @@
 
 
 
-
-PositionFiller::PositionFiller(bool white, bool black): fillWhiteCapturedSquare{white}, fillBlackCapturedSquare{black}
+PositionFiller::PositionFiller(bool white, bool black): whiteMove{white}, blackMove{black}
 {}
 void PositionFiller::fillBitBoard(gd::BitBoardPtr &ptr)
 {
@@ -12,10 +11,16 @@ void PositionFiller::fillBitBoard(gd::BitBoardPtr &ptr)
     ptr[gd::anyPiece]    = ptr[gd::whitePiece] | ptr[gd::blackPiece];
     ptr[gd::emptySquare] = ~ptr[gd::anyPiece];
     
-    if(fillWhiteCapturedSquare)
-        computeSquareCapturedByWhite(ptr);
-    if(fillBlackCapturedSquare)
+    if(whiteMove)
+    {
         computeSquareCapturedByBlack(ptr);
+        ptr[gd::extraInfo] &= gd::WHITE_EN_PASSANT_MASK;
+    }
+    if(blackMove)
+    {
+        computeSquareCapturedByWhite(ptr);
+        ptr[gd::extraInfo] &= gd::BLACK_EN_PASSANT_MASK;
+    }
 }
     void PositionFiller::computeSquareCapturedByWhite(gd::BitBoardPtr &ptr)
 {
