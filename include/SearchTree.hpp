@@ -11,7 +11,7 @@ public://///
     const bool black = 0;
     const bool white = 1;
 
-    int licznik{};
+    int licznik{};//////////
 
     WhiteChildren whiteChildren;
     BlackChildren blackChildren;
@@ -24,13 +24,3 @@ public://///
 
 };
 #endif //SEARCHTREE_HPP
-/*
-rnbqkbnr
-pppppppp
-********
-********
-********
-********
-PPPPPPPP
-RNBQKBNR
-*/

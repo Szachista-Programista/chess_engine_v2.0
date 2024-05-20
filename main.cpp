@@ -26,7 +26,7 @@ int main()
     writeChessboard(x);
     std::cout<<std::endl;
 
-    x = searchTree.findBestMove(x, 9, 1);
+    x = searchTree.findBestMove(x, 1, 1);
     std::cout<<searchTree.licznik<<std::endl;
     writeChessboard(x);
 

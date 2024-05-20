@@ -10,7 +10,7 @@ gd::BitBoardPtr SearchTree::findBestMove(const gd::BitBoardPtr position, const u
     float eval;
     if(color == white)
     {
-        children = whiteChildren.getMoves(position);
+        children = whiteChildren.generateChildren(position);
         for(int i=0; i<children.size(); i++)
         {
             eval = alphaBeta(children[i], depth-1, alpha, beta, black);
@@ -23,7 +23,7 @@ gd::BitBoardPtr SearchTree::findBestMove(const gd::BitBoardPtr position, const u
     }
     else
     {
-        children = blackChildren.getMoves(position);
+        children = blackChildren.generateChildren(position);
         for(int i=0; i<children.size(); i++)
         {
             eval = alphaBeta(children[i], depth-1, alpha, beta, white);
@@ -46,7 +46,7 @@ float SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth,
     if(color == white)
     {
         float maxEval = -1000.0;
-        children = whiteChildren.getMoves(position);
+        children = whiteChildren.generateChildren(position);
         for(int i=0; i<children.size(); i++)
         {
             eval = alphaBeta(children[i], depth-1, alpha, beta, black);
@@ -61,7 +61,7 @@ float SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth,
     else
     {
         float minEval = 1000.0;
-        children = blackChildren.getMoves(position);
+        children = blackChildren.generateChildren(position);
         for(int i=0; i<children.size(); i++)
         {
             eval = alphaBeta(children[i], depth-1, alpha, beta, white);
@@ -76,7 +76,7 @@ float SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth,
 }
 float SearchTree::evaluatePosition(const gd::BitBoardPtr &ptr)//const
 {
-    //licznik++;
+    licznik++;
     return
      ptr[gd::whitePawn].count() + 3*ptr[gd::whiteKnight].count() + 3*ptr[gd::whiteBishop].count() + 5*ptr[gd::whiteRook].count() + 9*ptr[gd::whiteQueen].count()
     -ptr[gd::blackPawn].count() - 3*ptr[gd::blackKnight].count() - 3*ptr[gd::blackBishop].count() - 5*ptr[gd::blackRook].count() - 9*ptr[gd::blackQueen].count();
