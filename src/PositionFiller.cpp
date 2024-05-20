@@ -2,6 +2,23 @@
 
 PositionFiller::PositionFiller(bool white, bool black): whiteMove{white}, blackMove{black}
 {}
+    void PositionFiller::fillExtraInfo(gd::BitBoardPtr &ptr)const
+{
+    if(ptr[gd::whiteKing][3] == true)
+    {
+        if(ptr[gd::whiteRook][7] == true)
+            ptr[gd::extraInfo][7] = 1;
+        if(ptr[gd::whiteRook][0] == true)
+            ptr[gd::extraInfo][0] = 1;
+    }
+    if(ptr[gd::blackKing][59] == true)
+    {
+        if(ptr[gd::blackRook][63] == true)
+            ptr[gd::extraInfo][63] = 1;
+        if(ptr[gd::blackRook][56] == true)
+            ptr[gd::extraInfo][56] = 1;
+    }
+}
 void PositionFiller::fillBitBoard(gd::BitBoardPtr &ptr)const
 {
     ptr[gd::whitePiece]  = ptr[gd::whitePawn]  | ptr[gd::whiteKnight] | ptr[gd::whiteBishop] | ptr[gd::whiteRook] | ptr[gd::whiteQueen] | ptr[gd::whiteKing];
