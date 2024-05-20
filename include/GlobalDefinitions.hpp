@@ -2,10 +2,13 @@
 #define GLOBAL_DEFINITIONS_HPP
 
 #include <iostream>
+#include <iomanip>
 #include <bitset>
 #include <fstream>
 #include <string>
 #include <vector>
+#include <algorithm>
+
 
 
 namespace gd
@@ -19,7 +22,6 @@ const std::bitset<64> SINGLE_LEFT_EDGE_MASK  = 0x7f7f7f7f7f7f7f7f;
 const std::bitset<64> DOUBLE_LEFT_EDGE_MASK  = 0x3f3f3f3f3f3f3f3f;
 const std::bitset<64> WHITE_EN_PASSANT_MASK  = 0xffffff00ffffffff;
 const std::bitset<64> BLACK_EN_PASSANT_MASK  = 0xffffffff00ffffff;
-
 
 struct errorType{std::string errorMessage;};
 
@@ -44,7 +46,6 @@ enum BitBoardIndex
     blackPiece,
     blackCapturedSquare,
 
-    anyPiece,
     emptySquare,
     extraInfo,
     bitBoardSize
@@ -95,7 +96,7 @@ enum Movements
     ull = 10,
     uul = 17
 };
+
+
 }
-
-
 #endif//GLOBAL_DEFINITIONS_HPP

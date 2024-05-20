@@ -2,10 +2,10 @@
 
 BlackChildren::BlackChildren(): positionFiller{false, true}
 {}
-std::vector<gd::BitBoardPtr>& BlackChildren::getMoves(gd::BitBoardPtr mother, std::vector<gd::BitBoardPtr> &childrenRef)
+std::vector<gd::BitBoardPtr> BlackChildren::getMoves(const gd::BitBoardPtr mother)
 {
     this->mother = mother;
-    this->children = childrenRef;
+    children.clear();
     for(bit = 0; bit<63; bit++)
     {
         if(mother[gd::blackPiece][bit] == false)
@@ -106,7 +106,7 @@ std::vector<gd::BitBoardPtr>& BlackChildren::getMoves(gd::BitBoardPtr mother, st
         else if(mother[gd::extraInfo][bit + gd::r] == true && bit%8 != 0) getEnPassantMove(bit + gd::dr);
     }
 }
-                void BlackChildren::getEnPassantMove(uint8_t targetBit)
+                void BlackChildren::getEnPassantMove(const uint8_t targetBit)
 {
     gd::BitBoardPtr child = copyMotherBitBoard();
     child[gd::blackPawn][bit] = 0;
@@ -134,7 +134,7 @@ std::vector<gd::BitBoardPtr>& BlackChildren::getMoves(gd::BitBoardPtr mother, st
         getForwardPromotionMove(gd::blackQueen);
     }
 }
-                void BlackChildren::getForwardPromotionMove(gd::BitBoardIndex promotedPiece)
+                void BlackChildren::getForwardPromotionMove(const gd::BitBoardIndex promotedPiece)
 {
     gd::BitBoardPtr child = copyMotherBitBoard();
     child[gd::blackPawn][bit] = 0;
@@ -213,7 +213,7 @@ std::vector<gd::BitBoardPtr>& BlackChildren::getMoves(gd::BitBoardPtr mother, st
         }
     }
 }
-                void BlackChildren::getCapturePromotionMove(gd::BitBoardIndex promotedPiece, gd::BitBoardIndex capturedPiece, uint8_t targetBit)
+                void BlackChildren::getCapturePromotionMove(const gd::BitBoardIndex promotedPiece, const gd::BitBoardIndex capturedPiece, const uint8_t targetBit)
 {
     gd::BitBoardPtr child = copyMotherBitBoard();
     child[gd::blackPawn][bit] = 0;
@@ -249,7 +249,7 @@ std::vector<gd::BitBoardPtr>& BlackChildren::getMoves(gd::BitBoardPtr mother, st
     }
     return directions;
 }
-        void BlackChildren::getKnightMoves(std::bitset<8> directions)
+        void BlackChildren::getKnightMoves(const std::bitset<8> directions)
 {
     if(directions[7]) getKnightMove(bit + gd::uur);
     if(directions[6]) getKnightMove(bit + gd::urr);
@@ -260,7 +260,7 @@ std::vector<gd::BitBoardPtr>& BlackChildren::getMoves(gd::BitBoardPtr mother, st
     if(directions[1]) getKnightMove(bit + gd::ull);
     if(directions[0]) getKnightMove(bit + gd::uul);
 }
-            void BlackChildren::getKnightMove(uint8_t targetBit)
+            void BlackChildren::getKnightMove(const uint8_t targetBit)
 {
     if(mother[gd::emptySquare][targetBit] == true)
         getNonCaptureMove(gd::blackKnight, targetBit);    
@@ -324,7 +324,7 @@ std::vector<gd::BitBoardPtr>& BlackChildren::getMoves(gd::BitBoardPtr mother, st
     if(bit/8 != 7)
         getVerticalMoves(gd::blackQueen, gd::u);
 }
-            void BlackChildren::getSlantMoves(gd::BitBoardIndex movedPiece, gd::Movements direction)
+            void BlackChildren::getSlantMoves(const gd::BitBoardIndex movedPiece, const gd::Movements direction)
 {
     uint8_t targetBit = bit;
     while(true)
@@ -353,7 +353,7 @@ std::vector<gd::BitBoardPtr>& BlackChildren::getMoves(gd::BitBoardPtr mother, st
         }
     }
 }
-            void BlackChildren::getHorizontalMoves(gd::BitBoardIndex movedPiece, gd::Movements direction)
+            void BlackChildren::getHorizontalMoves(const gd::BitBoardIndex movedPiece, const gd::Movements direction)
 {
     uint8_t targetBit = bit;
     while(true)
@@ -382,7 +382,7 @@ std::vector<gd::BitBoardPtr>& BlackChildren::getMoves(gd::BitBoardPtr mother, st
         }
     }
 }
-            void BlackChildren::getVerticalMoves(gd::BitBoardIndex movedPiece, gd::Movements direction)
+            void BlackChildren::getVerticalMoves(const gd::BitBoardIndex movedPiece, const gd::Movements direction)
 {
     uint8_t targetBit = bit;
     while(true)
@@ -435,7 +435,7 @@ std::vector<gd::BitBoardPtr>& BlackChildren::getMoves(gd::BitBoardPtr mother, st
     }
     return directions;
 }
-        void BlackChildren::getKingCommonMoves(std::bitset<8> directions)
+        void BlackChildren::getKingCommonMoves(const std::bitset<8> directions)
 {
     if(directions[7]) getKingCommonMove(bit + gd::ur);
     if(directions[6]) getKingCommonMove(bit + gd::r);
@@ -446,7 +446,7 @@ std::vector<gd::BitBoardPtr>& BlackChildren::getMoves(gd::BitBoardPtr mother, st
     if(directions[1]) getKingCommonMove(bit + gd::ul);
     if(directions[0]) getKingCommonMove(bit + gd::u);
 }
-            void BlackChildren::getKingCommonMove(uint8_t targetBit)
+            void BlackChildren::getKingCommonMove(const uint8_t targetBit)
 {
     if(mother[gd::emptySquare][targetBit] == true)
         getNonCaptureMove(gd::blackKing, targetBit);
@@ -487,7 +487,7 @@ std::vector<gd::BitBoardPtr>& BlackChildren::getMoves(gd::BitBoardPtr mother, st
             children.push_back(child);
         }
 }
-void BlackChildren::getCaptureMove(gd::BitBoardIndex movedPiece, gd::BitBoardIndex capturedPiece, uint8_t targetBit)
+void BlackChildren::getCaptureMove(const gd::BitBoardIndex movedPiece, const gd::BitBoardIndex capturedPiece, const uint8_t targetBit)
 {
     gd::BitBoardPtr child = copyMotherBitBoard();
     child[movedPiece][bit] = 0;
@@ -499,7 +499,7 @@ void BlackChildren::getCaptureMove(gd::BitBoardIndex movedPiece, gd::BitBoardInd
     else
         children.push_back(child);
 }
-void BlackChildren::getNonCaptureMove(gd::BitBoardIndex movedPiece, uint8_t targetBit)
+void BlackChildren::getNonCaptureMove(const gd::BitBoardIndex movedPiece, const uint8_t targetBit)
 {
     gd::BitBoardPtr child = copyMotherBitBoard();
     child[movedPiece][bit] = 0;
@@ -510,7 +510,7 @@ void BlackChildren::getNonCaptureMove(gd::BitBoardIndex movedPiece, uint8_t targ
     else
         children.push_back(child);
 }
-bool BlackChildren::isBlackKingChecked(gd::BitBoardPtr &ptr)
+bool BlackChildren::isBlackKingChecked(const gd::BitBoardPtr &ptr)
 {
     return (ptr[gd::blackKing] & ptr[gd::whiteCapturedSquare]).any();
 }
@@ -529,6 +529,7 @@ gd::BitBoardPtr BlackChildren::copyMotherBitBoard()
         copy[gd::whiteRook]   = mother[gd::whiteRook];
         copy[gd::whiteQueen]  = mother[gd::whiteQueen];
         copy[gd::whiteKing]   = mother[gd::whiteKing];
+        copy[gd::extraInfo]   = mother[gd::extraInfo];
         return copy;
     }
 void BlackChildren::deleteChildren(std::vector<gd::BitBoardPtr> &children)

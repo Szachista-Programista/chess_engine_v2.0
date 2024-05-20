@@ -1,8 +1,8 @@
 rnbqkbnr
-pppppppp
-********
-********
-********
-********
-PPPPPPPP
-RNBQKBNR
+pppp***p
+****pp**
+****P***
+***N****
+**PPP***
+PP*P**PP
+R**QKBNR

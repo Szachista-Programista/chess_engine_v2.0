@@ -14,39 +14,48 @@ gd::BitBoardPtr initializeBitBoardPtr();
 void writeChessboard(gd::BitBoardPtr BBPtr);
     gd::ChessBoardPtr rewriteBitBoardTo8x8CharArray(gd::BitBoardPtr BBPtr);
 void writeBitBoard(const std::bitset<64> &bs);
-int evaluatePosition(gd::BitBoardPtr &ptr);
+void writeBitBoard(const gd::BitBoardPtr &ptr);
+
 
 int main()
 {
+
+    SearchTree searchTree;
+    WhiteChildren wc;
     gd::BitBoardPtr x = initializeBitBoardPtr();
     writeChessboard(x);
     std::cout<<std::endl;
 
+    x = searchTree.findBestMove(x, 9, 1);
+    std::cout<<searchTree.licznik<<std::endl;
+    writeChessboard(x);
 
-/////////////
 
+
+
+
+
+/*
     WhiteChildren wc;
     BlackChildren bc;
-
     std::vector<gd::BitBoardPtr> wChildren;
     std::vector<gd::BitBoardPtr> bChildren;
-
-    wChildren = wc.getMoves(x, wChildren);
-    bChildren = bc.getMoves(x, bChildren);
-
+    wChildren = wc.getMoves(x);
+    bChildren = bc.getMoves(x);
     std::cout<<"BIALY  MA: "<<(wChildren).size()<<" RUCHOW."<<std::endl;
     std::cout<<"CZARNY MA: "<<bChildren.size()<<" RUCHOW."<<std::endl;
-
     wc.deleteChildren(wChildren);
     bc.deleteChildren(bChildren);
-
     wChildren.clear();
     bChildren.clear();
-
+*/
 /*
     unsigned long long iterations = 0;    auto start = std::chrono::steady_clock::now();    const int time_limit_seconds = 2;
     while (true)
     {
+
+
+
 
     iterations++;    auto current = std::chrono::steady_clock::now(); if (std::chrono::duration_cast<std::chrono::seconds>(current - start).count() >= time_limit_seconds) break;
     }
@@ -213,11 +222,100 @@ void writeBitBoard(const std::bitset<64> &bs)
             std::cout << std::endl;
     }
 }
-int evaluatePosition(gd::BitBoardPtr &ptr)
+void writeBitBoard(const gd::BitBoardPtr &ptr)
 {
-    return
-     ptr[gd::whitePawn].count() + 3*ptr[gd::whiteKnight].count() + 3*ptr[gd::whiteBishop].count() + 5*ptr[gd::whiteRook].count() + 9*ptr[gd::whiteQueen].count()
-    -ptr[gd::blackPawn].count() - 3*ptr[gd::blackKnight].count() - 3*ptr[gd::blackBishop].count() - 5*ptr[gd::blackRook].count() - 9*ptr[gd::blackQueen].count();
+    std::cout<<std::string(85,'^')<<std::endl<<std::endl;
+    for(int i=0; i<gd::bitBoardSize; i++)
+    {
+        std::cout<<std::setw(2)<<(int)i<<"    >>> ";
+        for (int j=63; j>=0; j--)
+        {
+            if (63>j && (63-j)%8 == 0)
+                std::cout << '\'';
+            std::cout << ptr[i][j];
+        }
+        std::cout<<" <<<"<<std::endl;
+        if(i == 5 || i == 11)
+            std::cout<<std::endl;
+    }
+    std::cout<<std::endl<<std::string(85,'^')<<std::endl;
 }
 
+////////////////////////////////////////////////////////////////
+/*
+#include <iostream>
+#include <vector>
+#include <thread>
+#include <future>
+#include <mutex>
+#include <chrono>
+#include <algorithm>
 
+constexpr int DEPTH = 5;
+constexpr int NUM_MOVES = 10;
+
+std::mutex mtx;
+
+// Funkcja symulująca przeszukiwanie dla danego ruchu
+int search(int move, int depth, int alpha, int beta) {
+    if (depth == 0) {
+        return move * depth; // Symulacja wyniku
+    }
+
+    int bestScore = -9999;
+    for (int i = 0; i < NUM_MOVES; ++i) {
+        int score = -search(i, depth - 1, -beta, -alpha);
+        bestScore = std::max(bestScore, score);
+        alpha = std::max(alpha, score);
+        if (alpha >= beta) {
+            break; // Beta cutoff
+        }
+    }
+    return bestScore;
+}
+
+// Funkcja przetwarzająca ruch w osobnym wątku
+void processMove(int move, int alpha, int beta, std::promise<int> result) {
+    int score = search(move, DEPTH, alpha, beta);
+    result.set_value(score);
+}
+
+// Główna funkcja przeszukiwania równoległego
+void parallelSearch(int depth, int alpha, int beta) {
+    std::vector<std::thread> threads;
+    std::vector<std::future<int>> futures;
+    int bestScore = -9999;
+
+    for (int move = 0; move < NUM_MOVES; ++move) {
+        std::promise<int> promise;
+        futures.push_back(promise.get_future());
+        threads.emplace_back(processMove, move, alpha, beta, std::move(promise));
+    }
+
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
+    for (auto& future : futures) {
+        int score = future.get();
+        std::lock_guard<std::mutex> lock(mtx);
+        bestScore = std::max(bestScore, score);
+        alpha = std::max(alpha, score);
+        if (alpha >= beta) {
+            break; // Beta cutoff
+        }
+    }
+
+    std::cout << "Best score: " << bestScore << std::endl;
+}
+
+int main() {
+    auto start = std::chrono::steady_clock::now();
+    parallelSearch(DEPTH, -9999, 9999);
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end - start;
+    std::cout << "Elapsed time: " << elapsed_seconds.count() << "s\n";
+
+    return 0;
+}
+*/

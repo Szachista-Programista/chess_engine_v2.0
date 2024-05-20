@@ -9,20 +9,22 @@ class PositionFiller
         const bool blackMove;
         //********************
 public: PositionFiller(bool white, bool black);
-        void fillBitBoard(gd::BitBoardPtr &ptr);
-private:    void computeSquareCapturedByWhite(gd::BitBoardPtr &ptr);
-                void computeSquareCapturedByWhitePawn(gd::BitBoardPtr &ptr);
-                void computeSquareCapturedByWhiteKnight(gd::BitBoardPtr &ptr);
-                void computeSquareCapturedByWhiteBishop(gd::BitBoardPtr &ptr);
-                void computeSquareCapturedByWhiteBishopRook(gd::BitBoardPtr &ptr);
-                void computeSquareCapturedByWhiteQueen(gd::BitBoardPtr &ptr);
-                void computeSquareCapturedByWhiteKing(gd::BitBoardPtr &ptr);
-            void computeSquareCapturedByBlack(gd::BitBoardPtr &ptr);
-                void computeSquareCapturedByBlackPawn(gd::BitBoardPtr &ptr);
-                void computeSquareCapturedByBlackKnight(gd::BitBoardPtr &ptr);
-                void computeSquareCapturedByBlackBishop(gd::BitBoardPtr &ptr);
-                void computeSquareCapturedByBlackBishopRook(gd::BitBoardPtr &ptr);
-                void computeSquareCapturedByBlackQueen(gd::BitBoardPtr &ptr);
-                void computeSquareCapturedByBlackKing(gd::BitBoardPtr &ptr);
+        void fillBitBoard(gd::BitBoardPtr &ptr)const;
+private:    void computeSquareCapturedByWhite(gd::BitBoardPtr &ptr)const;
+                void computeSquareCapturedByWhitePawn(gd::BitBoardPtr &ptr)const;
+                void computeSquareCapturedByWhiteKnight(gd::BitBoardPtr &ptr)const;
+                void computeSquareCapturedByWhiteBishop(gd::BitBoardPtr &ptr)const;
+                void computeSquareCapturedByWhiteBishopRook(gd::BitBoardPtr &ptr)const;
+                void computeSquareCapturedByWhiteQueen(gd::BitBoardPtr &ptr)const;
+                void computeSquareCapturedByWhiteKing(gd::BitBoardPtr &ptr)const;
+            void computeSquareCapturedByBlack(gd::BitBoardPtr &ptr)const;
+                void computeSquareCapturedByBlackPawn(gd::BitBoardPtr &ptr)const;
+                void computeSquareCapturedByBlackKnight(gd::BitBoardPtr &ptr)const;
+                void computeSquareCapturedByBlackBishop(gd::BitBoardPtr &ptr)const;
+                void computeSquareCapturedByBlackBishopRook(gd::BitBoardPtr &ptr)const;
+                void computeSquareCapturedByBlackQueen(gd::BitBoardPtr &ptr)const;
+                void computeSquareCapturedByBlackKing(gd::BitBoardPtr &ptr)const;
+            void updateExtraInfoAfterWhiteMove(gd::BitBoardPtr &ptr)const;
+            void updateExtraInfoAfterBlackMove(gd::BitBoardPtr &ptr)const;
 };
 #endif //POSITIONFILLER_HPP
