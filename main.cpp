@@ -1,6 +1,6 @@
 #include "include/SearchTree.hpp"
 #include "include/PositionWriter.hpp"
-#include <chrono>////////////
+//#include <chrono>////////////
 
 
 
@@ -11,42 +11,23 @@ int main()
     PositionConverter positionConverter;
     PositionWriter positionWriter;
     SearchTree searchTree;
-    
-    WhiteChildren wc;
-    gd::BitBoardPtr x = positionConverter.initializeBitBoardPtr();
-    positionWriter.writeChessboard(x);
-    std::cout<<std::endl;
-
-    x = searchTree.findBestMove(x, 1, 1);
-    std::cout<<searchTree.licznik<<std::endl;
-    positionWriter.writeChessboard(x);
-
-
-
-
-
-
-/*
     WhiteChildren wc;
     BlackChildren bc;
-    std::vector<gd::BitBoardPtr> wChildren;
-    std::vector<gd::BitBoardPtr> bChildren;
-    wChildren = wc.getMoves(x);
-    bChildren = bc.getMoves(x);
-    std::cout<<"BIALY  MA: "<<(wChildren).size()<<" RUCHOW."<<std::endl;
-    std::cout<<"CZARNY MA: "<<bChildren.size()<<" RUCHOW."<<std::endl;
-    wc.deleteChildren(wChildren);
-    bc.deleteChildren(bChildren);
-    wChildren.clear();
-    bChildren.clear();
-*/
+
+
+
+
+
+
+
+
+
+
+
 /*
     unsigned long long iterations = 0;    auto start = std::chrono::steady_clock::now();    const int time_limit_seconds = 2;
     while (true)
     {
-
-
-
 
     iterations++;    auto current = std::chrono::steady_clock::now(); if (std::chrono::duration_cast<std::chrono::seconds>(current - start).count() >= time_limit_seconds) break;
     }
@@ -54,6 +35,10 @@ int main()
 */
     return 0;
 }
+
+
+
+
 
 ////////////////////////////////////////////////////////////////
 /*

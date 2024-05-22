@@ -1,18 +1,46 @@
 #include "../include/BlackChildren.hpp"
 
-BlackChildren::BlackChildren(): positionFiller{false, true}
-{}
-std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardPtr mother)
+//BlackChildren::BlackChildren(): positionFiller{false, true}
+//{}
+std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardPtr position)
 {
-    this->mother = mother;
-    children.clear();
+    mother = copyBitBoard(position);
+    updateExtraInfo();
     getMoves();
     positionSorter.sortPositionsAscending(children);
+    delete[]mother;
     return children;
+}
+    void BlackChildren::updateExtraInfo()
+{
+    mother[gd::extraInfo][15] = 1;
+    uint64_t moveNumber{};
+    uint64_t ruleOf50Moves{};
+    for(uint8_t i=39; i>31; i--)
+    {
+        moveNumber <<= 1;
+        if(mother[gd::extraInfo][i])
+            moveNumber += 1;
+    }
+    for(uint8_t i=31; i>23; i--)
+    {
+        ruleOf50Moves <<= 1;
+        if(mother[gd::extraInfo][i])
+            ruleOf50Moves += 1;
+    }
+    moveNumber++;
+    ruleOf50Moves++;
+    moveNumber <<= 32;
+    ruleOf50Moves <<= 24;
+    mother[gd::extraInfo] &= gd::MOVE_NUMBER_MASK;
+    mother[gd::extraInfo] &= gd::RULE_OF_50_MOVES_MASK;
+    mother[gd::extraInfo] |= moveNumber;
+    mother[gd::extraInfo] |= ruleOf50Moves;
 }
     void BlackChildren::getMoves()
 {
-    for(bit = 0; bit<63; bit++)
+    children.clear();
+    for(bit = 0; bit<64; bit++)
     {
         if(mother[gd::blackPiece][bit] == false)
             continue;
@@ -77,7 +105,7 @@ std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardP
     gd::BitBoardPtr child = copyMotherBitBoard();
     child[gd::blackPawn][bit] = 0;
     child[gd::blackPawn][bit + gd::dd] = 1;
-    child[gd::extraInfo][bit + gd::dd] = 1;
+    child[gd::extraInfo][bit + gd::d] = 1;
     positionFiller.fillBitBoard(child);
     if(isBlackKingChecked(child))
         delete[]child;
@@ -107,8 +135,8 @@ std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardP
 {
     if(23 < bit && bit < 32)
     {
-        if     (mother[gd::extraInfo][bit + gd::l] == true && bit%8 != 7) getEnPassantMove(bit + gd::dl);
-        else if(mother[gd::extraInfo][bit + gd::r] == true && bit%8 != 0) getEnPassantMove(bit + gd::dr);
+        if     (mother[gd::extraInfo][bit + gd::dl] == true && bit%8 != 7) getEnPassantMove(bit + gd::dl);
+        else if(mother[gd::extraInfo][bit + gd::dr] == true && bit%8 != 0) getEnPassantMove(bit + gd::dr);
     }
 }
                     void BlackChildren::getEnPassantMove(const uint8_t targetBit)
@@ -522,19 +550,15 @@ std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardP
     gd::BitBoardPtr BlackChildren::copyMotherBitBoard()
     {
         gd::BitBoardPtr copy  = new std::bitset<64>[gd::bitBoardSize]{};
-        copy[gd::blackPawn]   = mother[gd::blackPawn];
-        copy[gd::blackKnight] = mother[gd::blackKnight];
-        copy[gd::blackBishop] = mother[gd::blackBishop];
-        copy[gd::blackRook]   = mother[gd::blackRook];
-        copy[gd::blackQueen]  = mother[gd::blackQueen];
-        copy[gd::blackKing]   = mother[gd::blackKing];
-        copy[gd::whitePawn]   = mother[gd::whitePawn];
-        copy[gd::whiteKnight] = mother[gd::whiteKnight];
-        copy[gd::whiteBishop] = mother[gd::whiteBishop];
-        copy[gd::whiteRook]   = mother[gd::whiteRook];
-        copy[gd::whiteQueen]  = mother[gd::whiteQueen];
-        copy[gd::whiteKing]   = mother[gd::whiteKing];
-        copy[gd::extraInfo]   = mother[gd::extraInfo];
+        for(uint8_t i=0; i<gd::bitBoardSize; i++)
+            copy[i] = mother[i];
+        return copy;
+    }
+    gd::BitBoardPtr BlackChildren::copyBitBoard(const gd::BitBoardPtr orginal)
+    {
+        gd::BitBoardPtr copy  = new std::bitset<64>[gd::bitBoardSize]{};
+        for(uint8_t i=0; i<gd::bitBoardSize; i++)
+            copy[i] = orginal[i];
         return copy;
     }
     void BlackChildren::deleteChildren(std::vector<gd::BitBoardPtr> &children)

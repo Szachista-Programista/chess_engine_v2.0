@@ -1,14 +1,17 @@
 #ifndef POSITIONSORTER_HPP
 #define POSITIONSORTER_HPP
 
-#include "GlobalDefinitions.hpp"
+#include "PositionEvaluator.hpp"
 
 class PositionSorter
 {
+        PositionEvaluator positionEvaluator;
         //********************
 public: void sortPositionsDescending(std::vector<gd::BitBoardPtr> &positions);
         void sortPositionsAscending(std::vector<gd::BitBoardPtr> &positions);
-private:float evaluatePosition(const gd::BitBoardPtr &ptr)const;
+        void sortEvaluatedPositionsDescending(std::vector<gd::EvaluedPosition> &positions);
+        void sortEvaluatedPositionsAscending(std::vector<gd::EvaluedPosition> &positions);
+
 
 };
 #endif //POSITIONSORTER_HPP

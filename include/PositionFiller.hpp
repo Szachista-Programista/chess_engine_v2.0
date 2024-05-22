@@ -5,10 +5,10 @@
 
 class PositionFiller
 {
-        const bool whiteMove;
-        const bool blackMove;
+        //const bool whiteMove;
+        //const bool blackMove;
         //********************
-public: PositionFiller(bool white, bool black);
+public: //PositionFiller(bool white = false, bool black = false);
         void fillExtraInfo(gd::BitBoardPtr &ptr)const;
         void fillBitBoard(gd::BitBoardPtr &ptr)const;
 private:    void computeSquareCapturedByWhite(gd::BitBoardPtr &ptr)const;
@@ -27,7 +27,5 @@ private:    void computeSquareCapturedByWhite(gd::BitBoardPtr &ptr)const;
                 void computeSquareCapturedByBlackKing(gd::BitBoardPtr &ptr)const;
             void updateExtraInfoAfterWhiteMove(gd::BitBoardPtr &ptr)const;
             void updateExtraInfoAfterBlackMove(gd::BitBoardPtr &ptr)const;
-
-
 };
 #endif //POSITIONFILLER_HPP

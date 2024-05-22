@@ -8,13 +8,14 @@ class BlackChildren
 {
         gd::BitBoardPtr mother;
         std::vector<gd::BitBoardPtr> children;
-        uint8_t bit{};
+        uint8_t bit;
         PositionFiller positionFiller;
         PositionSorter positionSorter;
         //********************
-public: BlackChildren();
-        std::vector<gd::BitBoardPtr> generateChildren(const gd::BitBoardPtr mother);
-private:    void getMoves();
+public: //BlackChildren();
+        std::vector<gd::BitBoardPtr> generateChildren(const gd::BitBoardPtr position);
+private:    void updateExtraInfo();
+            void getMoves();
                 void getPawnMoves();
                     void getPawnCommonMoves();
                         void getPawnCommonForwardMoves();
@@ -48,6 +49,7 @@ private:    void getMoves();
             void getNonCaptureMove(const gd::BitBoardIndex MovedPiece, const uint8_t targetBit);
             bool isBlackKingChecked(const gd::BitBoardPtr &ptr);
             gd::BitBoardPtr copyMotherBitBoard();
+            gd::BitBoardPtr copyBitBoard(const gd::BitBoardPtr orginal);
 public: void deleteChildren(std::vector<gd::BitBoardPtr> &children);
 };
 #endif //BLACKCHILDREN_HPP

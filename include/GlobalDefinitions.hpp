@@ -20,10 +20,15 @@ const std::bitset<64> SINGLE_RIGHT_EDGE_MASK = 0xfefefefefefefefe;
 const std::bitset<64> DOUBLE_RIGHT_EDGE_MASK = 0xfcfcfcfcfcfcfcfc;
 const std::bitset<64> SINGLE_LEFT_EDGE_MASK  = 0x7f7f7f7f7f7f7f7f;
 const std::bitset<64> DOUBLE_LEFT_EDGE_MASK  = 0x3f3f3f3f3f3f3f3f;
-const std::bitset<64> WHITE_EN_PASSANT_MASK  = 0xffffff00ffffffff;
-const std::bitset<64> BLACK_EN_PASSANT_MASK  = 0xffffffff00ffffff;
+const std::bitset<64> WHITE_EN_PASSANT_MASK  = 0xffff00ffffffffff;
+const std::bitset<64> BLACK_EN_PASSANT_MASK  = 0xffffffffff00ffff;
+const std::bitset<64> MOVE_NUMBER_MASK       = 0xffffff00ffffffff;
+const std::bitset<64> RULE_OF_50_MOVES_MASK  = 0xffffffff00ffffff;
+
 
 struct errorType{std::string errorMessage;};
+struct EvaluedPosition{BitBoardPtr position; float eval;};
+
 
 enum BitBoardIndex
 {

@@ -1,14 +1,14 @@
 #include "../include/PositionSorter.hpp"
 
 
-
 void PositionSorter::sortPositionsDescending(std::vector<gd::BitBoardPtr> &positions)
 {
     std::sort
     (
         positions.begin(),
         positions.end(),
-        [this](const gd::BitBoardPtr &ptrA, const gd::BitBoardPtr &ptrB) {return evaluatePosition(ptrA) > evaluatePosition(ptrB);}
+        [this](const gd::BitBoardPtr &ptrA, const gd::BitBoardPtr &ptrB)
+            {return positionEvaluator.evaluatePosition(ptrA) > positionEvaluator.evaluatePosition(ptrB);}
     );
 }
 void PositionSorter::sortPositionsAscending(std::vector<gd::BitBoardPtr> &positions)
@@ -17,12 +17,25 @@ void PositionSorter::sortPositionsAscending(std::vector<gd::BitBoardPtr> &positi
     (
         positions.begin(),
         positions.end(),
-        [this](const gd::BitBoardPtr &ptrA, const gd::BitBoardPtr &ptrB) {return evaluatePosition(ptrA) < evaluatePosition(ptrB);}
+        [this](const gd::BitBoardPtr &ptrA, const gd::BitBoardPtr &ptrB)
+            {return positionEvaluator.evaluatePosition(ptrA) < positionEvaluator.evaluatePosition(ptrB);}
     );
 }
-float PositionSorter::evaluatePosition(const gd::BitBoardPtr &ptr)const
+void PositionSorter::sortEvaluatedPositionsDescending(std::vector<gd::EvaluedPosition> &positions)
 {
-    return
-     ptr[gd::whitePawn].count() + 3*ptr[gd::whiteKnight].count() + 3*ptr[gd::whiteBishop].count() + 5*ptr[gd::whiteRook].count() + 9*ptr[gd::whiteQueen].count()
-    -ptr[gd::blackPawn].count() - 3*ptr[gd::blackKnight].count() - 3*ptr[gd::blackBishop].count() - 5*ptr[gd::blackRook].count() - 9*ptr[gd::blackQueen].count();
+    std::sort
+    (
+        positions.begin(),
+        positions.end(),
+        [/*this*/](const gd::EvaluedPosition &ptrA, const gd::EvaluedPosition &ptrB) {return ptrA.eval > ptrB.eval;}
+    );
+}
+void PositionSorter::sortEvaluatedPositionsAscending(std::vector<gd::EvaluedPosition> &positions)
+{
+    std::sort
+    (
+        positions.begin(),
+        positions.end(),
+        [/*this*/](const gd::EvaluedPosition &ptrA, const gd::EvaluedPosition &ptrB) {return ptrA.eval < ptrB.eval;}
+    );
 }

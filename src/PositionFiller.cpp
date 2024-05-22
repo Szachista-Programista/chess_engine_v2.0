@@ -1,7 +1,7 @@
 #include "../include/PositionFiller.hpp"
 
-PositionFiller::PositionFiller(bool white, bool black): whiteMove{white}, blackMove{black}
-{}
+//PositionFiller::PositionFiller(bool white, bool black): whiteMove{white}, blackMove{black}
+//{}
     void PositionFiller::fillExtraInfo(gd::BitBoardPtr &ptr)const
 {
     if(ptr[gd::whiteKing][3] == true)
@@ -25,19 +25,16 @@ void PositionFiller::fillBitBoard(gd::BitBoardPtr &ptr)const
     ptr[gd::blackPiece]  = ptr[gd::blackPawn]  | ptr[gd::blackKnight] | ptr[gd::blackBishop] | ptr[gd::blackRook] | ptr[gd::blackQueen] | ptr[gd::blackKing];
     ptr[gd::emptySquare] = ~(ptr[gd::whitePiece] | ptr[gd::blackPiece]);
     
-    if(whiteMove)
-    {
-        computeSquareCapturedByBlack(ptr);
-        updateExtraInfoAfterWhiteMove(ptr);
-    }
-    if(blackMove)
-    {
-        computeSquareCapturedByWhite(ptr);
-        updateExtraInfoAfterBlackMove(ptr);
-    }
+    computeSquareCapturedByBlack(ptr);
+    computeSquareCapturedByWhite(ptr);
+    //if(whiteMove)
+    updateExtraInfoAfterWhiteMove(ptr);
+    //if(blackMove)
+    updateExtraInfoAfterBlackMove(ptr);
 }
     void PositionFiller::computeSquareCapturedByWhite(gd::BitBoardPtr &ptr)const
 {
+    ptr[gd::whiteCapturedSquare] = 0;
     computeSquareCapturedByWhitePawn(ptr);
     computeSquareCapturedByWhiteKnight(ptr);
     computeSquareCapturedByWhiteBishop(ptr);
@@ -152,6 +149,7 @@ void PositionFiller::fillBitBoard(gd::BitBoardPtr &ptr)const
 }
     void PositionFiller::computeSquareCapturedByBlack(gd::BitBoardPtr &ptr)const
 {
+    ptr[gd::blackCapturedSquare] = 0;
     computeSquareCapturedByBlackPawn(ptr);
     computeSquareCapturedByBlackKnight(ptr);
     computeSquareCapturedByBlackBishop(ptr);
