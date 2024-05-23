@@ -1,6 +1,6 @@
 #include "include/SearchTree.hpp"
 #include "include/PositionWriter.hpp"
-//#include <chrono>////////////
+#include <chrono>////////////
 
 
 
@@ -14,14 +14,34 @@ int main()
     WhiteChildren wc;
     BlackChildren bc;
 
+    gd::BitBoardPtr a,b,c,x = positionConverter.convert_FEN_NotationToBitBoard
+    ("r1bqkb1r/pppp1ppp/2n2n2/4p1N1/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 1");
 
 
 
 
+    int depth = 8;
+
+    auto start = std::chrono::high_resolution_clock::now();
+    //////////////////
+    b = searchTree.findByAlphaBeta(x, depth, 1);
+    //////////////////
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    std::cout<< std::endl << "Czas wykonania \"findByAlphaBeta\"    : " << duration.count() << " ms" << std::endl;
+     start = std::chrono::high_resolution_clock::now();
+    //////////////////
+    c = searchTree.iterativeDeepening(x, depth, 1);
+    //////////////////
+     stop = std::chrono::high_resolution_clock::now();
+     duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    std::cout<< std::endl << "Czas wykonania \"iterativeDeepening\" : " << duration.count() << " ms" << std::endl;
 
 
 
-
+    positionWriter.writeChessboard(x);
+    positionWriter.writeChessboard(b);
+    positionWriter.writeChessboard(c);
 
 
 /*

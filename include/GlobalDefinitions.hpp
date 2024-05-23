@@ -26,8 +26,10 @@ const std::bitset<64> MOVE_NUMBER_MASK       = 0xffffff00ffffffff;
 const std::bitset<64> RULE_OF_50_MOVES_MASK  = 0xffffffff00ffffff;
 
 
+
 struct errorType{std::string errorMessage;};
 struct EvaluedPosition{BitBoardPtr position; float eval;};
+
 
 
 enum BitBoardIndex
