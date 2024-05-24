@@ -49,7 +49,6 @@ private:    void updateExtraInfo();
             void getNonCaptureMove(const gd::BitBoardIndex MovedPiece, const uint8_t targetBit);
             bool isWhiteKingChecked(const gd::BitBoardPtr &ptr);
             gd::BitBoardPtr copyMotherBitBoard();
-            gd::BitBoardPtr copyBitBoard(const gd::BitBoardPtr orginal);
 public: void deleteChildren(std::vector<gd::BitBoardPtr> &children);
 };
 #endif //WHITECHILDREN_HPP

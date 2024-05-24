@@ -4,7 +4,7 @@
 //{}
 std::vector<gd::BitBoardPtr> WhiteChildren::generateChildren(const gd::BitBoardPtr position)
 {
-    mother = copyBitBoard(position);
+    mother = gd::copyBitBoard(position);
     updateExtraInfo();
     getMoves();
     positionSorter.sortPositionsDescending(children);
@@ -552,13 +552,6 @@ std::vector<gd::BitBoardPtr> WhiteChildren::generateChildren(const gd::BitBoardP
         gd::BitBoardPtr copy  = new std::bitset<64>[gd::bitBoardSize]{};
         for(uint8_t i=0; i<gd::bitBoardSize; i++)
             copy[i] = mother[i];
-        return copy;
-    }
-gd::BitBoardPtr WhiteChildren::copyBitBoard(const gd::BitBoardPtr orginal)
-    {
-        gd::BitBoardPtr copy  = new std::bitset<64>[gd::bitBoardSize]{};
-        for(uint8_t i=0; i<gd::bitBoardSize; i++)
-            copy[i] = orginal[i];
         return copy;
     }
 void WhiteChildren::deleteChildren(std::vector<gd::BitBoardPtr> &children)

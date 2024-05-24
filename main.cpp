@@ -1,8 +1,5 @@
 #include "include/SearchTree.hpp"
 #include "include/PositionWriter.hpp"
-#include <chrono>////////////
-
-
 
 
 
@@ -16,34 +13,22 @@ int main()
 
     gd::BitBoardPtr a,b,c,x = positionConverter.convert_FEN_NotationToBitBoard
     ("r1bqkb1r/pppp1ppp/2n2n2/4p1N1/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 1");
+//1R1Q4/6pk/6rp/3p1q2/3Pp3/4B2P/6PK/3n4 b - - 0 1
+//r1bqk2r/pppp1p1p/2n2np1/2b1p2P/2B1P1P1/5N2/PPPP1P2/RNBQK2R w KQkq - 0 1
+//r1bqkb1r/pppp1ppp/2n2n2/4p1N1/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 1
 
+bool color = 1;
 
-
-
-    int depth = 8;
-
-    auto start = std::chrono::high_resolution_clock::now();
-    //////////////////
-    b = searchTree.findByAlphaBeta(x, depth, 1);
-    //////////////////
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    std::cout<< std::endl << "Czas wykonania \"findByAlphaBeta\"    : " << duration.count() << " ms" << std::endl;
-     start = std::chrono::high_resolution_clock::now();
-    //////////////////
-    c = searchTree.iterativeDeepening(x, depth, 1);
-    //////////////////
-     stop = std::chrono::high_resolution_clock::now();
-     duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    std::cout<< std::endl << "Czas wykonania \"iterativeDeepening\" : " << duration.count() << " ms" << std::endl;
-
-
+    b = searchTree.findByAlphaBeta(x, color);
+    c = searchTree.iterativeDeepening(x, color);
 
     positionWriter.writeChessboard(x);
     positionWriter.writeChessboard(b);
     positionWriter.writeChessboard(c);
 
 
+    return 0;
+}
 /*
     unsigned long long iterations = 0;    auto start = std::chrono::steady_clock::now();    const int time_limit_seconds = 2;
     while (true)
@@ -53,13 +38,6 @@ int main()
     }
     std::cout << "Program wykonano przez " << time_limit_seconds << " sekundy." << std::endl << "Liczba wykonanych iteracji: " << iterations << std::endl;
 */
-    return 0;
-}
-
-
-
-
-
 ////////////////////////////////////////////////////////////////
 /*
 #include <iostream>

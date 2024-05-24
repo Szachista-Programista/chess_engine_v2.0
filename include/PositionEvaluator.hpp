@@ -1,12 +1,17 @@
-#ifndef POSITIONEVALUATOR_HPP
-#define POSITIONEVALUATOR_HPP
+#ifndef POSITION_EVALUATOR_HPP
+#define POSITION_EVALUATOR_HPP
 
 #include "GlobalDefinitions.hpp"
+#include "PiecePositionPoints.hpp"
+
+
 
 class PositionEvaluator
 {
+        uint8_t bit;
         //********************
-public: float evaluatePosition(const gd::BitBoardPtr &ptr)const;
+public: int evaluatePosition(const gd::BitBoardPtr &ptr);
+
 };
-#endif //POSITIONEVALUATOR_HPP
+#endif //POSITION_EVALUATOR_HPP
 

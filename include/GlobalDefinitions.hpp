@@ -8,8 +8,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
-
+#include <chrono>////////////
 
 namespace gd
 {
@@ -24,11 +23,11 @@ const std::bitset<64> WHITE_EN_PASSANT_MASK  = 0xffff00ffffffffff;
 const std::bitset<64> BLACK_EN_PASSANT_MASK  = 0xffffffffff00ffff;
 const std::bitset<64> MOVE_NUMBER_MASK       = 0xffffff00ffffffff;
 const std::bitset<64> RULE_OF_50_MOVES_MASK  = 0xffffffff00ffffff;
-
+const int INF = 1'000'000'000;
 
 
 struct errorType{std::string errorMessage;};
-struct EvaluedPosition{BitBoardPtr position; float eval;};
+struct EvaluedPosition{BitBoardPtr position; int eval;};
 
 
 
@@ -103,6 +102,9 @@ enum Movements
     ull = 10,
     uul = 17
 };
+
+
+    gd::BitBoardPtr copyBitBoard(const gd::BitBoardPtr orginal);
 
 
 }
