@@ -39,7 +39,6 @@ gd::BitBoardPtr SearchTree::findByAlphaBeta(const gd::BitBoardPtr position, cons
         }
         auto stop = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-        std::cout<<">>>AB "<<std::setw(4)<<duration.count()<<"ms - depth="<<(int)depth<<" <<<"<<std::endl;
         if(duration.count() > 1500)
             break;
         else
@@ -71,7 +70,7 @@ gd::BitBoardPtr SearchTree::iterativeDeepening(const gd::BitBoardPtr position, c
             positionSorter.sortEvaluatedPositionsAscending(evaluedPositions);
         auto stop = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-        std::cout<<">>>ID "<<std::setw(4)<<duration.count()<<"ms - depth="<<(int)depth<<" <<<"<<std::endl;
+        //std::cout<<">>>ID "<<std::setw(4)<<duration.count()<<"ms - depth="<<(int)depth<<" <<<"<<std::endl;
         if(duration.count() > 1500)
             break;
     }

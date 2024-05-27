@@ -11,7 +11,7 @@ public:
         //********************
 
         gd::ChessBoardPtr convertBitBoardTo8x8CharArray(gd::BitBoardPtr &ptr);
-        void convertStringToBitBoard(std::string content, gd::BitBoardPtr &ptr);
+        gd::BitBoardPtr convertStringToBitBoard(std::string content);
         std::string convertBitBoardTo_FEN_Notation(gd::BitBoardPtr &ptr);
             std::string getPieces(gd::BitBoardPtr &ptr);
                 char getPieceChar(gd::BitBoardIndex index);     
@@ -29,9 +29,10 @@ public:
             void setEnPassant(gd::BitBoardPtr &ptr, std::string FEN_part);
             void setValueOf50MovesRule(gd::BitBoardPtr &ptr, std::string FEN_part);
             void setNumberOfMove(gd::BitBoardPtr &ptr, std::string FEN_part);
-
         std::string convertChessBoardFileContentToString();
         
+
+        std::string convertBitBoardToString(gd::BitBoardPtr &ptr);
 
 
         gd::BitBoardPtr initializeBitBoardPtr();

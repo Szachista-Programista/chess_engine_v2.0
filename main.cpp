@@ -1,5 +1,10 @@
 #include "include/SearchTree.hpp"
 #include "include/PositionWriter.hpp"
+#include "include/Play.hpp"
+
+
+
+
 
 
 
@@ -11,20 +16,10 @@ int main()
     WhiteChildren wc;
     BlackChildren bc;
 
-    gd::BitBoardPtr a,b,c,x = positionConverter.convert_FEN_NotationToBitBoard
-    ("r1bqkb1r/pppp1ppp/2n2n2/4p1N1/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 1");
-//1R1Q4/6pk/6rp/3p1q2/3Pp3/4B2P/6PK/3n4 b - - 0 1
-//r1bqk2r/pppp1p1p/2n2np1/2b1p2P/2B1P1P1/5N2/PPPP1P2/RNBQK2R w KQkq - 0 1
-//r1bqkb1r/pppp1ppp/2n2n2/4p1N1/2B1P3/8/PPPP1PPP/RNBQK2R w KQkq - 0 1
-
-bool color = 1;
-
-    b = searchTree.findByAlphaBeta(x, color);
-    c = searchTree.iterativeDeepening(x, color);
-
-    positionWriter.writeChessboard(x);
-    positionWriter.writeChessboard(b);
-    positionWriter.writeChessboard(c);
+    gd::BitBoardPtr a,b,c,x = positionConverter.initializeBitBoardPtr();
+    system("pause");
+    Play play(0);
+    play.run();
 
 
     return 0;

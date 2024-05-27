@@ -12,6 +12,12 @@ public: void writeBitBoard(const std::bitset<64> &bs);
         void writeChessboard(gd::BitBoardPtr BBPtr);
 
 
+void writeChessboard(std::string position, bool side);
+    void writeBoard();
+    void writeBitNumbers();
+    void writePieces(std::string position, bool side);
+        void writePiece(char piece, int x, int y);
+
 };
 #endif //POSITIONWRITER_HPP
 

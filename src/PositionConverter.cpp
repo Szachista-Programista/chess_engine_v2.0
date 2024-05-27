@@ -23,8 +23,16 @@ gd::ChessBoardPtr PositionConverter::convertBitBoardTo8x8CharArray(gd::BitBoardP
         }
     return CBPtr;
 }
-void PositionConverter::convertStringToBitBoard(std::string content, gd::BitBoardPtr &ptr)
+gd::BitBoardPtr PositionConverter::convertStringToBitBoard(std::string content)
 {
+    gd::BitBoardPtr bitBoard;
+    try {bitBoard = new std::bitset<64>[gd::bitBoardSize]{};}
+    catch(const std::bad_alloc &e)
+    {
+        gd::errorType x;
+        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
+        throw x;
+    }
     try
     {
         for (int i = 0; i < 64; i++)
@@ -32,26 +40,18 @@ void PositionConverter::convertStringToBitBoard(std::string content, gd::BitBoar
             {
                 case '*': break;
                 case ' ': break;
-                case 'P': ptr[gd::whitePawn  ].set(i); break;
-                //case 'S':
-                case 'N': ptr[gd::whiteKnight].set(i); break;
-                //case 'G':
-                case 'B': ptr[gd::whiteBishop].set(i); break;
-                //case 'W':
-                case 'R': ptr[gd::whiteRook  ].set(i); break;
-                //case 'H':
-                case 'Q': ptr[gd::whiteQueen ].set(i); break;
-                case 'K': ptr[gd::whiteKing  ].set(i); break;
-                case 'p': ptr[gd::blackPawn  ].set(i); break;
-                //case 's':
-                case 'n': ptr[gd::blackKnight].set(i); break;
-                //case 'g':
-                case 'b': ptr[gd::blackBishop].set(i); break;
-                //case 'w':
-                case 'r': ptr[gd::blackRook  ].set(i); break;
-                //case 'h':
-                case 'q': ptr[gd::blackQueen ].set(i); break;
-                case 'k': ptr[gd::blackKing  ].set(i); break;
+                case 'P': bitBoard[gd::whitePawn  ].set(i); break;
+                case 'N': bitBoard[gd::whiteKnight].set(i); break;
+                case 'B': bitBoard[gd::whiteBishop].set(i); break;
+                case 'R': bitBoard[gd::whiteRook  ].set(i); break;
+                case 'Q': bitBoard[gd::whiteQueen ].set(i); break;
+                case 'K': bitBoard[gd::whiteKing  ].set(i); break;
+                case 'p': bitBoard[gd::blackPawn  ].set(i); break;
+                case 'n': bitBoard[gd::blackKnight].set(i); break;
+                case 'b': bitBoard[gd::blackBishop].set(i); break;
+                case 'r': bitBoard[gd::blackRook  ].set(i); break;
+                case 'q': bitBoard[gd::blackQueen ].set(i); break;
+                case 'k': bitBoard[gd::blackKing  ].set(i); break;
                 default: throw std::runtime_error("Wrong 'chessboard.txt' content.");
             }
     }
@@ -61,6 +61,7 @@ void PositionConverter::convertStringToBitBoard(std::string content, gd::BitBoar
         x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
         throw x;
     }
+    return bitBoard;
 }
 std::string PositionConverter::convertBitBoardTo_FEN_Notation(gd::BitBoardPtr &ptr)
 {
@@ -78,7 +79,7 @@ std::string PositionConverter::convertBitBoardTo_FEN_Notation(gd::BitBoardPtr &p
     std::string notation{};
     int numberOfEmptySquare{};
     char piece;
-    for (int i=63; i>=0; i--)
+    for(int i=63; i>=0; i--)
     {
         piece = getPieceChar(getPieceIndex(ptr, i));
         if (63>i && (63-i)%8 == 0)
@@ -360,6 +361,20 @@ std::string PositionConverter::convertChessBoardFileContentToString()
 }
 
 
+
+
+std::string PositionConverter::convertBitBoardToString(gd::BitBoardPtr &ptr)
+{
+    std::string content;
+    for(int i=63; i>=0; i--)
+        content += getPieceChar(getPieceIndex(ptr, i));
+    return content;
+}
+
+
+
+
+
 gd::BitBoardPtr PositionConverter::initializeBitBoardPtr()
 {
     gd::BitBoardPtr bitBoard = loadBitBoard();
@@ -368,15 +383,7 @@ gd::BitBoardPtr PositionConverter::initializeBitBoardPtr()
     gd::BitBoardPtr PositionConverter::loadBitBoard()
 {
     std::string fileContent = convertChessBoardFileContentToString();
-    gd::BitBoardPtr bitBoard;
-    try {bitBoard = new std::bitset<64>[gd::bitBoardSize]{};}
-    catch(const std::bad_alloc &e)
-    {
-        gd::errorType x;
-        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
-        throw x;
-    }
-    convertStringToBitBoard(fileContent, bitBoard);
+    gd::BitBoardPtr bitBoard = convertStringToBitBoard(fileContent);
     positionFiller.fillBitBoard(bitBoard);
     positionFiller.fillExtraInfo(bitBoard);
     return bitBoard;
