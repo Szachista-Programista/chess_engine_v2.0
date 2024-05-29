@@ -1,7 +1,7 @@
 #include "include/SearchTree.hpp"
 #include "include/PositionWriter.hpp"
 #include "include/Play.hpp"
-
+#include "include/TranspositionTable.hpp"
 
 
 
@@ -12,16 +12,26 @@ int main()
 {
     PositionConverter positionConverter;
     PositionWriter positionWriter;
+    PositionEvaluator positionEvaluator;
     SearchTree searchTree;
+    TranspositionTable transpositionTable;
     WhiteChildren wc;
     BlackChildren bc;
-
-    gd::BitBoardPtr a,b,c,x = positionConverter.initializeBitBoardPtr();
-    system("pause");
     Play play(0);
-    play.run();
+
+    gd::BitBoardPtr x = positionConverter.convert_FEN_NotationToBitBoard
+    ("r1bqkb1r/ppp2pp1/2n2n1p/3Pp1N1/2B5/5Q2/PPPP1PPP/RNB1K2R w KQkq - 0 1");
 
 
+
+
+    std::cout<<transpositionTable.computeZobristKey(x);
+
+
+
+
+
+    //play.run();
     return 0;
 }
 /*

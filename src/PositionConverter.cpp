@@ -126,7 +126,7 @@ std::string PositionConverter::convertBitBoardTo_FEN_Notation(gd::BitBoardPtr &p
         case gd::emptySquare: return ' ';
     }    
 }
-            gd::BitBoardIndex PositionConverter::getPieceIndex(gd::BitBoardPtr &ptr, uint8_t bit)
+            gd::BitBoardIndex PositionConverter::getPieceIndex(const gd::BitBoardPtr &ptr, uint8_t bit)
 {
     for(auto element:{gd::whitePawn,
                       gd::whiteKnight,

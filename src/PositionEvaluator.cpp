@@ -11,7 +11,7 @@ int PositionEvaluator::evaluatePosition(const gd::BitBoardPtr &ptr)
         if(ptr[gd::whitePawn][bit] == true)
         {
             evaluation += 200 + ppp::whitePawn[63-bit];
-            continue;
+            //continue;
         }
         if(ptr[gd::whiteKnight][bit] == true)
         {
@@ -40,32 +40,32 @@ int PositionEvaluator::evaluatePosition(const gd::BitBoardPtr &ptr)
         }
         if(ptr[gd::blackPawn][bit] == true)
         {
-            evaluation -= 200 + ppp::blackPawn[63-bit];
+            evaluation += -200 + ppp::blackPawn[63-bit];
             continue;
         }
         if(ptr[gd::blackKnight][bit] == true)
         {
-            evaluation -= 600 + ppp::blackKnight[63-bit];
+            evaluation += -600 + ppp::blackKnight[63-bit];
             continue;
         }
         if(ptr[gd::blackBishop][bit] == true)
         {
-            evaluation -= 600 + ppp::blackBishop[63-bit];
+            evaluation += -600 + ppp::blackBishop[63-bit];
             continue;
         }
         if(ptr[gd::blackRook][bit] == true)
         {
-            evaluation -= 1000 + ppp::blackRook[63-bit];
+            evaluation += -1000 + ppp::blackRook[63-bit];
             continue;
         }
         if(ptr[gd::blackQueen][bit] == true)
         {
-            evaluation -= 1800 + ppp::blackQueen[63-bit];
+            evaluation += -1800 + ppp::blackQueen[63-bit];
             continue;
         }
         if(ptr[gd::blackKing][bit] == true)
         {
-            evaluation -= ppp::blackKing[63-bit];
+            evaluation += ppp::blackKing[63-bit];
             continue;
         }
     }

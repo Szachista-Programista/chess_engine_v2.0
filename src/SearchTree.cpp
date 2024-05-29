@@ -1,56 +1,10 @@
 #include "../include/SearchTree.hpp"
 
-gd::BitBoardPtr SearchTree::findByAlphaBeta(const gd::BitBoardPtr position, const bool color)
-{
-    gd::BitBoardPtr choosenChild;
-    for(uint8_t depth=0;; depth++)
-    {
-        auto start = std::chrono::high_resolution_clock::now();
-        std::vector<gd::BitBoardPtr> children;
-        std::vector<int> childEval;
-        int alpha = -gd::INF;
-        int beta  = gd::INF;
-        int eval;
-        if(color)
-        {
-            children = whiteChildren.generateChildren(position);
-            for(int i=0; i<children.size(); i++)
-            {
-                eval = alphaBeta(children[i], depth, alpha, beta, black);
-                alpha = std::max(alpha, eval);
-                childEval.push_back(eval);
-            }
-            auto it = std::find(childEval.begin(), childEval.end(), alpha);
-            choosenChild = gd::copyBitBoard(children[distance(childEval.begin(), it)]);
-            whiteChildren.deleteChildren(children);
-        }
-        else
-        {
-            children = blackChildren.generateChildren(position);
-            for(int i=0; i<children.size(); i++)
-            {
-                eval = alphaBeta(children[i], depth, alpha, beta, white);
-                beta = std::min(beta, eval);
-                childEval.push_back(eval);
-            }
-            auto it = std::find(childEval.begin(), childEval.end(), beta);
-            choosenChild = gd::copyBitBoard(children[distance(childEval.begin(), it)]);
-            blackChildren.deleteChildren(children);
-        }
-        auto stop = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-        if(duration.count() > 1500)
-            break;
-        else
-            delete[]choosenChild;
-    }
-    return choosenChild;
-}
 gd::BitBoardPtr SearchTree::iterativeDeepening(const gd::BitBoardPtr position, const bool color)
 {
     std::vector<gd::EvaluedPosition> evaluedPositions = getPositions(position, color);
     gd::BitBoardPtr choosenChild;
-    for(uint8_t depth=0;; depth++)
+    for(int depth=0;; depth++)
     {
         auto start = std::chrono::high_resolution_clock::now();
         int alpha = -gd::INF;
@@ -62,18 +16,14 @@ gd::BitBoardPtr SearchTree::iterativeDeepening(const gd::BitBoardPtr position, c
                 alpha = std::max(alpha, evaluedPositions[i].eval);
             else
                 beta = std::min(beta, evaluedPositions[i].eval);
-
         }
-        if(color)
-            positionSorter.sortEvaluatedPositionsDescending(evaluedPositions);
-        else
-            positionSorter.sortEvaluatedPositionsAscending(evaluedPositions);
+        positionSorter.sortEvaluatedPositions(evaluedPositions, color);
         auto stop = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-        //std::cout<<">>>ID "<<std::setw(4)<<duration.count()<<"ms - depth="<<(int)depth<<" <<<"<<std::endl;
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);  yyy(evaluedPositions, depth, duration);
         if(duration.count() > 1500)
             break;
-    }
+            
+    }                                                                                         xxx();
     choosenChild = gd::copyBitBoard(evaluedPositions.front().position);
     deletePositions(evaluedPositions);
     return choosenChild;
@@ -86,14 +36,14 @@ gd::BitBoardPtr SearchTree::iterativeDeepening(const gd::BitBoardPtr position, c
     else
         children = blackChildren.generateChildren(position);
     std::vector<gd::EvaluedPosition> evaluedPosition;
-    for (auto &position: children)
-        evaluedPosition.push_back({position, 0});
+    for(int i=0; i<children.size(); i++)
+        evaluedPosition.push_back({children[i], 0, i});
     return evaluedPosition;
 }
-    void SearchTree::deletePositions(std::vector<gd::EvaluedPosition> positions)
+    void SearchTree::deletePositions(std::vector<gd::EvaluedPosition> evaluedPosition)
 {
-    for(uint8_t i=0; i<positions.size(); i++)
-        delete[]positions[i].position;
+    for(uint8_t i=0; i<evaluedPosition.size(); i++)
+        delete[]evaluedPosition[i].position;
 }
 int SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth, int alpha, int beta, const bool color)
 {
@@ -148,4 +98,35 @@ int SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth, i
 }
 
 
+void SearchTree::yyy(const std::vector<gd::EvaluedPosition> &positions, int depth, std::chrono::milliseconds duration)
+{
+    std::ofstream file("abc.txt", std::ios::app);
 
+    //if (!file.is_open()) {
+        //std::cerr << "Nie udało się otworzyć pliku do zapisu: " << filename << std::endl;
+        //return;
+    //}
+    file<<"d="<<depth<<" t="<<std::setw(4)<<duration.count()<<" # ";
+    for (int i=0; i<positions.size(); i++)
+    {
+        file<<std::setw(5)<<positions[i].moveNumber;
+        if (i < positions.size() - 1)
+            file << ", ";
+    }
+    file<<std::endl;
+    file<<"d="<<depth<<" t="<<std::setw(4)<<duration.count()<<" # ";
+    for (int i=0; i<positions.size(); i++)
+    {
+        file<<std::setw(5)<<positions[i].eval;
+        if (i < positions.size() - 1)
+            file << ", ";
+    }
+    file<<std::endl;
+    file.close();
+}
+void SearchTree::xxx()
+{
+    std::ofstream file("abc.txt", std::ios::app);
+    file<<std::string(200, '#')<<std::endl;
+    file.close();
+}

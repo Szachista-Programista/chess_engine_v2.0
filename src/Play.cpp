@@ -34,6 +34,8 @@ bool Play::setUserMove()
 {
     std::cout<<std::endl<<"RUSZASZ SIE  : ";
     std::cin>>from>>to;
+    if(from == 99 || from == 77)
+        return;
     if(!color)
     {
         from = 63 - from;
@@ -42,8 +44,6 @@ bool Play::setUserMove()
 }
     bool Play::generateNewPosition()
 {
-    if(color && position[gd::whitePiece][from] == false || !color && position[gd::blackPiece][from] == false)
-        return false;
     gd::BitBoardPtr newPosition = gd::copyBitBoard(position);
     if(from == 99)
     {
@@ -81,6 +81,8 @@ bool Play::setUserMove()
     }
     else
     {
+        if(color && position[gd::whitePiece][from] == false || !color && position[gd::blackPiece][from] == false)
+            return false;
         if(color)
         {
             for(auto element: {gd::whitePawn, gd::whiteKnight, gd::whiteBishop, gd::whiteRook, gd::whiteQueen, gd::whiteKing})
@@ -131,17 +133,18 @@ bool Play::setUserMove()
 
 void Play::run()
 {    
+    system("pause");
     positionWriter.writeChessboard(positionConverter.convertBitBoardToString(position), color);
     if(!color)
     {
-        position = searchTree.findByAlphaBeta(position, !color);
+        position = searchTree.iterativeDeepening(position, !color);
         positionWriter.writeChessboard(positionConverter.convertBitBoardToString(position), color);
     }
     while(true)
     {
         while(! setUserMove()){};
         positionWriter.writeChessboard(positionConverter.convertBitBoardToString(position), color);
-        position = searchTree.findByAlphaBeta(position, !color);
+        position = searchTree.iterativeDeepening(position, !color);
         positionWriter.writeChessboard(positionConverter.convertBitBoardToString(position), color);
     }
 

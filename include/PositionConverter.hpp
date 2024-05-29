@@ -20,7 +20,7 @@ public:
             std::string getEnPassant(gd::BitBoardPtr &ptr);
             std::string getValueOf50MovesRule(gd::BitBoardPtr &ptr);
             std::string getNumberOfMove(gd::BitBoardPtr &ptr);
-                gd::BitBoardIndex getPieceIndex(gd::BitBoardPtr &ptr, uint8_t bit);
+                gd::BitBoardIndex getPieceIndex(const gd::BitBoardPtr &ptr, uint8_t bit);
         gd::BitBoardPtr convert_FEN_NotationToBitBoard(std::string FEN);
             void setPieces(gd::BitBoardPtr &ptr, std::string FEN_part);
                 void setPiece(gd::BitBoardPtr &ptr, uint8_t bit, char piece);

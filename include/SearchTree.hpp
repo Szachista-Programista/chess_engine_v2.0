@@ -13,10 +13,15 @@ class SearchTree
         PositionEvaluator positionEvaluator;
         PositionSorter positionSorter;
         //********************
-public: gd::BitBoardPtr findByAlphaBeta(const gd::BitBoardPtr position, const  bool color);
-        gd::BitBoardPtr iterativeDeepening(const gd::BitBoardPtr position, const  bool color);
+public: gd::BitBoardPtr iterativeDeepening(const gd::BitBoardPtr position, const  bool color);
 private:    std::vector<gd::EvaluedPosition> getPositions(const gd::BitBoardPtr position, const bool color);
             void deletePositions(std::vector<gd::EvaluedPosition> positions);
         int alphaBeta(const gd::BitBoardPtr position,const  uint8_t depth, int alpha, int beta, const bool color);
+
+
+void yyy(const std::vector<gd::EvaluedPosition> &positions, int depth, std::chrono::milliseconds duration);
+void xxx();
+
+
 };
 #endif //SEARCHTREE_HPP

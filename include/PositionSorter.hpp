@@ -9,8 +9,9 @@ class PositionSorter
         //********************
 public: void sortPositionsDescending(std::vector<gd::BitBoardPtr> &positions);
         void sortPositionsAscending(std::vector<gd::BitBoardPtr> &positions);
-        void sortEvaluatedPositionsDescending(std::vector<gd::EvaluedPosition> &positions);
-        void sortEvaluatedPositionsAscending(std::vector<gd::EvaluedPosition> &positions);
+        void sortEvaluatedPositions(std::vector<gd::EvaluedPosition> &positions, bool color);
+            void sortEvaluatedPositionsDescending(std::vector<gd::EvaluedPosition> &positions);
+            void sortEvaluatedPositionsAscending(std::vector<gd::EvaluedPosition> &positions);
 
 
 };

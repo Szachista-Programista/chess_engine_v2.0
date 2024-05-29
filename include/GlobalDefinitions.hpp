@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <random>
 #include <chrono>////////////
 
 namespace gd
@@ -27,7 +28,7 @@ const int INF = 1'000'000'000;
 
 
 struct errorType{std::string errorMessage;};
-struct EvaluedPosition{BitBoardPtr position; int eval;};
+struct EvaluedPosition{BitBoardPtr position; int eval; int moveNumber;};
 
 
 
@@ -109,3 +110,5 @@ enum Movements
 
 }
 #endif//GLOBAL_DEFINITIONS_HPP
+
+

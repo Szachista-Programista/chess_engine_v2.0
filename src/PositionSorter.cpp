@@ -21,13 +21,20 @@ void PositionSorter::sortPositionsAscending(std::vector<gd::BitBoardPtr> &positi
             {return positionEvaluator.evaluatePosition(ptrA) < positionEvaluator.evaluatePosition(ptrB);}
     );
 }
+void PositionSorter::sortEvaluatedPositions(std::vector<gd::EvaluedPosition> &positions, bool color)
+{
+    if(color)
+        sortEvaluatedPositionsDescending(positions);
+    else
+        sortEvaluatedPositionsAscending(positions);
+}
 void PositionSorter::sortEvaluatedPositionsDescending(std::vector<gd::EvaluedPosition> &positions)
 {
     std::sort
     (
         positions.begin(),
         positions.end(),
-        [/*this*/](const gd::EvaluedPosition &ptrA, const gd::EvaluedPosition &ptrB) {return ptrA.eval > ptrB.eval;}
+        [](const gd::EvaluedPosition &ptrA, const gd::EvaluedPosition &ptrB) {return ptrA.eval > ptrB.eval;}
     );
 }
 void PositionSorter::sortEvaluatedPositionsAscending(std::vector<gd::EvaluedPosition> &positions)
@@ -36,6 +43,6 @@ void PositionSorter::sortEvaluatedPositionsAscending(std::vector<gd::EvaluedPosi
     (
         positions.begin(),
         positions.end(),
-        [/*this*/](const gd::EvaluedPosition &ptrA, const gd::EvaluedPosition &ptrB) {return ptrA.eval < ptrB.eval;}
+        [](const gd::EvaluedPosition &ptrA, const gd::EvaluedPosition &ptrB) {return ptrA.eval < ptrB.eval;}
     );
 }
