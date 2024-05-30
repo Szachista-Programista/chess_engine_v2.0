@@ -6,6 +6,7 @@
 class PositionSorter
 {
         PositionEvaluator positionEvaluator;
+
         //********************
 public: void sortPositionsDescending(std::vector<gd::BitBoardPtr> &positions);
         void sortPositionsAscending(std::vector<gd::BitBoardPtr> &positions);

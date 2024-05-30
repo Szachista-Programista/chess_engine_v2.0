@@ -20,7 +20,7 @@ gd::BitBoardPtr SearchTree::iterativeDeepening(const gd::BitBoardPtr position, c
         positionSorter.sortEvaluatedPositions(evaluedPositions, color);
         auto stop = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);  yyy(evaluedPositions, depth, duration);
-        if(duration.count() > 1500)
+        if(duration.count() > 5000)
             break;
             
     }                                                                                         xxx();
@@ -47,10 +47,13 @@ gd::BitBoardPtr SearchTree::iterativeDeepening(const gd::BitBoardPtr position, c
 }
 int SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth, int alpha, int beta, const bool color)
 {
+    int eval;
+    const uint64_t zobristKey = transpositionTable.computeZobristKey(position);
+    if (transpositionTable.probeTTEntry(zobristKey, depth, eval))
+        return eval;
     if(depth == 0)
         return positionEvaluator.evaluatePosition(position);
     std::vector<gd::BitBoardPtr> children;
-    int eval;
     if(color)
     {
         int maxEval = -gd::INF;
@@ -71,6 +74,7 @@ int SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth, i
                 break;
         }
         whiteChildren.deleteChildren(children);
+        transpositionTable.storeTTEntry(zobristKey, depth, maxEval);
         return maxEval;
     }
     else
@@ -93,6 +97,7 @@ int SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth, i
                 break;
         }
         blackChildren.deleteChildren(children);
+        transpositionTable.storeTTEntry(zobristKey, depth, minEval);
         return minEval;
     }
 }

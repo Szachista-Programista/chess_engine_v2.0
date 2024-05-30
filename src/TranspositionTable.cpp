@@ -3,8 +3,9 @@
 TranspositionTable::TranspositionTable(): zobristTable(12, std::vector<uint64_t>(64))
 {
     initZobristTable();
+    transpositionTable = new TTEntry[TABLE_SIZE];
 }
-void TranspositionTable::initZobristTable()
+    void TranspositionTable::initZobristTable()
 {
     std::random_device rd;
     std::mt19937_64 gen(rd());
@@ -13,6 +14,10 @@ void TranspositionTable::initZobristTable()
         for (int j = 0; j < 64; ++j)
             zobristTable[i][j] = dis(gen);
 }
+TranspositionTable::~TranspositionTable()
+{
+    delete[]transpositionTable;
+}
 uint64_t TranspositionTable::computeZobristKey(const gd::BitBoardPtr &ptr)
 {
     uint64_t hash{};
@@ -20,5 +25,20 @@ uint64_t TranspositionTable::computeZobristKey(const gd::BitBoardPtr &ptr)
         if (int index = positionConverter.getPieceIndex(ptr, i); index != gd::emptySquare)
             hash ^= zobristTable[index][i];
     return hash;
+}
+void TranspositionTable::storeTTEntry(uint64_t key, int depth, int score)
+{
+    int index = key % TABLE_SIZE;
+    transpositionTable[index] = {key, depth, score};
+}
+bool TranspositionTable::probeTTEntry(uint64_t key, int depth, int &score)
+{
+    int index = key % TABLE_SIZE;
+    if (transpositionTable[index].key == key  && transpositionTable[index].depth >= depth)
+    {
+        score = transpositionTable[index].score;
+        return true;
+    }
+    return false;
 }
 

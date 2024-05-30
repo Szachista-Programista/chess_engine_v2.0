@@ -24,10 +24,7 @@ int main()
 
 
 
-
-    std::cout<<transpositionTable.computeZobristKey(x);
-
-
+    searchTree.iterativeDeepening(x, 1);
 
 
 

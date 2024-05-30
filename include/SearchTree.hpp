@@ -3,6 +3,7 @@
 
 #include "WhiteChildren.hpp"
 #include "BlackChildren.hpp"
+#include "TranspositionTable.hpp"
 
 class SearchTree
 {
@@ -12,6 +13,8 @@ class SearchTree
         BlackChildren blackChildren;
         PositionEvaluator positionEvaluator;
         PositionSorter positionSorter;
+        TranspositionTable transpositionTable;
+
         //********************
 public: gd::BitBoardPtr iterativeDeepening(const gd::BitBoardPtr position, const  bool color);
 private:    std::vector<gd::EvaluedPosition> getPositions(const gd::BitBoardPtr position, const bool color);
