@@ -2,9 +2,24 @@
 #include "include/PositionWriter.hpp"
 #include "include/Play.hpp"
 #include "include/TranspositionTable.hpp"
+#include "include/Polyglot.hpp"
 
-
-
+std::vector<std::string> readOpenings()
+{
+    std::vector<std::string> lines;
+    std::string line;
+    std::ifstream file("txt/openings.txt");
+    if(file.is_open())
+    {
+        while (std::getline(file, line))
+            lines.push_back(line);
+        file.close();
+    }
+    else
+        std::cerr << "Unable to open file: " << "txt/openings.txt" << std::endl;
+    
+    return lines;
+}
 
 
 
@@ -17,29 +32,30 @@ int main()
     TranspositionTable transpositionTable;
     WhiteChildren wc;
     BlackChildren bc;
-    Play play(0);
+    Polyglot polyglot;
+    Play play(0);//play.run();
 
     gd::BitBoardPtr x = positionConverter.convert_FEN_NotationToBitBoard
-    ("r1bqkb1r/ppp2pp1/2n2n1p/3Pp1N1/2B5/5Q2/PPPP1PPP/RNB1K2R w KQkq - 0 1");
+    ("p1pppppp/RNBQKBNR/RNBQKBNR/RNBQKBNR/RNBQKBNR/RNBQKBNR/RNBQKBNR/1P1PPPP1 b KQkq - 0 1");
+    //searchTree.iterativeDeepening(x, 1);
+
+    x[gd::extraInfo][ 0]=1;
+    x[gd::extraInfo][ 7]=1;
+    x[gd::extraInfo][56]=1;
+    x[gd::extraInfo][63]=1;
+
+
+    positionWriter.writeChessboard(x);
+    positionWriter.writeBitBoard(x);
+    std::cout<<std::hex<<polyglot.generateKey(x);
+//rnbqkbnr/p1pppppp/8/8/P6P/R1p5/1P1PPPP1/1NBQKBNR b Kkq - 0 4
 
 
 
-    searchTree.iterativeDeepening(x, 1);
-
-
-
-    //play.run();
+    
     return 0;
 }
-/*
-    unsigned long long iterations = 0;    auto start = std::chrono::steady_clock::now();    const int time_limit_seconds = 2;
-    while (true)
-    {
 
-    iterations++;    auto current = std::chrono::steady_clock::now(); if (std::chrono::duration_cast<std::chrono::seconds>(current - start).count() >= time_limit_seconds) break;
-    }
-    std::cout << "Program wykonano przez " << time_limit_seconds << " sekundy." << std::endl << "Liczba wykonanych iteracji: " << iterations << std::endl;
-*/
 ////////////////////////////////////////////////////////////////
 /*
 #include <iostream>

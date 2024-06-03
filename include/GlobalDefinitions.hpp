@@ -1,6 +1,7 @@
 #ifndef GLOBAL_DEFINITIONS_HPP
 #define GLOBAL_DEFINITIONS_HPP
 
+#include <windows.h>
 #include <iostream>
 #include <iomanip>
 #include <bitset>
@@ -9,6 +10,7 @@
 #include <vector>
 #include <algorithm>
 #include <random>
+#include <cstdint>//??????????
 #include <chrono>////////////
 
 namespace gd

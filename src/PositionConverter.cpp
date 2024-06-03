@@ -40,6 +40,7 @@ gd::BitBoardPtr PositionConverter::convertStringToBitBoard(std::string content)
             {
                 case '*': break;
                 case ' ': break;
+                case '-': break;
                 case 'P': bitBoard[gd::whitePawn  ].set(i); break;
                 case 'N': bitBoard[gd::whiteKnight].set(i); break;
                 case 'B': bitBoard[gd::whiteBishop].set(i); break;
@@ -338,7 +339,7 @@ std::string PositionConverter::convertChessBoardFileContentToString()
     std::ifstream reading;
     std::string line;
     std::string content{};
-    reading.open("chessboard.txt");
+    reading.open("txt/chessboard.txt");
     try
     {
         if (!reading.is_open())

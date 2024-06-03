@@ -105,7 +105,7 @@ int SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth, i
 
 void SearchTree::yyy(const std::vector<gd::EvaluedPosition> &positions, int depth, std::chrono::milliseconds duration)
 {
-    std::ofstream file("abc.txt", std::ios::app);
+    std::ofstream file("txt/abc.txt", std::ios::app);
 
     //if (!file.is_open()) {
         //std::cerr << "Nie udało się otworzyć pliku do zapisu: " << filename << std::endl;
@@ -131,7 +131,7 @@ void SearchTree::yyy(const std::vector<gd::EvaluedPosition> &positions, int dept
 }
 void SearchTree::xxx()
 {
-    std::ofstream file("abc.txt", std::ios::app);
+    std::ofstream file("txt/abc.txt", std::ios::app);
     file<<std::string(200, '#')<<std::endl;
     file.close();
 }
