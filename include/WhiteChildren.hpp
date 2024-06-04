@@ -12,10 +12,8 @@ class WhiteChildren
         PositionFiller positionFiller;
         PositionSorter positionSorter;
         //********************
-public: //WhiteChildren();
-        std::vector<gd::BitBoardPtr> generateChildren(const gd::BitBoardPtr position);
-private:    void updateExtraInfo();
-            void getMoves();
+public: std::vector<gd::BitBoardPtr> generateChildren(const gd::BitBoardPtr position);
+private:    void getMoves();
                 void getPawnMoves();
                     void getPawnCommonMoves();
                         void getPawnCommonForwardMoves();
@@ -47,7 +45,7 @@ private:    void updateExtraInfo();
                     void getShortCastle();
             void getCaptureMove(const gd::BitBoardIndex MovedPiece, const gd::BitBoardIndex CapturedPiece, const uint8_t targetBit);
             void getNonCaptureMove(const gd::BitBoardIndex MovedPiece, const uint8_t targetBit);
-            bool isWhiteKingChecked(const gd::BitBoardPtr &ptr);
+            bool isWhiteKingChecked(gd::BitBoardPtr &ptr);
             gd::BitBoardPtr copyMotherBitBoard();
 public: void deleteChildren(std::vector<gd::BitBoardPtr> &children);
 };

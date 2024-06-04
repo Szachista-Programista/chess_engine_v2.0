@@ -2,6 +2,60 @@
 
 
 
+Polyglot::Polyglot(std::string filename): polyglotBookFileName{filename}
+{
+    initPolyglotBook();
+}
+    void Polyglot::initPolyglotBook()
+{
+    loadPolyglotBook();
+    swabPolyglotBookByteOrder();
+}
+        void Polyglot::loadPolyglotBook()
+{
+    std::ifstream file(polyglotBookFileName, std::ios::binary);
+    /*if (!file) {
+        std::cerr << "Failed to open book file: " << filename << std::endl;
+        return;
+    }*/
+    PolyglotEntry entry;
+    while (file.read(reinterpret_cast<char*>(&entry), sizeof(PolyglotEntry)))
+        polyglotBook.push_back(entry);
+    file.close();
+}
+        void Polyglot::swabPolyglotBookByteOrder()
+{
+    for(auto &element: polyglotBook)
+    {
+        swapByteOrder(element.key);
+        swapByteOrder(element.move);
+        swapByteOrder(element.weight);
+    }
+}
+            void Polyglot::swapByteOrder(uint16_t &u16)
+{
+    u16 = (u16>>8) |
+          (u16<<8);
+}
+            void Polyglot::swapByteOrder(uint32_t &u32)
+{
+    u32 = (u32>>24) |
+         ((u32<< 8) & 0x00FF0000) |
+         ((u32>> 8) & 0x0000FF00) |
+          (u32<<24);
+}
+            void Polyglot::swapByteOrder(uint64_t &u64)
+{
+    u64 = (u64>>56) |
+         ((u64<<40) & 0x00FF000000000000) |
+         ((u64<<24) & 0x0000FF0000000000) |
+         ((u64<< 8) & 0x000000FF00000000) |
+         ((u64>> 8) & 0x00000000FF000000) |
+         ((u64>>24) & 0x0000000000FF0000) |
+         ((u64>>40) & 0x000000000000FF00) |
+          (u64<<56);
+}
+
 uint64_t Polyglot::generateKey(const gd::BitBoardPtr &ptr)
 {
     uint64_t polyglotKey{};

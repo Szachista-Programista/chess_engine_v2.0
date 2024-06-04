@@ -32,11 +32,11 @@ int main()
     TranspositionTable transpositionTable;
     WhiteChildren wc;
     BlackChildren bc;
-    Polyglot polyglot;
+    Polyglot polyglot("bin/book.bin");
     Play play(0);//play.run();
 
     gd::BitBoardPtr x = positionConverter.convert_FEN_NotationToBitBoard
-    ("p1pppppp/RNBQKBNR/RNBQKBNR/RNBQKBNR/RNBQKBNR/RNBQKBNR/RNBQKBNR/1P1PPPP1 b KQkq - 0 1");
+    ("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b Qq e6 0 1");
     //searchTree.iterativeDeepening(x, 1);
 
     x[gd::extraInfo][ 0]=1;
@@ -50,9 +50,9 @@ int main()
     std::cout<<std::hex<<polyglot.generateKey(x);
 //rnbqkbnr/p1pppppp/8/8/P6P/R1p5/1P1PPPP1/1NBQKBNR b Kkq - 0 4
 
-
-
-    
+//rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+//463b96181691fc9c
+//463b96181691fc9c
     return 0;
 }
 

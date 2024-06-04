@@ -8,7 +8,13 @@
 class Polyglot
 {
 public:
-
+        const std::string polyglotBookFileName;
+        struct PolyglotEntry{
+            uint64_t key;
+            uint16_t move;
+            uint16_t weight;
+            uint32_t learn;};
+        std::vector<PolyglotEntry> polyglotBook;
         const uint64_t POLYGLOT_RANDOM[781]{
             0x9D39247E33776D41, 0x2AF7398005AAA5C7, 0x44DB015024623547, 0x9C15F73E62A76AE2,
             0x75834465489C0C89, 0x3290AC3A203001BF, 0x0FBBAD1F61042279, 0xE83A908FF2FB60CA,
@@ -208,6 +214,14 @@ public:
             0xF8D626AAAF278509};
         PositionConverter positionConverter;
         //********************
+        Polyglot(std::string filename);
+            void initPolyglotBook();
+                void loadPolyglotBook();
+                void swabPolyglotBookByteOrder();
+                    void swapByteOrder(uint16_t &u16);
+                    void swapByteOrder(uint32_t &u32);
+                    void swapByteOrder(uint64_t &u64);
+    
         uint64_t generateKey(const gd::BitBoardPtr &ptr);
             uint64_t generatePositionKey(const gd::BitBoardPtr &ptr);
                 uint64_t getPolyglotPieceIndex(const gd::BitBoardPtr &ptr, uint8_t bit);
@@ -217,7 +231,6 @@ public:
             uint64_t generateCastleKey(const gd::BitBoardPtr &ptr);
             uint64_t generateEnPassantKey(const gd::BitBoardPtr &ptr);
             uint64_t generateCurrentTurnKey(const gd::BitBoardPtr &ptr);
-
 
 
 

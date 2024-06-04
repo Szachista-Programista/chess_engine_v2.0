@@ -1,41 +1,13 @@
 #include "../include/BlackChildren.hpp"
 
-//BlackChildren::BlackChildren(): positionFiller{false, true}
-//{}
 std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardPtr position)
 {
     mother = gd::copyBitBoard(position);
-    updateExtraInfo();
+    positionFiller.updateBitBoardBeforeBlackMove(mother);
     getMoves();
     positionSorter.sortPositionsAscending(children);
     delete[]mother;
     return children;
-}
-    void BlackChildren::updateExtraInfo()
-{
-    mother[gd::extraInfo][15] = 1;
-    uint64_t moveNumber{};
-    uint64_t ruleOf50Moves{};
-    for(uint8_t i=39; i>31; i--)
-    {
-        moveNumber <<= 1;
-        if(mother[gd::extraInfo][i])
-            moveNumber += 1;
-    }
-    for(uint8_t i=31; i>23; i--)
-    {
-        ruleOf50Moves <<= 1;
-        if(mother[gd::extraInfo][i])
-            ruleOf50Moves += 1;
-    }
-    moveNumber++;
-    ruleOf50Moves++;
-    moveNumber <<= 32;
-    ruleOf50Moves <<= 24;
-    mother[gd::extraInfo] &= gd::MOVE_NUMBER_MASK;
-    mother[gd::extraInfo] &= gd::RULE_OF_50_MOVES_MASK;
-    mother[gd::extraInfo] |= moveNumber;
-    mother[gd::extraInfo] |= ruleOf50Moves;
 }
     void BlackChildren::getMoves()
 {
@@ -106,7 +78,6 @@ std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardP
     child[gd::blackPawn][bit] = 0;
     child[gd::blackPawn][bit + gd::dd] = 1;
     child[gd::extraInfo][bit + gd::d] = 1;
-    positionFiller.fillBitBoard(child);
     if(isBlackKingChecked(child))
         delete[]child;
     else
@@ -145,7 +116,6 @@ std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardP
     child[gd::blackPawn][bit] = 0;
     child[gd::blackPawn][targetBit] = 1;
     child[gd::whitePawn][targetBit + gd::u] = 0;
-    positionFiller.fillBitBoard(child);
     if(isBlackKingChecked(child))
         delete[]child;
     else
@@ -172,7 +142,6 @@ std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardP
     gd::BitBoardPtr child = copyMotherBitBoard();
     child[gd::blackPawn][bit] = 0;
     child[promotedPiece][bit + gd::d] = 1;
-    positionFiller.fillBitBoard(child);
     if(isBlackKingChecked(child))
         delete[]child;
     else
@@ -252,7 +221,6 @@ std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardP
     child[gd::blackPawn][bit] = 0;
     child[promotedPiece][targetBit] = 1;
     child[capturedPiece][targetBit] = 0;
-    positionFiller.fillBitBoard(child);
     if(isBlackKingChecked(child))
         delete[]child;
     else
@@ -502,7 +470,6 @@ std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardP
             child[gd::blackKing][61] = 1;
             child[gd::blackRook][63] = 0;
             child[gd::blackRook][60] = 1;
-            positionFiller.fillBitBoard(child);
             children.push_back(child);
         }
 }
@@ -516,7 +483,6 @@ std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardP
             child[gd::blackKing][57] = 1;
             child[gd::blackRook][56] = 0;
             child[gd::blackRook][58] = 1;
-            positionFiller.fillBitBoard(child);
             children.push_back(child);
         }
 }
@@ -526,7 +492,6 @@ std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardP
     child[movedPiece][bit] = 0;
     child[movedPiece][targetBit] = 1;
     child[capturedPiece][targetBit] = 0;
-    positionFiller.fillBitBoard(child);
     if(isBlackKingChecked(child))
         delete[]child;
     else
@@ -537,14 +502,14 @@ std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardP
     gd::BitBoardPtr child = copyMotherBitBoard();
     child[movedPiece][bit] = 0;
     child[movedPiece][targetBit] = 1;
-    positionFiller.fillBitBoard(child);
     if(isBlackKingChecked(child))
         delete[]child;
     else
         children.push_back(child);
 }
-    bool BlackChildren::isBlackKingChecked(const gd::BitBoardPtr &ptr)
+    bool BlackChildren::isBlackKingChecked(gd::BitBoardPtr &ptr)
 {
+    positionFiller.fillBitBoard(ptr, true, false);
     return (ptr[gd::blackKing] & ptr[gd::whiteCapturedSquare]).any();
 }
     gd::BitBoardPtr BlackChildren::copyMotherBitBoard()
