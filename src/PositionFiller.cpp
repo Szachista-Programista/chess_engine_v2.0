@@ -1,6 +1,6 @@
 #include "../include/PositionFiller.hpp"
 
-void PositionFiller::fillBitBoard(gd::BitBoardPtr &ptr, bool white = true, bool black = true)
+void PositionFiller::fillBitBoard(gd::BitBoardPtr &ptr, bool white, bool black)
 {
     ptr[gd::whitePiece]  = ptr[gd::whitePawn]  | ptr[gd::whiteKnight] | ptr[gd::whiteBishop] | ptr[gd::whiteRook] | ptr[gd::whiteQueen] | ptr[gd::whiteKing];
     ptr[gd::blackPiece]  = ptr[gd::blackPawn]  | ptr[gd::blackKnight] | ptr[gd::blackBishop] | ptr[gd::blackRook] | ptr[gd::blackQueen] | ptr[gd::blackKing];
@@ -12,7 +12,6 @@ void PositionFiller::fillBitBoard(gd::BitBoardPtr &ptr, bool white = true, bool 
 }
     void PositionFiller::computeSquareCapturedByWhite(gd::BitBoardPtr &ptr)
 {
-    fillBitBoard(ptr);
     ptr[gd::whiteCapturedSquare] = 0;
     computeSquareCapturedByWhitePawn(ptr);
     computeSquareCapturedByWhiteKnight(ptr);
@@ -128,7 +127,6 @@ void PositionFiller::fillBitBoard(gd::BitBoardPtr &ptr, bool white = true, bool 
 }
     void PositionFiller::computeSquareCapturedByBlack(gd::BitBoardPtr &ptr)
 {
-    fillBitBoard(ptr);
     ptr[gd::blackCapturedSquare] = 0;
     computeSquareCapturedByBlackPawn(ptr);
     computeSquareCapturedByBlackKnight(ptr);
@@ -267,11 +265,11 @@ void PositionFiller::updateBitBoardBeforeBlackMove(gd::BitBoardPtr &ptr)
     void PositionFiller::updateExtraInfoBeforeBlackMove(gd::BitBoardPtr &ptr)
 {
     ptr[gd::extraInfo] &= gd::WHITE_EN_PASSANT_MASK;
-    ptr[gd::extraInfo][15] = 1;
+    ptr[gd::extraInfo][15] = 0;
     checkWhiteCastles(ptr);
     updateMovesCounter(ptr);
 }
-        void checkWhiteCastles(gd::BitBoardPtr &ptr)
+        void PositionFiller::checkWhiteCastles(gd::BitBoardPtr &ptr)
 {
     if(ptr[gd::extraInfo][0] == true || ptr[gd::extraInfo][7] == true)
     {
@@ -287,7 +285,7 @@ void PositionFiller::updateBitBoardBeforeBlackMove(gd::BitBoardPtr &ptr)
             if(ptr[gd::whiteRook][0] == false)
                 ptr[gd::extraInfo][0] = 0;
         }
-    }    
+    }
 }
         void PositionFiller::updateMovesCounter(gd::BitBoardPtr &ptr)
 {
@@ -322,11 +320,11 @@ void PositionFiller::updateBitBoardBeforeWhiteMove(gd::BitBoardPtr &ptr)
     void PositionFiller::updateExtraInfoBeforeWhiteMove(gd::BitBoardPtr &ptr)
 {
     ptr[gd::extraInfo] &= gd::BLACK_EN_PASSANT_MASK;
-    ptr[gd::extraInfo][15] = 0;
+    ptr[gd::extraInfo][15] = 1;
     checkBlackCastles(ptr);
     updateMovesCounter(ptr);
 }
-        void checkBlackCastles(gd::BitBoardPtr &ptr)
+        void PositionFiller::checkBlackCastles(gd::BitBoardPtr &ptr)
 {
     if(ptr[gd::extraInfo][56] == true || ptr[gd::extraInfo][63] == true)
     {

@@ -4,23 +4,25 @@ Play::Play(bool color): color{color}, position{positionConverter.initializeBitBo
 {}
 bool Play::isMoveAllowed(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &targetPosition)
 {
-    for(auto element: whiteChildren.generateChildren(startPosition))
-        if(isTheSamePosition(element, targetPosition))
+    std::vector<gd::BitBoardPtr> children;
+    children = whiteChildren.generateChildren(startPosition);
+    for(auto element: children)
+        if(transpositionTable.computeZobristKey(element) == transpositionTable.computeZobristKey(targetPosition))
+        {
+            whiteChildren.deleteChildren(children);
             return true;
-    for(auto element: blackChildren.generateChildren(startPosition))
-        if(isTheSamePosition(element, targetPosition))
+        }
+    whiteChildren.deleteChildren(children);
+    children = blackChildren.generateChildren(startPosition);
+    for(auto element: children)
+        if(transpositionTable.computeZobristKey(element) == transpositionTable.computeZobristKey(targetPosition))
+        {
+            blackChildren.deleteChildren(children);
             return true;
+        }
+    blackChildren.deleteChildren(children);
     return false;
 }
-    bool Play::isTheSamePosition(gd::BitBoardPtr &positionA, gd::BitBoardPtr &positionB)
-{
-    for(auto index:{gd::whitePawn, gd::whiteKnight, gd::whiteBishop, gd::whiteRook, gd::whiteQueen, gd::whiteKing,
-                    gd::blackPawn, gd::blackKnight, gd::blackBishop, gd::blackRook, gd::blackQueen, gd::blackKing})
-        if(positionA[index] != positionB[index])
-            return false;
-    return true;
-}
-
 
 
 

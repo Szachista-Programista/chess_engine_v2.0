@@ -524,3 +524,4 @@ void WhiteChildren::deleteChildren(std::vector<gd::BitBoardPtr> &children)
     for(uint8_t i=0; i<children.size(); i++)
         delete[]children[i];
 }
+

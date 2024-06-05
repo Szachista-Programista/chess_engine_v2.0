@@ -1,7 +1,6 @@
 #include "../include/Polyglot.hpp"
 
 
-
 Polyglot::Polyglot(std::string filename): polyglotBookFileName{filename}
 {
     initPolyglotBook();
@@ -55,8 +54,35 @@ Polyglot::Polyglot(std::string filename): polyglotBookFileName{filename}
          ((u64>>40) & 0x000000000000FF00) |
           (u64<<56);
 }
-
-uint64_t Polyglot::generateKey(const gd::BitBoardPtr &ptr)
+bool Polyglot::checkPolyglotBook(const gd::BitBoardPtr &position, gd::BitBoardPtr &movedPosition)
+{
+    Movement::Move move;
+    if(searchPolyglotBook(position, move))
+    {
+        movedPosition = gd::copyBitBoard(position);
+        movement.makeMove(movedPosition, move);
+        return true;
+    }
+    else
+        return false;
+}
+    bool Polyglot::searchPolyglotBook(const gd::BitBoardPtr &ptr, Movement::Move &move)
+{
+    uint64_t key = generateKey(ptr);
+    int bestMoveWeight{};
+    for(int i=0; i<polyglotBook.size(); i++)
+        if(polyglotBook[i].key == key)
+            if(polyglotBook[i].weight > bestMoveWeight)
+            {
+                bestMoveWeight = polyglotBook[i].weight;
+                move = getPolyglotMove(i);
+            }
+    if(bestMoveWeight > 0)
+        return true;
+    else
+        return false;
+}
+        uint64_t Polyglot::generateKey(const gd::BitBoardPtr &ptr)
 {
     uint64_t polyglotKey{};
     polyglotKey ^= generatePositionKey(ptr);
@@ -65,7 +91,7 @@ uint64_t Polyglot::generateKey(const gd::BitBoardPtr &ptr)
     polyglotKey ^= generateCurrentTurnKey(ptr);
     return polyglotKey;
 }
-    uint64_t Polyglot::generatePositionKey(const gd::BitBoardPtr &ptr)
+            uint64_t Polyglot::generatePositionKey(const gd::BitBoardPtr &ptr)
 {
     uint64_t key{};
     for (uint8_t bit=0; bit<64; bit++)
@@ -73,13 +99,13 @@ uint64_t Polyglot::generateKey(const gd::BitBoardPtr &ptr)
             key ^= POLYGLOT_RANDOM[getPolyglotPieceIndex(ptr, bit)];
     return key;
 }
-        uint64_t Polyglot::getPolyglotPieceIndex(const gd::BitBoardPtr &ptr, uint8_t bit)
+                uint64_t Polyglot::getPolyglotPieceIndex(const gd::BitBoardPtr &ptr, uint8_t bit)
 {
     return 64*getPieceNumber(ptr, bit) + 
             8*getRowNumber(bit)        + 
               getColumnNumber(bit);
 }
-            uint64_t Polyglot::getPieceNumber(const gd::BitBoardPtr &ptr, uint8_t bit)
+                    uint64_t Polyglot::getPieceNumber(const gd::BitBoardPtr &ptr, uint8_t bit)
 {
     switch (positionConverter.getPieceIndex(ptr, bit))
     {
@@ -97,15 +123,15 @@ uint64_t Polyglot::generateKey(const gd::BitBoardPtr &ptr)
         case gd::blackKing:   return 10; break;
     }
 }
-            uint64_t Polyglot::getRowNumber(uint8_t bit)
+                    uint64_t Polyglot::getRowNumber(uint8_t bit)
 {
     return bit/8;
 }
-            uint64_t Polyglot::getColumnNumber(uint8_t bit)
+                    uint64_t Polyglot::getColumnNumber(uint8_t bit)
 {
     return 7-bit%8;
 }
-    uint64_t Polyglot::generateCastleKey(const gd::BitBoardPtr &ptr)
+            uint64_t Polyglot::generateCastleKey(const gd::BitBoardPtr &ptr)
 {
     uint64_t key{};
     if (ptr[gd::extraInfo][ 0]) key ^= POLYGLOT_RANDOM[768];
@@ -114,7 +140,7 @@ uint64_t Polyglot::generateKey(const gd::BitBoardPtr &ptr)
     if (ptr[gd::extraInfo][63]) key ^= POLYGLOT_RANDOM[771];
     return key;
 }
-    uint64_t Polyglot::generateEnPassantKey(const gd::BitBoardPtr &ptr)
+            uint64_t Polyglot::generateEnPassantKey(const gd::BitBoardPtr &ptr)
 {
     uint64_t key{};
     for(uint8_t column=0; column<8; column++)
@@ -125,14 +151,29 @@ uint64_t Polyglot::generateKey(const gd::BitBoardPtr &ptr)
         }
     return key;
 }
-    uint64_t Polyglot::generateCurrentTurnKey(const gd::BitBoardPtr &ptr)
+            uint64_t Polyglot::generateCurrentTurnKey(const gd::BitBoardPtr &ptr)
 {
     uint64_t key{};
     if(ptr[gd::extraInfo][15])
         key ^= POLYGLOT_RANDOM[780];
     return key;
 }
+        Movement::Move Polyglot::getPolyglotMove(int index)
+{
+    Movement::Move move;
+    uint16_t polyglotMove = polyglotBook[index].move;
 
+    uint8_t lineFrom   = polyglotMove>>9 & 7;
+    uint8_t columnFrom = polyglotMove>>6 & 7;
+    uint8_t lineTo     = polyglotMove>>3 & 7;
+    uint8_t columnTo   = polyglotMove>>0 & 7;
+
+    move.from = lineFrom*8 + 7-columnFrom;
+    move.to   = lineTo  *8 + 7-columnTo;
+    move.promotion = polyglotMove>>12 & 7;
+
+    return move;
+}
 
 
 

@@ -129,22 +129,10 @@ std::string PositionConverter::convertBitBoardTo_FEN_Notation(gd::BitBoardPtr &p
 }
             gd::BitBoardIndex PositionConverter::getPieceIndex(const gd::BitBoardPtr &ptr, uint8_t bit)
 {
-    for(auto element:{gd::whitePawn,
-                      gd::whiteKnight,
-                      gd::whiteBishop,
-                      gd::whiteRook,
-                      gd::whiteQueen,
-                      gd::whiteKing,
-                      gd::blackPawn,
-                      gd::blackKnight,
-                      gd::blackBishop,
-                      gd::blackRook,
-                      gd::blackQueen,
-                      gd::blackKing,
-                      gd::emptySquare,})
-
-        if(ptr[element][bit])
-            return element;
+    for(uint8_t i=0; i<12; i++)
+        if(ptr[i][bit])
+            return static_cast<gd::BitBoardIndex>(i);
+    return gd::emptySquare;
 }
     char PositionConverter::getTurnOfColor(gd::BitBoardPtr &ptr)
 {

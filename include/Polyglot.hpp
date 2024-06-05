@@ -1,13 +1,12 @@
 #ifndef POLYGLOT_HPP
 #define POLYGLOT_HPP
 
-#include "GlobalDefinitions.hpp"
-#include "PositionConverter.hpp"
-
+#include "Movement.hpp"
 
 class Polyglot
 {
 public:
+        Movement movement;
         const std::string polyglotBookFileName;
         struct PolyglotEntry{
             uint64_t key;
@@ -221,19 +220,18 @@ public:
                     void swapByteOrder(uint16_t &u16);
                     void swapByteOrder(uint32_t &u32);
                     void swapByteOrder(uint64_t &u64);
-    
-        uint64_t generateKey(const gd::BitBoardPtr &ptr);
-            uint64_t generatePositionKey(const gd::BitBoardPtr &ptr);
-                uint64_t getPolyglotPieceIndex(const gd::BitBoardPtr &ptr, uint8_t bit);
-                    uint64_t getPieceNumber(const gd::BitBoardPtr &ptr, uint8_t bit);
-                    uint64_t getRowNumber(uint8_t bit);
-                    uint64_t getColumnNumber(uint8_t bit);
-            uint64_t generateCastleKey(const gd::BitBoardPtr &ptr);
-            uint64_t generateEnPassantKey(const gd::BitBoardPtr &ptr);
-            uint64_t generateCurrentTurnKey(const gd::BitBoardPtr &ptr);
-
-
-
+        bool checkPolyglotBook(const gd::BitBoardPtr &position, gd::BitBoardPtr &movedPosition);
+            bool searchPolyglotBook(const gd::BitBoardPtr &ptr, Movement::Move &move);
+                uint64_t generateKey(const gd::BitBoardPtr &ptr);
+                    uint64_t generatePositionKey(const gd::BitBoardPtr &ptr);
+                        uint64_t getPolyglotPieceIndex(const gd::BitBoardPtr &ptr, uint8_t bit);
+                            uint64_t getPieceNumber(const gd::BitBoardPtr &ptr, uint8_t bit);
+                            uint64_t getRowNumber(uint8_t bit);
+                            uint64_t getColumnNumber(uint8_t bit);
+                    uint64_t generateCastleKey(const gd::BitBoardPtr &ptr);
+                    uint64_t generateEnPassantKey(const gd::BitBoardPtr &ptr);
+                    uint64_t generateCurrentTurnKey(const gd::BitBoardPtr &ptr);
+                Movement::Move getPolyglotMove(int index);
 };
 #endif //POLYGLOT_HPP
 

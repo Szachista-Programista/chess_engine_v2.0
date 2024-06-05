@@ -1,58 +1,30 @@
-#include "include/SearchTree.hpp"
-#include "include/PositionWriter.hpp"
 #include "include/Play.hpp"
-#include "include/TranspositionTable.hpp"
-#include "include/Polyglot.hpp"
+    TranspositionTable transpositionTable;
+    PositionConverter positionConverter;
+    PositionEvaluator positionEvaluator;
+    PositionWriter positionWriter;
+    WhiteChildren whiteChildren;
+    BlackChildren blackChildren;
+    SearchTree searchTree;
+    Polyglot polyglot("bin/book.bin");
+    Play play(0);
+////////////////////////////////////////////////////////////////
 
-std::vector<std::string> readOpenings()
-{
-    std::vector<std::string> lines;
-    std::string line;
-    std::ifstream file("txt/openings.txt");
-    if(file.is_open())
-    {
-        while (std::getline(file, line))
-            lines.push_back(line);
-        file.close();
-    }
-    else
-        std::cerr << "Unable to open file: " << "txt/openings.txt" << std::endl;
-    
-    return lines;
-}
+
 
 
 
 int main()
 {
-    PositionConverter positionConverter;
-    PositionWriter positionWriter;
-    PositionEvaluator positionEvaluator;
-    SearchTree searchTree;
-    TranspositionTable transpositionTable;
-    WhiteChildren wc;
-    BlackChildren bc;
-    Polyglot polyglot("bin/book.bin");
-    Play play(0);//play.run();
+//play.run();
 
-    gd::BitBoardPtr x = positionConverter.convert_FEN_NotationToBitBoard
-    ("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b Qq e6 0 1");
-    //searchTree.iterativeDeepening(x, 1);
+    gd::BitBoardPtr x = positionConverter.convert_FEN_NotationToBitBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    gd::BitBoardPtr y = positionConverter.convert_FEN_NotationToBitBoard("rnbqkb1r/pppppppp/5n2/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
-    x[gd::extraInfo][ 0]=1;
-    x[gd::extraInfo][ 7]=1;
-    x[gd::extraInfo][56]=1;
-    x[gd::extraInfo][63]=1;
+    //x = searchTree.iterativeDeepening(x, 1);
+    //positionWriter.writeChessboard(x);
 
 
-    positionWriter.writeChessboard(x);
-    positionWriter.writeBitBoard(x);
-    std::cout<<std::hex<<polyglot.generateKey(x);
-//rnbqkbnr/p1pppppp/8/8/P6P/R1p5/1P1PPPP1/1NBQKBNR b Kkq - 0 4
-
-//rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-//463b96181691fc9c
-//463b96181691fc9c
     return 0;
 }
 

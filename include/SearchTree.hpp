@@ -1,9 +1,8 @@
 #ifndef SEARCHTREE_HPP
 #define SEARCHTREE_HPP
 
-#include "WhiteChildren.hpp"
-#include "BlackChildren.hpp"
 #include "TranspositionTable.hpp"
+#include "Polyglot.hpp"
 
 class SearchTree
 {

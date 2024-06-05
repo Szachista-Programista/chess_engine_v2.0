@@ -524,3 +524,6 @@ std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(const gd::BitBoardP
     for(uint8_t i=0; i<children.size(); i++)
         delete[]children[i];
 }
+
+
+

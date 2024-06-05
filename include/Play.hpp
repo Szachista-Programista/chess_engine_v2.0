@@ -9,6 +9,7 @@ class Play
 {
 public:
         PositionConverter positionConverter;
+        TranspositionTable transpositionTable;
         PositionWriter positionWriter;
         PositionFiller positionFiller;
         SearchTree searchTree;
@@ -22,7 +23,6 @@ public:
 
         Play(bool color);
         bool isMoveAllowed(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &targetPosition);
-            bool isTheSamePosition(gd::BitBoardPtr &positionA, gd::BitBoardPtr &positionB);
         bool setUserMove();
             void setUserMoveCoord();
             bool generateNewPosition();

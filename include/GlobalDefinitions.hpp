@@ -1,7 +1,7 @@
 #ifndef GLOBAL_DEFINITIONS_HPP
 #define GLOBAL_DEFINITIONS_HPP
 
-#include <windows.h>
+//#include <windows.h>
 #include <iostream>
 #include <iomanip>
 #include <bitset>
@@ -31,6 +31,7 @@ const int INF = 1'000'000'000;
 
 struct errorType{std::string errorMessage;};
 struct EvaluedPosition{BitBoardPtr position; int eval; int moveNumber;};
+//struct Move{uint8_t from; uint8_t to; uint8_t promotion;};
 
 
 
