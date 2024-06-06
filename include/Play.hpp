@@ -9,23 +9,18 @@ class Play
 {
 public:
         PositionConverter positionConverter;
-        TranspositionTable transpositionTable;
-        PositionWriter positionWriter;
         PositionFiller positionFiller;
+        PositionWriter positionWriter;
         SearchTree searchTree;
-        WhiteChildren whiteChildren;
-        BlackChildren blackChildren;
-        int from;
-        int to;
+        Movement movement;
+        Movement::Move move;
         bool color;
         gd::BitBoardPtr position;
         //********************
 
         Play(bool color);
-        bool isMoveAllowed(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &targetPosition);
         bool setUserMove();
             void setUserMoveCoord();
-            bool generateNewPosition();
 
         void run();
 

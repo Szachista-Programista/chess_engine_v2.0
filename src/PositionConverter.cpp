@@ -1,70 +1,7 @@
 #include "../include/PositionConverter.hpp"
 
 
-gd::ChessBoardPtr PositionConverter::convertBitBoardTo8x8CharArray(gd::BitBoardPtr &ptr)
-{
-    gd::ChessBoardPtr CBPtr;
-    char piece;
-    try {CBPtr = new char[8][8];}
-    catch(const std::bad_alloc &e)
-    {
-        gd::errorType x;
-        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
-        throw x;
-    }
-    for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-        {
-            piece = getPieceChar(getPieceIndex(ptr, i*8+j));
-            if(piece == ' ')
-                CBPtr[i][j] = '.';
-            else
-                CBPtr[i][j] = piece;
-        }
-    return CBPtr;
-}
-gd::BitBoardPtr PositionConverter::convertStringToBitBoard(std::string content)
-{
-    gd::BitBoardPtr bitBoard;
-    try {bitBoard = new std::bitset<64>[gd::bitBoardSize]{};}
-    catch(const std::bad_alloc &e)
-    {
-        gd::errorType x;
-        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
-        throw x;
-    }
-    try
-    {
-        for (int i = 0; i < 64; i++)
-            switch (content[63-i])
-            {
-                case '*': break;
-                case ' ': break;
-                case '-': break;
-                case 'P': bitBoard[gd::whitePawn  ].set(i); break;
-                case 'N': bitBoard[gd::whiteKnight].set(i); break;
-                case 'B': bitBoard[gd::whiteBishop].set(i); break;
-                case 'R': bitBoard[gd::whiteRook  ].set(i); break;
-                case 'Q': bitBoard[gd::whiteQueen ].set(i); break;
-                case 'K': bitBoard[gd::whiteKing  ].set(i); break;
-                case 'p': bitBoard[gd::blackPawn  ].set(i); break;
-                case 'n': bitBoard[gd::blackKnight].set(i); break;
-                case 'b': bitBoard[gd::blackBishop].set(i); break;
-                case 'r': bitBoard[gd::blackRook  ].set(i); break;
-                case 'q': bitBoard[gd::blackQueen ].set(i); break;
-                case 'k': bitBoard[gd::blackKing  ].set(i); break;
-                default: throw std::runtime_error("Wrong 'chessboard.txt' content.");
-            }
-    }
-    catch(const std::runtime_error &e)
-    {
-        gd::errorType x;
-        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
-        throw x;
-    }
-    return bitBoard;
-}
-std::string PositionConverter::convertBitBoardTo_FEN_Notation(gd::BitBoardPtr &ptr)
+std::string PositionConverter::bitBoardToFEN(gd::BitBoardPtr &ptr)
 {
     std::string FEN;
     FEN = getPieces(ptr) +' '+ 
@@ -129,9 +66,11 @@ std::string PositionConverter::convertBitBoardTo_FEN_Notation(gd::BitBoardPtr &p
 }
             gd::BitBoardIndex PositionConverter::getPieceIndex(const gd::BitBoardPtr &ptr, uint8_t bit)
 {
-    for(uint8_t i=0; i<12; i++)
-        if(ptr[i][bit])
-            return static_cast<gd::BitBoardIndex>(i);
+    gd::BitBoardIndex pieceIndex[] = {gd::whitePawn, gd::whiteKnight, gd::whiteBishop, gd::whiteRook, gd::whiteQueen, gd::whiteKing,
+                                      gd::blackPawn, gd::blackKnight, gd::blackBishop, gd::blackRook, gd::blackQueen, gd::blackKing};
+    for(auto index: pieceIndex)
+        if(ptr[index][bit])
+            return index;
     return gd::emptySquare;
 }
     char PositionConverter::getTurnOfColor(gd::BitBoardPtr &ptr)
@@ -207,7 +146,7 @@ std::string PositionConverter::convertBitBoardTo_FEN_Notation(gd::BitBoardPtr &p
     value = value/2 + 1;
     return std::to_string(value);
 }
-gd::BitBoardPtr PositionConverter::convert_FEN_NotationToBitBoard(std::string FEN)
+gd::BitBoardPtr PositionConverter::FEN_ToBitBoard(std::string FEN)
 {
     gd::BitBoardPtr bitBoard;
     try {bitBoard = new std::bitset<64>[gd::bitBoardSize]{};}
@@ -322,37 +261,31 @@ gd::BitBoardPtr PositionConverter::convert_FEN_NotationToBitBoard(std::string FE
     value <<= 32;
     ptr[gd::extraInfo] |= value;
 }
-std::string PositionConverter::convertChessBoardFileContentToString()
+
+
+gd::ChessBoardPtr PositionConverter::bitBoardTo8x8CharArray(gd::BitBoardPtr &ptr)//temporary
 {
-    std::ifstream reading;
-    std::string line;
-    std::string content{};
-    reading.open("txt/chessboard.txt");
-    try
-    {
-        if (!reading.is_open())
-            throw std::ifstream::failure("The file 'chessboard.txt' cannot be opened .");
-        for(int i=0; i<8; i++)
-        {
-            if (!getline(reading, line))
-                throw std::ifstream::failure("Error reading character from 'chessboard.txt' file .");
-            content += line;
-        }
-    }
-    catch(const std::ifstream::failure &e)
+    gd::ChessBoardPtr CBPtr;
+    char piece;
+    try {CBPtr = new char[8][8];}
+    catch(const std::bad_alloc &e)
     {
         gd::errorType x;
         x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
         throw x;
     }
-    reading.close();
-    return content;
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+        {
+            piece = getPieceChar(getPieceIndex(ptr, i*8+j));
+            if(piece == ' ')
+                CBPtr[i][j] = '.';
+            else
+                CBPtr[i][j] = piece;
+        }
+    return CBPtr;
 }
-
-
-
-
-std::string PositionConverter::convertBitBoardToString(gd::BitBoardPtr &ptr)
+std::string PositionConverter::bitBoardToString(gd::BitBoardPtr &ptr)//temporary
 {
     std::string content;
     for(int i=63; i>=0; i--)
@@ -362,18 +295,3 @@ std::string PositionConverter::convertBitBoardToString(gd::BitBoardPtr &ptr)
 
 
 
-
-
-gd::BitBoardPtr PositionConverter::initializeBitBoardPtr()
-{
-    gd::BitBoardPtr bitBoard = loadBitBoard();
-    return bitBoard;
-}
-    gd::BitBoardPtr PositionConverter::loadBitBoard()
-{
-    std::string fileContent = convertChessBoardFileContentToString();
-    gd::BitBoardPtr bitBoard = convertStringToBitBoard(fileContent);
-    positionFiller.fillBitBoard(bitBoard);
-    positionFiller.fillExtraInfo(bitBoard);
-    return bitBoard;
-}

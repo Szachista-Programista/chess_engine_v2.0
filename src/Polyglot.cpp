@@ -54,15 +54,11 @@ Polyglot::Polyglot(std::string filename): polyglotBookFileName{filename}
          ((u64>>40) & 0x000000000000FF00) |
           (u64<<56);
 }
-bool Polyglot::checkPolyglotBook(const gd::BitBoardPtr &position, gd::BitBoardPtr &movedPosition)
+bool Polyglot::checkPolyglotBook(gd::BitBoardPtr &position)
 {
     Movement::Move move;
-    if(searchPolyglotBook(position, move))
-    {
-        movedPosition = gd::copyBitBoard(position);
-        movement.makeMove(movedPosition, move);
+    if(searchPolyglotBook(position, move) && movement.makeMove(position, move))
         return true;
-    }
     else
         return false;
 }

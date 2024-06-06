@@ -2,6 +2,8 @@
 #define TRANSPOSITION_TABLE_HPP
 
 #include "PositionConverter.hpp"
+#include "WhiteChildren.hpp"
+#include "BlackChildren.hpp"
 
 class TranspositionTable
 {

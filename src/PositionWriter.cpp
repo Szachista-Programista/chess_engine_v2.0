@@ -31,7 +31,7 @@ void PositionWriter::writeBitBoard(const gd::BitBoardPtr &ptr)
 }
 void PositionWriter::writeChessboard(gd::BitBoardPtr BBPtr)
 {
-    gd::ChessBoardPtr CBPtr = positionConverter.convertBitBoardTo8x8CharArray(BBPtr);
+    gd::ChessBoardPtr CBPtr = positionConverter.bitBoardTo8x8CharArray(BBPtr);
 
     std::cout<<std::string(27,'\333')<<std::endl;
     std::cout<<std::string( 5,'\333')<<" 1 2 3 4 5 6 7 8 "<<std::string(5,'\333')<<std::endl;
@@ -57,7 +57,7 @@ void PositionWriter::writeChessboard(std::string position, bool side)
     writePieces(position, side);
 }
     void PositionWriter::writeBoard()
-{   
+{
     std::string a = "\033[48;2;163;91;23m" + std::string(11, ' ') + "\033[0m";
     std::string b = "\033[48;2;120;67;21m" + std::string(11, ' ') + "\033[0m";
     std::string abababab = a+b+a+b+a+b+a+b;

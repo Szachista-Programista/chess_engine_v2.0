@@ -1,7 +1,6 @@
 #ifndef SEARCHTREE_HPP
 #define SEARCHTREE_HPP
 
-#include "TranspositionTable.hpp"
 #include "Polyglot.hpp"
 
 class SearchTree
@@ -13,9 +12,11 @@ class SearchTree
         PositionEvaluator positionEvaluator;
         PositionSorter positionSorter;
         TranspositionTable transpositionTable;
+        Polyglot polyglot;
 
         //********************
-public: gd::BitBoardPtr iterativeDeepening(const gd::BitBoardPtr position, const  bool color);
+public: SearchTree();
+        gd::BitBoardPtr iterativeDeepening(const gd::BitBoardPtr position, const  bool color);
 private:    std::vector<gd::EvaluedPosition> getPositions(const gd::BitBoardPtr position, const bool color);
             void deletePositions(std::vector<gd::EvaluedPosition> positions);
         int alphaBeta(const gd::BitBoardPtr position,const  uint8_t depth, int alpha, int beta, const bool color);

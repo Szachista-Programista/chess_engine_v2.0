@@ -240,23 +240,6 @@ void PositionFiller::fillBitBoard(gd::BitBoardPtr &ptr, bool white, bool black)
     ptr[gd::blackCapturedSquare] |= (ptr[gd::blackKing] << gd::leftt) & gd::SINGLE_RIGHT_EDGE_MASK;
     ptr[gd::blackCapturedSquare] |= (ptr[gd::blackKing] << gd::upLeft) & gd::SINGLE_RIGHT_EDGE_MASK;
 }
-void PositionFiller::fillExtraInfo(gd::BitBoardPtr &ptr)
-{
-    if(ptr[gd::whiteKing][3] == true)
-    {
-        if(ptr[gd::whiteRook][7] == true)
-            ptr[gd::extraInfo][7] = 1;
-        if(ptr[gd::whiteRook][0] == true)
-            ptr[gd::extraInfo][0] = 1;
-    }
-    if(ptr[gd::blackKing][59] == true)
-    {
-        if(ptr[gd::blackRook][63] == true)
-            ptr[gd::extraInfo][63] = 1;
-        if(ptr[gd::blackRook][56] == true)
-            ptr[gd::extraInfo][56] = 1;
-    }
-}
 void PositionFiller::updateBitBoardBeforeBlackMove(gd::BitBoardPtr &ptr)
 {
     fillBitBoard(ptr, true, false);

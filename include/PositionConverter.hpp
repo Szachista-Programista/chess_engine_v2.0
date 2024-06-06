@@ -9,10 +9,7 @@ class PositionConverter
 public:
         PositionFiller positionFiller;
         //********************
-
-        gd::ChessBoardPtr convertBitBoardTo8x8CharArray(gd::BitBoardPtr &ptr);
-        gd::BitBoardPtr convertStringToBitBoard(std::string content);
-        std::string convertBitBoardTo_FEN_Notation(gd::BitBoardPtr &ptr);
+        std::string bitBoardToFEN(gd::BitBoardPtr &ptr);
             std::string getPieces(gd::BitBoardPtr &ptr);
                 char getPieceChar(gd::BitBoardIndex index);   
                     gd::BitBoardIndex getPieceIndex(const gd::BitBoardPtr &ptr, uint8_t bit);  
@@ -21,7 +18,7 @@ public:
             std::string getEnPassant(gd::BitBoardPtr &ptr);
             std::string getValueOf50MovesRule(gd::BitBoardPtr &ptr);
             std::string getNumberOfMove(gd::BitBoardPtr &ptr);
-        gd::BitBoardPtr convert_FEN_NotationToBitBoard(std::string FEN);
+        gd::BitBoardPtr FEN_ToBitBoard(std::string FEN);
             void setPieces(gd::BitBoardPtr &ptr, std::string FEN_part);
                 void setPiece(gd::BitBoardPtr &ptr, uint8_t bit, char piece);
             void setTurnOfColor(gd::BitBoardPtr &ptr, std::string FEN_part);
@@ -29,15 +26,10 @@ public:
             void setEnPassant(gd::BitBoardPtr &ptr, std::string FEN_part);
             void setValueOf50MovesRule(gd::BitBoardPtr &ptr, std::string FEN_part);
             void setNumberOfMove(gd::BitBoardPtr &ptr, std::string FEN_part);
-        std::string convertChessBoardFileContentToString();
         
 
-        std::string convertBitBoardToString(gd::BitBoardPtr &ptr);
-
-
-        gd::BitBoardPtr initializeBitBoardPtr();
-            gd::BitBoardPtr loadBitBoard();
-                
+        gd::ChessBoardPtr bitBoardTo8x8CharArray(gd::BitBoardPtr &ptr);
+        std::string bitBoardToString(gd::BitBoardPtr &ptr);
 
 
 

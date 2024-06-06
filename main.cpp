@@ -6,28 +6,29 @@
     WhiteChildren whiteChildren;
     BlackChildren blackChildren;
     SearchTree searchTree;
+    Movement movement;
     Polyglot polyglot("bin/book.bin");
     Play play(0);
 ////////////////////////////////////////////////////////////////
 
-
-
-
-
 int main()
 {
-//play.run();
+    play.run();
 
-    gd::BitBoardPtr x = positionConverter.convert_FEN_NotationToBitBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-    gd::BitBoardPtr y = positionConverter.convert_FEN_NotationToBitBoard("rnbqkb1r/pppppppp/5n2/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    gd::BitBoardPtr x = positionConverter.FEN_ToBitBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    gd::BitBoardPtr y = positionConverter.FEN_ToBitBoard("rnbqkb1r/pppp1ppp/5n2/4p3/4P3/2N2N2/PPPP1PPP/R1BQKB1R b KQkq - 3 3");
+
+
+
 
     //x = searchTree.iterativeDeepening(x, 1);
-    //positionWriter.writeChessboard(x);
 
+    //positionWriter.writeBitBoard(y);
 
     return 0;
 }
-
+//r1bq1rk1/p1pp1ppp/1pn2n2/4p1N1/1bB1P1Q1/2N5/PPPP1PPP/R1B1K2R w KQ - 0 1
+//rnbqkb1r/pppp1ppp/5n2/4p3/4P3/2N2N2/PPPP1PPP/R1BQKB1R b KQkq - 3 3
 ////////////////////////////////////////////////////////////////
 /*
 #include <iostream>

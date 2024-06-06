@@ -1,16 +1,25 @@
 #include "../include/Movement.hpp"
 
-void Movement::makeMove(gd::BitBoardPtr &position, Move move)
+
+bool Movement::makeMove(gd::BitBoardPtr &position, Move move)
 {
+    gd::BitBoardPtr movedPosition = gd::copyBitBoard(position);
+
     if(position[gd::extraInfo][15] == 1)
+        makeWhiteMove(movedPosition, move);
+    else
+        makeBlackMove(movedPosition, move);
+
+    if(isMoveAllowed(position, movedPosition))
     {
-        makeWhiteMove(position, move);
-        positionFiller.updateBitBoardBeforeBlackMove(position);
+        delete[]position;
+        position = movedPosition;
+        return true;
     }
     else
     {
-        makeBlackMove(position, move);
-        positionFiller.updateBitBoardBeforeWhiteMove(position);
+        delete[]movedPosition;
+        return false;
     }
 }
     void Movement::makeWhiteMove(gd::BitBoardPtr &position, Move move)
@@ -25,6 +34,7 @@ void Movement::makeMove(gd::BitBoardPtr &position, Move move)
         makeWhiteDoublePush(position, move);
     else
         makeWhiteCommonMove(position, move);
+    positionFiller.updateBitBoardBeforeBlackMove(position);
 }
         void Movement::makeWhiteCastle(gd::BitBoardPtr &position, Move move)
 {
@@ -87,6 +97,7 @@ void Movement::makeMove(gd::BitBoardPtr &position, Move move)
         makeBlackDoublePush(position, move);
     else
         makeBlackCommonMove(position, move);
+    positionFiller.updateBitBoardBeforeWhiteMove(position);
 }
         void Movement::makeBlackCastle(gd::BitBoardPtr &position, Move move)
 {
@@ -137,3 +148,27 @@ void Movement::makeMove(gd::BitBoardPtr &position, Move move)
     position[positionConverter.getPieceIndex(position, move.from)][move.to] = 1;
     position[positionConverter.getPieceIndex(position, move.from)][move.from] = 0;
 }
+    bool Movement::isMoveAllowed(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition)
+{
+    std::vector<gd::BitBoardPtr> children;
+    children = whiteChildren.generateChildren(startPosition);
+    for(auto element: children)
+        if(transpositionTable.computeZobristKey(element) == transpositionTable.computeZobristKey(movedPosition))
+        {
+            whiteChildren.deleteChildren(children);
+            return true;
+        }
+    whiteChildren.deleteChildren(children);
+    children = blackChildren.generateChildren(startPosition);
+    for(auto element: children)
+        if(transpositionTable.computeZobristKey(element) == transpositionTable.computeZobristKey(movedPosition))
+        {
+            blackChildren.deleteChildren(children);
+            return true;
+        }
+    blackChildren.deleteChildren(children);
+    return false;
+}
+
+
+ 

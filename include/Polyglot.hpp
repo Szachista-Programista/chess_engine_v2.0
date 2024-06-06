@@ -220,7 +220,7 @@ public:
                     void swapByteOrder(uint16_t &u16);
                     void swapByteOrder(uint32_t &u32);
                     void swapByteOrder(uint64_t &u64);
-        bool checkPolyglotBook(const gd::BitBoardPtr &position, gd::BitBoardPtr &movedPosition);
+        bool checkPolyglotBook(gd::BitBoardPtr &position);
             bool searchPolyglotBook(const gd::BitBoardPtr &ptr, Movement::Move &move);
                 uint64_t generateKey(const gd::BitBoardPtr &ptr);
                     uint64_t generatePositionKey(const gd::BitBoardPtr &ptr);
