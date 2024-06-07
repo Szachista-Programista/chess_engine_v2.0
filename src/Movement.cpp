@@ -5,13 +5,14 @@ bool Movement::makeMove(gd::BitBoardPtr &position, Move move)
 {
     gd::BitBoardPtr movedPosition = gd::copyBitBoard(position);
 
-    if(position[gd::extraInfo][15] == 1)
+    if(position[gd::extraInfo][gd::isWhiteTurn] == 1)
         makeWhiteMove(movedPosition, move);
     else
         makeBlackMove(movedPosition, move);
 
     if(isMoveAllowed(position, movedPosition))
     {
+        check50MovesCounter(position, movedPosition);
         delete[]position;
         position = movedPosition;
         return true;
@@ -34,7 +35,8 @@ bool Movement::makeMove(gd::BitBoardPtr &position, Move move)
         makeWhiteDoublePush(position, move);
     else
         makeWhiteCommonMove(position, move);
-    positionFiller.updateBitBoardBeforeBlackMove(position);
+    positionFiller.fillBitBoard(position);
+    positionFiller.updateExtraInfoAfterWhiteMove(position);
 }
         void Movement::makeWhiteCastle(gd::BitBoardPtr &position, Move move)
 {
@@ -97,7 +99,9 @@ bool Movement::makeMove(gd::BitBoardPtr &position, Move move)
         makeBlackDoublePush(position, move);
     else
         makeBlackCommonMove(position, move);
-    positionFiller.updateBitBoardBeforeWhiteMove(position);
+    positionFiller.fillBitBoard(position);
+    positionFiller.updateExtraInfoAfterBlackMove(position);
+
 }
         void Movement::makeBlackCastle(gd::BitBoardPtr &position, Move move)
 {
@@ -148,7 +152,7 @@ bool Movement::makeMove(gd::BitBoardPtr &position, Move move)
     position[positionConverter.getPieceIndex(position, move.from)][move.to] = 1;
     position[positionConverter.getPieceIndex(position, move.from)][move.from] = 0;
 }
-    bool Movement::isMoveAllowed(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition)
+bool Movement::isMoveAllowed(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition)
 {
     std::vector<gd::BitBoardPtr> children;
     children = whiteChildren.generateChildren(startPosition);
@@ -169,6 +173,11 @@ bool Movement::makeMove(gd::BitBoardPtr &position, Move move)
     blackChildren.deleteChildren(children);
     return false;
 }
+void Movement::check50MovesCounter(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition)
+{
+    if(startPosition[gd::emptySquare].count() != movedPosition[gd::emptySquare].count())
+        movedPosition[gd::extraInfo] &= gd::RULE_OF_50_MOVES_MASK;
+    else if(startPosition[gd::whitePawn] != movedPosition[gd::whitePawn] || startPosition[gd::blackPawn] != movedPosition[gd::blackPawn])
+        movedPosition[gd::extraInfo] &= gd::RULE_OF_50_MOVES_MASK;
+}
 
-
- 

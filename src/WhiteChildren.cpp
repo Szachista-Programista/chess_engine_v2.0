@@ -1,9 +1,13 @@
 #include "../include/WhiteChildren.hpp"
 
-std::vector<gd::BitBoardPtr> WhiteChildren::generateChildren(const gd::BitBoardPtr position)
+std::vector<gd::BitBoardPtr> WhiteChildren::generateChildren(gd::BitBoardPtr position)
 {
+    positionFiller.fillBitBoard(position, false, true);
     mother = gd::copyBitBoard(position);
-    positionFiller.updateBitBoardBeforeWhiteMove(mother);
+    mother[gd::extraInfo] &= gd::BLACK_EN_PASSANT_MASK;
+    if((mother[gd::whiteKing] & mother[gd::blackCapturedSquare]).any())
+        mother[gd::extraInfo][gd::isCheck] = 1;
+    positionFiller.checkCastles(mother);
     getMoves();
     positionSorter.sortPositionsDescending(children);
     delete[]mother;
@@ -78,10 +82,7 @@ std::vector<gd::BitBoardPtr> WhiteChildren::generateChildren(const gd::BitBoardP
     child[gd::whitePawn][bit] = 0;
     child[gd::whitePawn][bit + gd::uu] = 1;
     child[gd::extraInfo][bit + gd::u] = 1;
-    if(isWhiteKingChecked(child))
-        delete[]child;
-    else
-        children.push_back(child);
+    validateMove(child);
 }
                 void WhiteChildren::getPawnCommonCaptureMoves()
 {
@@ -116,10 +117,7 @@ std::vector<gd::BitBoardPtr> WhiteChildren::generateChildren(const gd::BitBoardP
     child[gd::whitePawn][bit] = 0;
     child[gd::whitePawn][targetBit] = 1;
     child[gd::blackPawn][targetBit + gd::d] = 0;
-    if(isWhiteKingChecked(child))
-        delete[]child;
-    else
-        children.push_back(child);
+    validateMove(child);
 }
             void WhiteChildren::getPawnPromotionMoves()
 {
@@ -142,10 +140,7 @@ std::vector<gd::BitBoardPtr> WhiteChildren::generateChildren(const gd::BitBoardP
     gd::BitBoardPtr child = copyMotherBitBoard();
     child[gd::whitePawn][bit] = 0;
     child[promotedPiece][bit + gd::u] = 1;
-    if(isWhiteKingChecked(child))
-        delete[]child;
-    else
-        children.push_back(child);
+    validateMove(child);
 }
                 void WhiteChildren::getPawnLeftCapturePromotionMove()
 {
@@ -221,10 +216,7 @@ std::vector<gd::BitBoardPtr> WhiteChildren::generateChildren(const gd::BitBoardP
     child[gd::whitePawn][bit] = 0;
     child[promotedPiece][targetBit] = 1;
     child[capturedPiece][targetBit] = 0;
-    if(isWhiteKingChecked(child))
-        delete[]child;
-    else
-        children.push_back(child);
+    validateMove(child);
 }
         void WhiteChildren::getKnightMoves()
 {
@@ -449,6 +441,8 @@ std::vector<gd::BitBoardPtr> WhiteChildren::generateChildren(const gd::BitBoardP
 }
                 void WhiteChildren::getKingCommonMove(const uint8_t targetBit)
 {
+    if(mother[gd::blackCapturedSquare][targetBit] == true)
+        return;
     if(mother[gd::emptySquare][targetBit] == true)
         getNonCaptureMove(gd::whiteKing, targetBit);
     else if(mother[gd::blackPiece][targetBit] == true)
@@ -492,22 +486,23 @@ std::vector<gd::BitBoardPtr> WhiteChildren::generateChildren(const gd::BitBoardP
     child[movedPiece][bit] = 0;
     child[movedPiece][targetBit] = 1;
     child[capturedPiece][targetBit] = 0;
-    if(isWhiteKingChecked(child))
-        delete[]child;
-    else
-        children.push_back(child);
+    validateMove(child);
 }
     void WhiteChildren::getNonCaptureMove(const gd::BitBoardIndex movedPiece, const uint8_t targetBit)
 {
     gd::BitBoardPtr child = copyMotherBitBoard();
     child[movedPiece][bit] = 0;
     child[movedPiece][targetBit] = 1;
-    if(isWhiteKingChecked(child))
-        delete[]child;
-    else
-        children.push_back(child);
+    validateMove(child);
 }
-    bool WhiteChildren::isWhiteKingChecked(gd::BitBoardPtr &ptr)
+    void WhiteChildren::validateMove(gd::BitBoardPtr &ptr)
+{
+    if((mother[gd::extraInfo][gd::isCheck] || mother[gd::blackCapturedSquare][bit]) && isWhiteKingChecked(ptr))
+        delete[]ptr;
+    else
+        children.push_back(ptr);
+}
+        bool WhiteChildren::isWhiteKingChecked(gd::BitBoardPtr &ptr)
 {
     positionFiller.fillBitBoard(ptr, false, true);
     return (ptr[gd::whiteKing] & ptr[gd::blackCapturedSquare]).any();

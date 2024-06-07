@@ -12,7 +12,7 @@ class BlackChildren
         PositionFiller positionFiller;
         PositionSorter positionSorter;
         //********************
-public: std::vector<gd::BitBoardPtr> generateChildren(const gd::BitBoardPtr position);
+public: std::vector<gd::BitBoardPtr> generateChildren(gd::BitBoardPtr position);
 private:    void getMoves();
                 void getPawnMoves();
                     void getPawnCommonMoves();
@@ -41,11 +41,14 @@ private:    void getMoves();
                     std::bitset<8> getKingMoveDirections();
                     void getKingCommonMoves(const std::bitset<8> directions);
                         void getKingCommonMove(const uint8_t targetBit);
+                            void getKingCaptureMove(const gd::BitBoardIndex capturedPiece, const uint8_t targetBit);
+                            void getKingNonCaptureMove(const uint8_t targetBit);
                     void getLongCastle();
                     void getShortCastle();
             void getCaptureMove(const gd::BitBoardIndex MovedPiece, const gd::BitBoardIndex CapturedPiece, const uint8_t targetBit);
             void getNonCaptureMove(const gd::BitBoardIndex MovedPiece, const uint8_t targetBit);
-            bool isBlackKingChecked(gd::BitBoardPtr &ptr);
+            void validateMove(gd::BitBoardPtr &ptr);
+                bool isBlackKingChecked(gd::BitBoardPtr &ptr);
             gd::BitBoardPtr copyMotherBitBoard();
 public: void deleteChildren(std::vector<gd::BitBoardPtr> &children);
 };

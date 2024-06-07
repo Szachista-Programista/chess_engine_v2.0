@@ -31,10 +31,13 @@ const int INF = 1'000'000'000;
 
 struct errorType{std::string errorMessage;};
 struct EvaluedPosition{BitBoardPtr position; int eval; int moveNumber;};
-//struct Move{uint8_t from; uint8_t to; uint8_t promotion;};
 
 
-
+enum BitIndex
+{
+    isWhiteTurn = 15,
+    isCheck = 16
+};
 enum BitBoardIndex
 {
     whitePawn,

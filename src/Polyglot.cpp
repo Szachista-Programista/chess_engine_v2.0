@@ -97,8 +97,8 @@ bool Polyglot::checkPolyglotBook(gd::BitBoardPtr &position)
 }
                 uint64_t Polyglot::getPolyglotPieceIndex(const gd::BitBoardPtr &ptr, uint8_t bit)
 {
-    return 64*getPieceNumber(ptr, bit) + 
-            8*getRowNumber(bit)        + 
+    return 64*getPieceNumber(ptr, bit) +
+            8*getRowNumber(bit)        +
               getColumnNumber(bit);
 }
                     uint64_t Polyglot::getPieceNumber(const gd::BitBoardPtr &ptr, uint8_t bit)
@@ -140,17 +140,24 @@ bool Polyglot::checkPolyglotBook(gd::BitBoardPtr &position)
 {
     uint64_t key{};
     for(uint8_t column=0; column<8; column++)
-        if(ptr[gd::extraInfo][47-column] || ptr[gd::extraInfo][23-column])
-        {
-            key ^= POLYGLOT_RANDOM[772 + column];
-            break;
-        }
+        if(ptr[gd::extraInfo][23-column])
+            if((column<7 && ptr[gd::blackPawn][23-column + gd::ur]) || (0<column && ptr[gd::blackPawn][23-column + gd::ul]))
+            {
+                key ^= POLYGLOT_RANDOM[772 + column];
+                break;
+            }
+        else if(ptr[gd::extraInfo][47-column])
+            if((column<7 && ptr[gd::whitePawn][47-column + gd::dr]) || (0<column && ptr[gd::whitePawn][47-column + gd::dl]))
+            {
+                key ^= POLYGLOT_RANDOM[772 + column];
+                break;
+            }
     return key;
 }
             uint64_t Polyglot::generateCurrentTurnKey(const gd::BitBoardPtr &ptr)
 {
     uint64_t key{};
-    if(ptr[gd::extraInfo][15])
+    if(ptr[gd::extraInfo][gd::isWhiteTurn])
         key ^= POLYGLOT_RANDOM[780];
     return key;
 }

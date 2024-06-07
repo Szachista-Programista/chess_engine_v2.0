@@ -25,9 +25,8 @@ private:    void makeWhiteMove(gd::BitBoardPtr &position, Move move);
                 void makeBlackEnPassant(gd::BitBoardPtr &position, Move move);
                 void makeBlackDoublePush(gd::BitBoardPtr &position, Move move);
                 void makeBlackCommonMove(gd::BitBoardPtr &position, Move move);
-public:/*?????*/bool isMoveAllowed(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition);
-
-
+public: bool isMoveAllowed(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition);
+        void check50MovesCounter(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition);
 
 
 

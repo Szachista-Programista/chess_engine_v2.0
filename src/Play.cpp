@@ -30,21 +30,28 @@ bool Play::setUserMove()
 void Play::run()
 {
     system("pause");
-    positionWriter.writeChessboard(positionConverter.bitBoardToString(position), color);
+    positionWriter.writeChessboard(positionConverter.bitBoardToString(position), color); yyy();
     if(!color)
     {
         position = searchTree.iterativeDeepening(position, !color);
-        positionWriter.writeChessboard(positionConverter.bitBoardToString(position), color);
+        positionWriter.writeChessboard(positionConverter.bitBoardToString(position), color); yyy();
     }
     while(true)
     {
         while(! setUserMove()){};
-        positionWriter.writeChessboard(positionConverter.bitBoardToString(position), color);
+        positionWriter.writeChessboard(positionConverter.bitBoardToString(position), color); yyy();
         position = searchTree.iterativeDeepening(position, !color);
-        positionWriter.writeChessboard(positionConverter.bitBoardToString(position), color);
+        positionWriter.writeChessboard(positionConverter.bitBoardToString(position), color); yyy();
     }
 }
 
 
 
 
+void Play::yyy()
+{
+    std::ofstream file("txt/abc.txt", std::ios::app);
+    file<<positionConverter.bitBoardToFEN(position);
+    file<<std::endl;
+    file.close();
+}

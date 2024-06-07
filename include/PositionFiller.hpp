@@ -21,12 +21,11 @@ private:    void computeSquareCapturedByWhite(gd::BitBoardPtr &ptr);
                 void computeSquareCapturedByBlackBishopRook(gd::BitBoardPtr &ptr);
                 void computeSquareCapturedByBlackQueen(gd::BitBoardPtr &ptr);
                 void computeSquareCapturedByBlackKing(gd::BitBoardPtr &ptr);
-public: void updateBitBoardBeforeBlackMove(gd::BitBoardPtr &ptr);
-private:    void updateExtraInfoBeforeBlackMove(gd::BitBoardPtr &ptr);
-                void checkWhiteCastles(gd::BitBoardPtr &ptr);
-                void updateMovesCounter(gd::BitBoardPtr &ptr);
-public: void updateBitBoardBeforeWhiteMove(gd::BitBoardPtr &ptr);
-private:    void updateExtraInfoBeforeWhiteMove(gd::BitBoardPtr &ptr);
-                void checkBlackCastles(gd::BitBoardPtr &ptr);
+public: void updateExtraInfoAfterWhiteMove(gd::BitBoardPtr &ptr);
+        void updateExtraInfoAfterBlackMove(gd::BitBoardPtr &ptr);
+private:    void updateMovesCounter(gd::BitBoardPtr &ptr);
+public: void checkCastles(gd::BitBoardPtr &ptr);
+private:    void checkBlackCastles(gd::BitBoardPtr &ptr);
+            void checkWhiteCastles(gd::BitBoardPtr &ptr);
 };
 #endif //POSITIONFILLER_HPP

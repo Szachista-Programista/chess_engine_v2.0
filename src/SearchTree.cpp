@@ -2,18 +2,17 @@
 
 SearchTree::SearchTree(): polyglot{"bin/book.bin"}
 {}
-gd::BitBoardPtr SearchTree::iterativeDeepening(const gd::BitBoardPtr position, const bool color)
+gd::BitBoardPtr SearchTree::iterativeDeepening(gd::BitBoardPtr position, const bool color)
 {
 
     std::vector<gd::EvaluedPosition> evaluedPositions = getPositions(position, color);
     gd::BitBoardPtr choosenChild;
 
-    //choosenChild = gd::copyBitBoard(position);
-    //if(polyglot.checkPolyglotBook(choosenChild))
-    //    return choosenChild;
-    //else 
-    //    delete[]choosenChild;
-
+    choosenChild = gd::copyBitBoard(position);
+    if(polyglot.checkPolyglotBook(choosenChild))
+        return choosenChild;
+    else 
+        delete[]choosenChild;
 
     for(int depth=0;; depth++)
     {
@@ -32,11 +31,16 @@ gd::BitBoardPtr SearchTree::iterativeDeepening(const gd::BitBoardPtr position, c
         auto stop = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);  yyy(evaluedPositions, depth, duration);
         if(duration.count() > 1500)
-            break;
-            
+            break;     
     }                                                                                         xxx();
     choosenChild = gd::copyBitBoard(evaluedPositions.front().position);
     deletePositions(evaluedPositions);
+    positionFiller.fillBitBoard(choosenChild);
+    if(color)
+        positionFiller.updateExtraInfoAfterWhiteMove(choosenChild);
+    else
+        positionFiller.updateExtraInfoAfterBlackMove(choosenChild);
+    movement.check50MovesCounter(position, choosenChild);
     return choosenChild;
 }
     std::vector<gd::EvaluedPosition> SearchTree::getPositions(const gd::BitBoardPtr position, const bool color)
@@ -74,7 +78,7 @@ int SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth, i
             if((position[gd::whiteKing] & position[gd::blackCapturedSquare]).any())
                 return -gd::INF - depth;
             else
-                return 0.0f;
+                return 0;
         }
         for(int i=0; i<children.size(); i++)
         {
@@ -97,7 +101,7 @@ int SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth, i
             if((position[gd::blackKing] & position[gd::whiteCapturedSquare]).any())
                 return gd::INF + depth;
             else
-                return 0.0f;
+                return 0;
         }
         for(int i=0; i<children.size(); i++)
         {

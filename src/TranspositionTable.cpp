@@ -34,13 +34,11 @@ void TranspositionTable::storeTTEntry(uint64_t key, int depth, int score)
 bool TranspositionTable::probeTTEntry(uint64_t key, int depth, int &score)
 {
     int index = key % TABLE_SIZE;
-    if (transpositionTable[index].key == key  && transpositionTable[index].depth > depth)
+    if (transpositionTable[index].key == key  && transpositionTable[index].depth >= depth)
     {
-        //std::cout<<1;
         score = transpositionTable[index].score;
         return true;
-    }        //std::cout<<0;
-
+    }
     return false;
 }
 

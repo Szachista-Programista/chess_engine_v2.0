@@ -4,7 +4,7 @@
 std::string PositionConverter::bitBoardToFEN(gd::BitBoardPtr &ptr)
 {
     std::string FEN;
-    FEN = getPieces(ptr) +' '+ 
+    FEN = getPieces(ptr) +' '+
           getTurnOfColor(ptr) +' '+
           getCastles(ptr) +' '+
           getEnPassant(ptr) +' '+
@@ -62,7 +62,7 @@ std::string PositionConverter::bitBoardToFEN(gd::BitBoardPtr &ptr)
         case gd::blackQueen:  return 'q';
         case gd::blackKing:   return 'k';
         case gd::emptySquare: return ' ';
-    }    
+    }
 }
             gd::BitBoardIndex PositionConverter::getPieceIndex(const gd::BitBoardPtr &ptr, uint8_t bit)
 {
@@ -75,7 +75,7 @@ std::string PositionConverter::bitBoardToFEN(gd::BitBoardPtr &ptr)
 }
     char PositionConverter::getTurnOfColor(gd::BitBoardPtr &ptr)
 {
-    if(ptr[gd::extraInfo][15] == 1)
+    if(ptr[gd::extraInfo][gd::isWhiteTurn] == 1)
         return 'w';
     else
         return 'b';
@@ -210,7 +210,7 @@ gd::BitBoardPtr PositionConverter::FEN_ToBitBoard(std::string FEN)
     void PositionConverter::setTurnOfColor(gd::BitBoardPtr &ptr, std::string FEN_part)
 {
     if(FEN_part[0] == 'w')
-        ptr[gd::extraInfo][15] = 1;
+        ptr[gd::extraInfo][gd::isWhiteTurn] = 1;
 }
     void PositionConverter::setCastles(gd::BitBoardPtr &ptr, std::string FEN_part)
 {
@@ -253,7 +253,7 @@ gd::BitBoardPtr PositionConverter::FEN_ToBitBoard(std::string FEN)
     void PositionConverter::setNumberOfMove(gd::BitBoardPtr &ptr, std::string FEN_part)
 {
     uint64_t value = stoull(FEN_part);
-    if(ptr[gd::extraInfo][15] == 1)
+    if(ptr[gd::extraInfo][gd::isWhiteTurn] == 1)
         value = 2*value - 2;
     else
         value = 2*value - 1;

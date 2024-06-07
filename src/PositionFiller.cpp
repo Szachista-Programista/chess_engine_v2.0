@@ -240,35 +240,19 @@ void PositionFiller::fillBitBoard(gd::BitBoardPtr &ptr, bool white, bool black)
     ptr[gd::blackCapturedSquare] |= (ptr[gd::blackKing] << gd::leftt) & gd::SINGLE_RIGHT_EDGE_MASK;
     ptr[gd::blackCapturedSquare] |= (ptr[gd::blackKing] << gd::upLeft) & gd::SINGLE_RIGHT_EDGE_MASK;
 }
-void PositionFiller::updateBitBoardBeforeBlackMove(gd::BitBoardPtr &ptr)
-{
-    fillBitBoard(ptr, true, false);
-    updateExtraInfoBeforeBlackMove(ptr);
-}
-    void PositionFiller::updateExtraInfoBeforeBlackMove(gd::BitBoardPtr &ptr)
+void PositionFiller::updateExtraInfoAfterWhiteMove(gd::BitBoardPtr &ptr)
 {
     ptr[gd::extraInfo] &= gd::WHITE_EN_PASSANT_MASK;
-    ptr[gd::extraInfo][15] = 0;
-    checkWhiteCastles(ptr);
+    ptr[gd::extraInfo][gd::isWhiteTurn] = 0;
     updateMovesCounter(ptr);
+    checkCastles(ptr);
 }
-        void PositionFiller::checkWhiteCastles(gd::BitBoardPtr &ptr)
+void PositionFiller::updateExtraInfoAfterBlackMove(gd::BitBoardPtr &ptr)
 {
-    if(ptr[gd::extraInfo][0] == true || ptr[gd::extraInfo][7] == true)
-    {
-        if(ptr[gd::whiteKing][3] == false)
-        {
-            ptr[gd::extraInfo][0] = 0;
-            ptr[gd::extraInfo][7] = 0;
-        }
-        else
-        {
-            if(ptr[gd::whiteRook][7] == false)
-                ptr[gd::extraInfo][7] = 0;
-            if(ptr[gd::whiteRook][0] == false)
-                ptr[gd::extraInfo][0] = 0;
-        }
-    }
+    ptr[gd::extraInfo] &= gd::BLACK_EN_PASSANT_MASK;
+    ptr[gd::extraInfo][gd::isWhiteTurn] = 1;
+    updateMovesCounter(ptr);
+    checkCastles(ptr);
 }
         void PositionFiller::updateMovesCounter(gd::BitBoardPtr &ptr)
 {
@@ -295,19 +279,30 @@ void PositionFiller::updateBitBoardBeforeBlackMove(gd::BitBoardPtr &ptr)
     ptr[gd::extraInfo] |= moveNumber;
     ptr[gd::extraInfo] |= ruleOf50Moves;
 }
-void PositionFiller::updateBitBoardBeforeWhiteMove(gd::BitBoardPtr &ptr)
+        void PositionFiller::checkCastles(gd::BitBoardPtr &ptr)
 {
-    fillBitBoard(ptr, false, true);
-    updateExtraInfoBeforeWhiteMove(ptr);
-}
-    void PositionFiller::updateExtraInfoBeforeWhiteMove(gd::BitBoardPtr &ptr)
-{
-    ptr[gd::extraInfo] &= gd::BLACK_EN_PASSANT_MASK;
-    ptr[gd::extraInfo][15] = 1;
+    checkWhiteCastles(ptr);
     checkBlackCastles(ptr);
-    updateMovesCounter(ptr);
 }
-        void PositionFiller::checkBlackCastles(gd::BitBoardPtr &ptr)
+            void PositionFiller::checkWhiteCastles(gd::BitBoardPtr &ptr)
+{
+    if(ptr[gd::extraInfo][0] == true || ptr[gd::extraInfo][7] == true)
+    {
+        if(ptr[gd::whiteKing][3] == false)
+        {
+            ptr[gd::extraInfo][0] = 0;
+            ptr[gd::extraInfo][7] = 0;
+        }
+        else
+        {
+            if(ptr[gd::whiteRook][7] == false)
+                ptr[gd::extraInfo][7] = 0;
+            if(ptr[gd::whiteRook][0] == false)
+                ptr[gd::extraInfo][0] = 0;
+        }
+    }
+}
+            void PositionFiller::checkBlackCastles(gd::BitBoardPtr &ptr)
 {
     if(ptr[gd::extraInfo][56] == true || ptr[gd::extraInfo][63] == true)
     {

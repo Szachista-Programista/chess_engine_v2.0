@@ -1,34 +1,58 @@
 #include "include/Play.hpp"
-    TranspositionTable transpositionTable;
-    PositionConverter positionConverter;
-    PositionEvaluator positionEvaluator;
-    PositionWriter positionWriter;
-    WhiteChildren whiteChildren;
-    BlackChildren blackChildren;
-    SearchTree searchTree;
-    Movement movement;
-    Polyglot polyglot("bin/book.bin");
-    Play play(0);
+TranspositionTable transpositionTable;
+PositionConverter positionConverter;
+PositionEvaluator positionEvaluator;
+PositionWriter positionWriter;
+WhiteChildren whiteChildren;
+BlackChildren blackChildren;
+SearchTree searchTree;
+Movement movement;
+Polyglot polyglot("bin/codekiddy.bin");
+Play play(1);
+
+////////////////////////////////////////////////////////////////
+
+void countNumberOfMoves(std::string FEN)
+{
+    gd::BitBoardPtr x = positionConverter.FEN_ToBitBoard(FEN);
+    std::vector<gd::BitBoardPtr> B = blackChildren.generateChildren(x);
+    std::vector<gd::BitBoardPtr> W = whiteChildren.generateChildren(x);
+    std::cout<<" - bialy rochow: "<<W.size()<<" czarny rochow: "<<B.size()<<std::endl;
+}
+void testujDzieciaczki()
+{
+std::cout<<std::left<<std::setw(5)<<"40/36";
+countNumberOfMoves("r1bq1b1r/pppk1pp1/8/np3p1p/1Q1nB1P1/N4N2/PPPPPP1P/R1B1K1R1 w Q - 0 1");
+std::cout<<std::left<<std::setw(5)<<"3/2";
+countNumberOfMoves("rnbk1n2/1pP1p1pp/7r/R3q3/3Q4/5N2/pP1p1PPP/1NB1K2R w K - 0 1");//szach
+std::cout<<std::left<<std::setw(5)<<"8/8";
+countNumberOfMoves("2bk1bn1/ppp1pppp/2n1q2R/r7/7R/r2Q1N2/PPPP1PPP/1NB1KB2 w - - 0 1");//szach
+std::cout<<std::left<<std::setw(5)<<"45/47";
+countNumberOfMoves("r3k1q1/1pppp2P/1nb5/8/8/5BN1/p2PPPP1/1Q2K2R w Kq - 0 1");//promocje/roszady
+}
+
 ////////////////////////////////////////////////////////////////
 
 int main()
 {
-    play.run();
-
-    gd::BitBoardPtr x = positionConverter.FEN_ToBitBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-    gd::BitBoardPtr y = positionConverter.FEN_ToBitBoard("rnbqkb1r/pppp1ppp/5n2/4p3/4P3/2N2N2/PPPP1PPP/R1BQKB1R b KQkq - 3 3");
+//play.run();
+//testujDzieciaczki();
 
 
 
+    //y = searchTree.iterativeDeepening(y, 0);
 
-    //x = searchTree.iterativeDeepening(x, 1);
 
-    //positionWriter.writeBitBoard(y);
+
+   
+
+
+
+
 
     return 0;
 }
-//r1bq1rk1/p1pp1ppp/1pn2n2/4p1N1/1bB1P1Q1/2N5/PPPP1PPP/R1B1K2R w KQ - 0 1
-//rnbqkb1r/pppp1ppp/5n2/4p3/4P3/2N2N2/PPPP1PPP/R1BQKB1R b KQkq - 3 3
+
 ////////////////////////////////////////////////////////////////
 /*
 #include <iostream>
