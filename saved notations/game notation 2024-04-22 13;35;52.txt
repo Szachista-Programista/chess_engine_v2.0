@@ -1,0 +1,45 @@
+>>> 2024-04-22 13:35:52 <<<
+===========================
+ 1.    e4          e5      
+ 2.    Nf3         Nc6     
+ 3.    Bc4         Nf6     
+ 4.    Ng5         Qe7     
+ 5.    Nxf7        Na5     
+ 6.    Nxh8        Nxc4    
+ 7.    Qe2         Nb6     
+ 8.    Nc3         Qe6     
+ 9.    Nb5         Qc6     
+10.    a4          a6      
+11.    Nc3         Bb4     
+12.    b3          Bxc3    
+13.    dxc3        Qxc3+   
+14.    Bd2         Qxa1+   
+15.    Qd1         Qxd1+   
+16.    Kxd1        Nxe4    
+17.    f3          Nf2+    
+18.    Kc1         Nxh1    
+19.    h4          Ng3     
+20.    f4          exf4    
+21.    Bxf4        Ne2+    
+22.    Kb2         Nxf4    
+23.    g3          Ne2     
+24.    g4          Nd4     
+25.    g5          Nc6     
+26.    h5          Nb4     
+27.    g6          hxg6    
+28.    Nxg6        Nc6     
+29.    Ka3         d6      
+30.    b4          Nd5     
+31.    b5          axb5    
+32.    Kb3         Rxa4    
+33.    c3          Rc4     
+34.    Kb2         Bh3     
+35.    Nh4         Rxh4    
+36.    Kc2         Rxh5    
+37.    Kd3         Re5     
+38.    c4          Re3+    
+39.    Kc2         bxc4    
+40.    Kd2         Nd4     
+41.    Kd1         c3      
+42.    Kc1         Re1#    
+43.    0.1         
