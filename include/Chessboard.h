@@ -2,7 +2,7 @@
 #define CHESSBOARD_H
 #include <iomanip>
 #include <sstream>
-#include "GlobalDefinitions.h"
+#include "GlobalDefinitionsPrevious.h"
 /**
  * @brief Class responsible for displaying everything that happens during the game,
  * including the chessboard, pieces, capturing user moves, saving and remembering past moves.

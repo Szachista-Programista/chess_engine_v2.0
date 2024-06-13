@@ -1,6 +1,6 @@
 #ifndef MENU_H
 #define MENU_H
-#include "GlobalDefinitions.h"
+#include "GlobalDefinitionsPrevious.h"
 #include <SFML/Graphics.hpp>
 /**
  * @brief The "Menu" class is responsible for displaying various menus in the game window,

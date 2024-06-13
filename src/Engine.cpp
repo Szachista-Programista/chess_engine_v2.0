@@ -1,6 +1,6 @@
 #include "../include/Engine.h"
 
-Engine::Engine(bool k): color{k}, movement{k}
+Engine::Engine(bool k): color{k}, playService{k}
 {
     globalType::gameStage        = globalType::opening;
     comparativeChessboardPointer = loadPiecesArrangement();
@@ -74,273 +74,13 @@ Engine::~Engine()noexcept
 }
 bool Engine::canUserMakeSuchMove(int userMoveCode)
 {
-    decipherUserMove(userMoveCode);
-    if(!isPieceOfUserOnStartingSquare()   )return false;
-    if( isPieceOfUserOnFinalSquare()      )return false;
-    if( isThisMoveExposesKingToCapture()  )return false;
-    if(!isAllowedMove()                   )return false;
-    return true;
-}
-    void Engine::decipherUserMove(int userMoveCode)
-{
-    if(userMoveCode == 10000)
-        u.toY = u.toX = u.fromY = u.fromX = promotionCode = 0;
-    else
-    {
-    u.toY = userMoveCode    % 10;
-    userMoveCode /=10;
-    u.toX = userMoveCode    % 10;
-    userMoveCode /=10;
-    u.fromY  = userMoveCode % 10;
-    userMoveCode /=10;
-    u.fromX  = userMoveCode % 10;
-    userMoveCode /=10;
-    promotionCode = userMoveCode;
-    }
-    try
-    {
-        if (u.fromX < 0 || 7 < u.fromX || u.fromY < 0 || 7 < u.fromY || u.toX < 0 || 7 < u.toX || u.toY < 0 || 7 < u.toY)
-            throw std::runtime_error("User movement coordinates out of range.");
-    }
-    catch(const std::runtime_error &e)
-    {
-        globalType::errorType x;
-        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
-        throw x;
-    }
-}
-    bool Engine::isPieceOfUserOnStartingSquare()
-{
-    try
-    {
-        if (u.fromX < 0 || 7 < u.fromX || u.fromY < 0 || 7 < u.fromY || u.toX < 0 || 7 < u.toX || u.toY < 0 || 7 < u.toY)
-            throw std::runtime_error("User movement coordinates out of range.");
-        if (workingChessboardPointer == nullptr)
-            throw std::runtime_error("Nullptr of the chessboard.");
-    }
-    catch(const std::runtime_error &e)
-    {
-        globalType::errorType x;
-        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
-        throw x;
-    }
-    globalType::chessboardPointer ptr_X = workingChessboardPointer;
-    if(ptr_X[u.fromY][u.fromX]<'b' && 'r'<ptr_X[u.fromY][u.fromX])
-        return false;
-    else
-        return true;
-}
-    bool Engine::isPieceOfUserOnFinalSquare()
-{
-    try
-    {
-        if (u.fromX < 0 || 7 < u.fromX || u.fromY < 0 || 7 < u.fromY || u.toX < 0 || 7 < u.toX || u.toY < 0 || 7 < u.toY)
-            throw std::runtime_error("User movement coordinates out of range.");
-        if (workingChessboardPointer == nullptr)
-            throw std::runtime_error("Nullptr of the chessboard.");
-    }
-    catch(const std::runtime_error &e)
-    {
-        globalType::errorType x;
-        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
-        throw x;
-    }
-    globalType::chessboardPointer ptr_X = workingChessboardPointer;
-    if(ptr_X[u.toY][u.toX]<'b' || 'r'<ptr_X[u.toY][u.toX])
-        return false;
-    else
-        return true;
-}
-    bool Engine::isThisMoveExposesKingToCapture()
-{
-    try
-    {
-        if (u.fromX < 0 || 7 < u.fromX || u.fromY < 0 || 7 < u.fromY || u.toX < 0 || 7 < u.toX || u.toY < 0 || 7 < u.toY)
-            throw std::runtime_error("User movement coordinates out of range.");
-        if (workingChessboardPointer == nullptr)
-            throw std::runtime_error("Nullptr of the chessboard.");
-    }
-    catch(const std::runtime_error &e)
-    {
-        globalType::errorType x;
-        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
-        throw x;
-    }
-    globalType::chessboardPointer ptr_X = workingChessboardPointer;
-    int potentiallyUserKingLocationX;
-    int potentiallyUserKingLocationY;
+     Movement::Move move = codeToMove(userMoveCode)
+    positionConverter.
 
-    if(ptr_X[u.fromY][u.fromX]=='k') //is it move of user's king
-    {
-        potentiallyUserKingLocationX = u.toX;
-        potentiallyUserKingLocationY = u.toY;
-    }
-    else
-    {
-        potentiallyUserKingLocationX = movement.userKingLocationX;
-        potentiallyUserKingLocationY = movement.userKingLocationY;
-    }
-    globalType::chessboardPointer cOpy = movement.copyChessboard(ptr_X);
-    cOpy[u.toY][u.toX]=cOpy[u.fromY][u.fromX];
-    cOpy[u.fromY][u.fromX]=' ';
-    if(movement.isUserSquareCaptured(potentiallyUserKingLocationX, potentiallyUserKingLocationY, cOpy))
-    {
-        delete[]cOpy;
-        return true;
-    }
-    else
-    {
-        delete[]cOpy;
-        return false;
-    }
+
+
 }
-    bool Engine::isAllowedMove()
-{
-    try
-    {
-        if (u.fromX < 0 || 7 < u.fromX || u.fromY < 0 || 7 < u.fromY || u.toX < 0 || 7 < u.toX || u.toY < 0 || 7 < u.toY)
-            throw std::runtime_error("User movement coordinates out of range.");
-        if (workingChessboardPointer == nullptr)
-            throw std::runtime_error("Nullptr of the chessboard.");
-        switch(workingChessboardPointer[u.fromY][u.fromX])
-        {
-            case 'p':
-                return isAllowedMoveByPawn();
-            case 'n':
-                return isAllowedMoveByKnight();
-            case 'b':
-                return isAllowedSlantMove();
-            case 'q':
-                return (isAllowedSlantMove() || isAllowedNonslantMove());
-            case 'r':
-                return isAllowedNonslantMove();
-            case 'k':
-                return isAllowedMovebyKing();
-            default: throw std::runtime_error("Wrong sign.");
-        }
-    }
-    catch(const std::runtime_error &e)
-    {
-        globalType::errorType x;
-        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
-        throw x;
-    }
-}
-        bool Engine::isAllowedMoveByPawn()
-{
-    globalType::chessboardPointer ptr_X = workingChessboardPointer;
-    if(u.fromY==1 && u.toY-u.fromY==2 && u.fromX==u.toX && ptr_X[u.fromY+1][u.toX]==' ' && ptr_X[u.toY][u.toX]==' ') return true;//move 2 forward
-    if(u.toY-u.fromY==1 && u.fromX==u.toX && ptr_X[u.toY][u.toX]==' ')                                               return true;//move 1 forward
-    if(u.toY-u.fromY==1 && u.fromX-u.toX==1 && 'B'<=ptr_X[u.toY][u.toX] && ptr_X[u.toY][u.toX]<='R')                 return true;//capture <<
-    if(u.toY-u.fromY==1 && u.toX-u.fromX==1 && 'B'<=ptr_X[u.toY][u.toX] && ptr_X[u.toY][u.toX]<='R')                 return true;//capture >>
-    if(ptr_X[e.toY][e.toX] == 'P' && e.fromY-e.toY == 2 && e.toX == u.toX && u.fromY == e.toY)
-    {
-        if(u.toY-u.fromY==1 && u.fromX-u.toX==1 && ' ' == ptr_X[u.toY][u.toX]) return true;//En passant <<
-        if(u.toY-u.fromY==1 && u.toX-u.fromX==1 && ' ' == ptr_X[u.toY][u.toX]) return true;//En passant >>
-    }
-    return false;
-}
-        bool Engine::isAllowedMoveByKnight()
-{
-    if((abs(u.fromX-u.toX)==2 && abs(u.fromY-u.toY)==1) || (abs(u.fromX-u.toX)==1 && abs(u.fromY-u.toY)==2))
-        return true;
-    else
-        return false;
-}
-        bool Engine::isAllowedSlantMove()
-{
-    globalType::chessboardPointer ptr_X = workingChessboardPointer;
-    if(u.fromX-u.fromY==u.toX-u.toY) // slant movements (\)
-    {
-        if(u.fromX<u.toX) //movement towards 04:30
-            for(int x=u.fromX+1, y=u.fromY+1; x<u.toX && y<u.toY; x++, y++)
-                if(ptr_X[y][x]!=' ')
-                    return false;
-        if(u.fromX>u.toX) //movement towards 10:30
-            for(int x=u.fromX-1, y=u.fromY-1; x>u.toX && y>u.toY; x--, y--)
-                if(ptr_X[y][x]!=' ')
-                    return false;
-        return true;
-    }
-    if(u.fromX+u.fromY==u.toX+u.toY) // slant movements (/)
-    {
-        if(u.fromX<u.toX) //movement towards 01:30
-            for(int x=u.fromX+1, y=u.fromY-1; x<u.toX && y>u.toY; x++, y--)
-                if(ptr_X[y][x]!=' ')
-                    return false;
-        if(u.fromX>u.toX) //movement towards 07:30
-            for(int x=u.fromX-1, y=u.fromY+1; x>u.toX && y<u.toY; x--, y++)
-                if(ptr_X[y][x]!=' ')
-                    return false;
-        return true;
-    }
-    return false;
-}
-        bool Engine::isAllowedNonslantMove()
-{
-    globalType::chessboardPointer ptr_X = workingChessboardPointer;
-    if(u.fromY == u.toY) //horizontal movements
-    {
-        if(u.fromX>u.toX) //to left
-            for(int x=u.fromX-1; x>u.toX; x--)
-                if(ptr_X[u.fromY][x]!=' ')
-                    return false;
-        if(u.fromX<u.toX) //to right
-            for(int x=u.fromX+1; x<u.toX; x++)
-                if(ptr_X[u.fromY][x]!=' ')
-                    return false;
-        return true;
-    }
-    if(u.fromX == u.toX) //vertical movements
-    {
-        if(u.fromY>u.toY)//up
-            for(int y=u.fromY-1; y>u.toY; y--)
-                if(ptr_X[y][u.fromX]!=' ')
-                    return false;
-        if(u.fromY<u.toY)//down
-            for(int y=u.fromY+1; y<u.toY; y++)
-                if(ptr_X[y][u.fromX]!=' ')
-                    return false;
-        return true;
-    }
-    return false;
-}
-        bool Engine::isAllowedMovebyKing()
-{
-    globalType::chessboardPointer ptr_X = workingChessboardPointer;
-    if(abs(u.fromX-u.toX)<=1 && abs(u.fromY-u.toY)<=1)//ordinary king's movement
-    if(0<=u.toY-1                ? ptr_X[u.toY-1][u.toX  ] != 'K': true)
-    if(0<=u.toY-1 && u.toX+1<=7  ? ptr_X[u.toY-1][u.toX+1] != 'K': true)
-    if(              u.toX+1<=7  ? ptr_X[u.toY  ][u.toX+1] != 'K': true)
-    if(u.toY+1<=7 && u.toX+1<=7  ? ptr_X[u.toY+1][u.toX+1] != 'K': true)
-    if(u.toY+1<=7                ? ptr_X[u.toY+1][u.toX  ] != 'K': true)
-    if(u.toY+1<=7 && 0<=u.toX-1  ? ptr_X[u.toY+1][u.toX-1] != 'K': true)
-    if(              0<=u.toX-1  ? ptr_X[u.toY  ][u.toX-1] != 'K': true)
-    if(0<=u.toY-1 && 0<=u.toX-1  ? ptr_X[u.toY-1][u.toX-1] != 'K': true)
-        return true;
-    if(u.fromY==u.toY && abs(u.fromX - u.toX) == 2 && movement.userKingMoved==false)//castle
-    {
-        if(color==0)//when user play black
-        {
-            if(u.toX==2 && movement.userLeftRookMoved ==false && ptr_X[0][1]==' ' && ptr_X[0][2]==' ' && ptr_X[0][3]==' ')//long castle
-            if(!movement.isUserSquareCaptured(2, 0, ptr_X) && !movement.isUserSquareCaptured(3, 0, ptr_X) && !movement.isUserSquareCaptured(4, 0, ptr_X))
-                return true;
-            if(u.toX==6 && movement.userRightRookMoved==false && ptr_X[0][5]==' ' && ptr_X[0][6]==' ')//short castle
-            if(!movement.isUserSquareCaptured(4, 0, ptr_X) && !movement.isUserSquareCaptured(5, 0, ptr_X) && !movement.isUserSquareCaptured(6, 0, ptr_X))
-                return true;
-        }
-        if(color==1)//when user play white
-        {
-            if(u.toX==5 && movement.userRightRookMoved==false && ptr_X[0][4]==' ' && ptr_X[0][5]==' ' && ptr_X[0][6]==' ')//long castle
-            if(!movement.isUserSquareCaptured(3, 0, ptr_X) && !movement.isUserSquareCaptured(4, 0, ptr_X) && !movement.isUserSquareCaptured(5, 0, ptr_X))
-                return true;
-            if(u.toX==1 && movement.userLeftRookMoved ==false && ptr_X[0][1]==' ' && ptr_X[0][2]==' ')//short castle
-            if(!movement.isUserSquareCaptured(1, 0, ptr_X) && !movement.isUserSquareCaptured(2, 0, ptr_X) && !movement.isUserSquareCaptured(3, 0, ptr_X))
-                return true;
-        }
-    }
-    return false;
-}
+
 int Engine::makeMove                         (int userMoveCode)
 {
     getEngineReadyForMove(userMoveCode);
@@ -544,289 +284,7 @@ int Engine::makeMove                         (int userMoveCode)
         movement.gameOverStalemateByEngine = true;
     }
 }
-    void Engine::makeOpeningMove()noexcept
-{
-    if(color)
-        blackOpeningMove();
-    else
-        whiteOpeningMove();
-    if(movementNumber == 3)
-        globalType::gameStage = globalType::middlegame;
-}
-        void Engine::blackOpeningMove()noexcept
-{
-    userPiecesMovedInOpening += workingChessboardPointer[u.toY][u.toX];
-    switch(movementNumber)
-    {
-        case 1:
-            if(((u.toX==2 || u.toX==4) && u.toY==3) || (userPiecesMovedInOpening[0]=='n' && u.toX==2)){
-                if(randomChance(3))     { workingChessboardPointer[6][4]=' '; workingChessboardPointer[4][4]='P'; }
-                else                    { workingChessboardPointer[6][2]=' '; workingChessboardPointer[4][2]='P'; }
-            }
-            else                        { workingChessboardPointer[6][3]=' '; workingChessboardPointer[4][3]='P'; }
-            break;
-        case 2:
-            if(userPiecesMovedInOpening[1]=='q' || 4<=u.toY){
-                globalType::gameStage = globalType::middlegame;
-                makeMiddlegameMove();
-                break;
-            }
-            else if(e.toX==4){
-                if(randomChance(3))     { workingChessboardPointer[7][1]=' '; workingChessboardPointer[5][2]='N'; }
-                else                    { workingChessboardPointer[6][3]=' '; workingChessboardPointer[5][3]='P'; }
-            }
-            else if(e.toX==2){
-                if(randomChance(3))     { workingChessboardPointer[7][6]=' '; workingChessboardPointer[5][5]='N'; }
-                else if(randomChance(2)){ workingChessboardPointer[6][3]=' '; workingChessboardPointer[5][3]='P'; }
-                else                    { workingChessboardPointer[6][1]=' '; workingChessboardPointer[5][1]='P'; }
-            }
-            else                        { workingChessboardPointer[7][6]=' '; workingChessboardPointer[5][5]='N'; }
-            break;
-        case 3:
-            if(userPiecesMovedInOpening[1]=='q' || 4<=u.toY){
-                globalType::gameStage = globalType::middlegame;
-                makeMiddlegameMove();
-                break;
-            }
-            else if(workingChessboardPointer[7][6]=='N') { workingChessboardPointer[7][6]=' '; workingChessboardPointer[5][5]='N'; }
-            else                                         { workingChessboardPointer[7][1]=' '; workingChessboardPointer[5][2]='N'; }
-            break;
-    }
-}
-        void Engine::whiteOpeningMove()noexcept
-{
-    if(1 < movementNumber)
-        userPiecesMovedInOpening += workingChessboardPointer[u.toY][u.toX];
-    switch(movementNumber)
-    {
-        case 1:
-            if(randomChance(3))     { workingChessboardPointer[6][4]=' '; workingChessboardPointer[4][4]='P'; }
-            else if(randomChance(3)){ workingChessboardPointer[6][3]=' '; workingChessboardPointer[4][3]='P'; }
-            else if(randomChance(2)){ workingChessboardPointer[7][6]=' '; workingChessboardPointer[5][5]='N'; }
-            else                    { workingChessboardPointer[7][1]=' '; workingChessboardPointer[5][2]='N'; }
-            break;
-        case 2:
-            if(workingChessboardPointer[4][4]=='P'){
-                if(randomChance(3)){ workingChessboardPointer[7][1]=' '; workingChessboardPointer[5][2]='N'; }
-                else               { workingChessboardPointer[7][6]=' '; workingChessboardPointer[5][5]='N'; }
-            }
-            else if(workingChessboardPointer[4][3]=='p'){
-                if(randomChance(3)){ workingChessboardPointer[7][6]=' '; workingChessboardPointer[5][5]='N'; }
-                else               { workingChessboardPointer[7][1]=' '; workingChessboardPointer[5][2]='N'; }
-            }
-            else if(workingChessboardPointer[5][2]=='N')
-                                   { workingChessboardPointer[7][6]=' '; workingChessboardPointer[5][5]='N'; }
-            else
-                                   { workingChessboardPointer[7][1]=' '; workingChessboardPointer[5][2]='N'; }
-            break;
-        case 3:
-            if(userPiecesMovedInOpening[1]=='q' || 4 <= u.toY){
-                globalType::gameStage = globalType::middlegame;
-                makeMiddlegameMove();
-                break;
-            }
-            else if(workingChessboardPointer[6][4]=='p') { workingChessboardPointer[6][4]=' '; workingChessboardPointer[4][4]='P'; }
-            else                                         { workingChessboardPointer[6][3]=' '; workingChessboardPointer[4][3]='P'; }
-            break;
-    }
-}
-        int Engine::randomChance(int optionsNumber)noexcept
-{
-    srand(static_cast<unsigned int>(time(nullptr)));
-    return rand() % optionsNumber;
-}
-    void Engine::makeMiddlegameMove()
-{
-    movement.findNextMove(workingChessboardPointer);
-    if( ! movement.gameOver)
-        isItEndgameTime();
-}
-        void Engine::isItEndgameTime()noexcept
-{
-    int nrOfUserPawns   {};
-    int nrOfUserKnights {};
-    int nrOfUserBishops {};
-    int nrOfUserRooks   {};
-    int nrOfUserQueens  {};
 
-    for(int i=0; i<8; i++)
-        for(int j=0; j<8; j++)
-            switch(workingChessboardPointer[i][j])
-            {
-                case 'p': nrOfUserPawns++;     break;
-                case 'n': nrOfUserKnights++;   break;
-                case 'b': nrOfUserBishops++;   break;
-                case 'r': nrOfUserRooks++;     break;
-                case 'q': nrOfUserQueens++;    break;
-            }
-    if(( nrOfUserRooks + nrOfUserQueens <= 1 ) && ( nrOfUserKnights + nrOfUserBishops + nrOfUserRooks + nrOfUserQueens <= 3 ) && ( nrOfUserPawns <= 3 ))
-    {
-        globalType::gameStage = globalType::endgame;
-        setUserKingSideLocation();
-        setUserKingCornerLocation();
-    }
-}
-            void Engine::setUserKingSideLocation()noexcept
-{
-    //if(globalType::gameStage == globalType::middlegame)
-       for(int i=0; i<8; i++)
-            for(int j=0; j<8; j++)
-                if(workingChessboardPointer[i][j] == 'k')
-                {
-                    if( 1  <= j-i &&  7  <= j+i)  {globalType::userKingSideLocation = globalType::engineRightSide;  return;}
-                    if(j-i <=  0  &&  8  <= j+i)  {globalType::userKingSideLocation = globalType::engineDownSide;   return;}
-                    if(j-i <= -1  && j+i <=  7 )  {globalType::userKingSideLocation = globalType::engineLeftSide;   return;}
-                    if( 0  <= j-i && j+i <=  6 )  {globalType::userKingSideLocation = globalType::engineUpSide;     return;}
-                }
-    /*if(globalType::gameStage == globalType::endgame)
-       for(int i=0; i<8; i++)
-            for(int j=0; j<8; j++)
-                if(workingChessboardPointer[i][j] == 'k')
-                {
-                    if(6 <= j)  {globalType::userKingSideLocation = globalType::engineRightSide;  return;}
-                    if(6 <= i)  {globalType::userKingSideLocation = globalType::engineDownSide;   return;}
-                    if(j <= 1)  {globalType::userKingSideLocation = globalType::engineLeftSide;   return;}
-                    if(i <= 1)  {globalType::userKingSideLocation = globalType::engineUpSide;     return;}
-                }*/
-}
-            void Engine::setUserKingCornerLocation()noexcept
-{
-    //if(globalType::gameStage == globalType::middlegame)
-        for(int i=0; i<8; i++)
-            for(int j=0; j<8; j++)
-                if(workingChessboardPointer[i][j] == 'k')
-                {
-                    if(i <= 3 && 4 <= j)  {globalType::userKingCornerLocation = globalType::engineUpRightCorner;   return;}
-                    if(4 <= i && 4 <= j)  {globalType::userKingCornerLocation = globalType::engineDownRightCorner; return;}
-                    if(4 <= i && j <= 3)  {globalType::userKingCornerLocation = globalType::engineDownLeftCorner;  return;}
-                    if(i <= 3 && j <= 3)  {globalType::userKingCornerLocation = globalType::engineUpLeftCorner;    return;}
-                }
-    /*if(globalType::gameStage == globalType::endgame)
-        for(int i=0; i<8; i++)
-            for(int j=0; j<8; j++)
-                if(workingChessboardPointer[i][j] == 'k')
-                {
-                    if(i <= 2 && 5 <= j)  {globalType::userKingCornerLocation = globalType::engineUpRightCorner;   return;}
-                    if(5 <= i && 5 <= j)  {globalType::userKingCornerLocation = globalType::engineDownRightCorner; return;}
-                    if(5 <= i && j <= 2)  {globalType::userKingCornerLocation = globalType::engineDownLeftCorner;  return;}
-                    if(i <= 2 && j <= 2)  {globalType::userKingCornerLocation = globalType::engineUpLeftCorner;    return;}
-                }*/
-}
-    void Engine::makeEndgameMove()
-{
-    setKindOfEndgame();
-    try
-    {
-        switch(globalType::choosenEndgame)
-        {
-            case globalType::rooksAndQueensMate: makeRooksAndQueensMateMove();    break;
-            case globalType::rookOrQueenMate:    makeSingleRookOrQueenMateMove(); break;
-            case globalType::unspecifiedMate:    makeUnspecifiedMateMove();       break;
-            default: throw std::runtime_error("Wrong kind of endgame.");
-        }
-    }
-    catch(const std::runtime_error &e)
-    {
-        globalType::errorType x;
-        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
-        throw x;
-    }
-}
-        void Engine::setKindOfEndgame()noexcept
-{
-    //int nrOfEnginePawns   {};
-    //int nrOfEngineKnights {};
-    //int nrOfEngineBishops {};
-    int nrOfEngineRooks   {};
-    int nrOfEngineQueens  {};
-
-    for(int i=0; i<8; i++)
-        for(int j=0; j<8; j++)
-            switch(workingChessboardPointer[i][j])
-            {
-                //case 'P': nrOfEnginePawns++;   break;
-                //case 'N': nrOfEngineKnights++; break;
-                //case 'B': nrOfEngineBishops++; break;
-                case 'R': nrOfEngineRooks++;   break;
-                case 'Q': nrOfEngineQueens++;  break;
-            }
-
-    if      ( 2 <= nrOfEngineRooks + nrOfEngineQueens ) {globalType::choosenEndgame = globalType::rooksAndQueensMate; return;}
-    else if ( 1 == nrOfEngineRooks + nrOfEngineQueens ) {globalType::choosenEndgame = globalType::rookOrQueenMate;    return;}
-    else                                                {globalType::choosenEndgame = globalType::unspecifiedMate;    return;}
-}
-        void Engine::makeRooksAndQueensMateMove()noexcept
-{
-    double dot1 = 0.1, dot04 = 0.04, dot01 = 0.01, dot004 = 0.004;
-
-    globalType::userKingBehaviorPriority1    = &dot1;
-    globalType::engineKnightBehaviorPriority = &dot01;
-    globalType::engineBishopBehaviorPriority = &dot01;
-    globalType::engineRookBehaviorPriority1  = &dot04;
-    globalType::engineRookBehaviorPriority2  = &dot004;
-    globalType::engineQueenBehaviorPriority1 = &dot04;
-    globalType::engineQueenBehaviorPriority2 = &dot004;
-    globalType::engineKingBehaviorPriority   = &dot01;
-
-    globalType::userKingBehaviorPoints1    = &movement.goToSideOfUserKing;
-    globalType::engineKnightBehaviorPoints = &movement.goOppositeDirectionOfUserKing;
-    globalType::engineBishopBehaviorPoints = &movement.goOppositeDirectionOfUserKing;
-    globalType::engineRookBehaviorPoints1  = &movement.separateUserKingFromRestOfBoard;
-    globalType::engineRookBehaviorPoints2  = &movement.runSidewaysFromKing;
-    globalType::engineQueenBehaviorPoints1 = &movement.separateUserKingFromRestOfBoard;
-    globalType::engineQueenBehaviorPoints2 = &movement.runSidewaysFromKing;
-    globalType::engineKingBehaviorPoints   = &movement.goOppositeDirectionOfUserKing;
-
-    movement.findNextMove(workingChessboardPointer);
-}
-        void Engine::makeSingleRookOrQueenMateMove()noexcept
-{
-    double dot1 = 0.1, dot04 = 0.04, dot01 = 0.01, zero = 0.0;
-
-    globalType::userKingBehaviorPriority1    = &dot1;
-    globalType::engineKnightBehaviorPriority = &dot01;
-    globalType::engineBishopBehaviorPriority = &dot01;
-    globalType::engineRookBehaviorPriority1  = &dot1;
-    globalType::engineRookBehaviorPriority2  = &zero;
-    globalType::engineQueenBehaviorPriority1 = &dot1;
-    globalType::engineQueenBehaviorPriority2 = &zero;
-    globalType::engineKingBehaviorPriority   = &dot04;
-
-    globalType::userKingBehaviorPoints1    = &movement.goToCornerOfUserKing;
-    globalType::engineKnightBehaviorPoints = &movement.goOppositeDirectionOfUserKing;
-    globalType::engineBishopBehaviorPoints = &movement.goOppositeDirectionOfUserKing;
-    globalType::engineRookBehaviorPoints1  = &movement.followUserKingToCorner;
-    globalType::engineRookBehaviorPoints2  = &movement.makeNothing;
-    globalType::engineQueenBehaviorPoints1 = &movement.followUserKingToCorner;
-    globalType::engineQueenBehaviorPoints2 = &movement.makeNothing;
-    globalType::engineKingBehaviorPoints   = &movement.followUserKingToSide;
-
-    movement.findNextMove(workingChessboardPointer);
-}
-        void Engine::makeUnspecifiedMateMove()noexcept
-{
-    double dot1 = 0.1, dot04 = 0.04, dot01 = 0.01, zero = 0.0;
-
-    globalType::userKingBehaviorPriority1    = &dot1;//?
-    globalType::engineKnightBehaviorPriority = &dot01;//?
-    globalType::engineBishopBehaviorPriority = &dot01;//?
-    globalType::engineRookBehaviorPriority1  = &zero;
-    globalType::engineRookBehaviorPriority2  = &zero;
-    globalType::engineQueenBehaviorPriority1 = &zero;
-    globalType::engineQueenBehaviorPriority2 = &zero;
-    globalType::engineKingBehaviorPriority   = &dot04;//?
-
-    globalType::userKingBehaviorPoints1    = &movement.goToCornerOfUserKing;//?
-    globalType::engineKnightBehaviorPoints = &movement.followUserKingToCorner;//?
-    globalType::engineBishopBehaviorPoints = &movement.followUserKingToCorner;//?
-    globalType::engineRookBehaviorPoints1  = &movement.makeNothing;
-    globalType::engineRookBehaviorPoints2  = &movement.makeNothing;
-    globalType::engineQueenBehaviorPoints1 = &movement.makeNothing;
-    globalType::engineQueenBehaviorPoints2 = &movement.makeNothing;
-    globalType::engineKingBehaviorPoints   = &movement.followUserKingToCorner;//?
-
-    movement.findNextMove(workingChessboardPointer);
-}
     int  Engine::engineMoveCoding()noexcept
 {
     findEngineMove(); //  finds e.fromY e.toY e.fromX e.toX by comparing workingChessboardPointer and comparativeChessboardPointer
@@ -923,3 +381,47 @@ int Engine::makeMove                         (int userMoveCode)
     return 0;
 }
 
+
+
+int Engine::moveToCode( Movement::Move move)
+{
+    u.toY = 7-(move.to/8);
+    u.toX = 7-(move.to%8);
+    u.fromY = 7-(move.to/8);
+    u.fromX = 7-(move.to%8);
+
+    int code = move.promotion;
+    code *= 10;
+    code += u.fromX;
+    code *= 10;
+    code += u.fromY;
+    code *= 10;
+    code += u.toX;
+    code *= 10;
+    code += u.toY;
+
+    rerurn code;
+}
+Movement::Move Engine::codeToMove(int code)
+{
+ Movement::Move move;
+
+    if(code == 10000)
+        u.toY = u.toX = u.fromY = u.fromX = promotionCode = 0;
+    else
+    {
+    u.toY = code    % 10;
+    code /=10;
+    u.toX = code    % 10;
+    code /=10;
+    u.fromY  = code % 10;
+    code /=10;
+    u.fromX  = code % 10;
+    code /=10;
+    move.promotion = code;
+    }
+
+    move.from = (7 - u.fromY) * 8 + 7 - u.fromX;
+    move.to   =  (7 - u.toY) * 8 + 7 - u.toX;
+    return move;
+}

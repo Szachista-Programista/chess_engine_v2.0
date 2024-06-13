@@ -1,25 +1,17 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 #include <cmath>
-#include "Move.h"
-/**
- * @brief The Engine class manages the entire game, handling opening,
- * middle game, and endgame moves.
- *
- * This class contains an instance of the Move class and utilizes it
- * for generating moves. It orchestrates the entire game, starting with
- * opening moves and deciding when the opening phase ends. Once the opening
- * phase is complete, it executes middle game moves using the Move class.
- * Finally, when it determines that it's time for the endgame,
- * it performs endgame moves, also utilizing the Move class to generate moves
- * according to different rules aimed at checkmating the opponent.
- */
+#include "GlobalDefinitionsPrevious.h"
+#include "PlayService.hpp"
+
 class Engine{
     bool color;
 
     int promotionCode;
     int movementNumber = 0;
 
+    PlayService playService;
+    PositionConverter positionConverter;
     std::vector<globalType::chessboardPointer>arrangements;
     std::vector<uint64_t>controlNumbersOfArrangements;
 
@@ -28,7 +20,6 @@ class Engine{
     globalType::chessboardPointer comparativeChessboardPointer;
     globalType::chessboardPointer workingChessboardPointer;
 
-    Move movement;
 //********************************************************************************
 public: Engine(bool k);
 private:    globalType::chessboardPointer loadPiecesArrangement();
@@ -72,6 +63,10 @@ private:    void getEngineReadyForMove(int userMoveCode);
                 int  encodeEngineMove()noexcept;
                 void markEngineMoveOnChessboard()noexcept;
                 int  isItGameOver()noexcept;
+
+
+int moveToCode(Movement::Move move);
+Movement::Move codeToMove(int code);
 //********************************************************************************************
     struct Movement{
         int fromX,

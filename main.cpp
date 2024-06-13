@@ -21,7 +21,7 @@ int main() {
 */
 
 
-#include "include/Play.hpp"
+#include "include/PlayService.hpp"
 TranspositionTable transpositionTable;
 PositionConverter positionConverter;
 PositionEvaluator positionEvaluator;
@@ -60,8 +60,8 @@ int main()
 {
 int color;
 std::cin>>color;
-Play play(color);
-play.run();
+PlayService playService(color);
+playService.run();
 //testujDzieciaczki();
 
 
@@ -70,7 +70,7 @@ play.run();
 
 
 
-   
+
 
 
 

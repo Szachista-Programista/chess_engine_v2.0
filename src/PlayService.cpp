@@ -1,15 +1,15 @@
-#include "../include/Play.hpp"
+#include "../include/PlayService.hpp"
 
-Play::Play(bool color): color{color}, position{positionConverter.FEN_ToBitBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")}
+PlayService::PlayService(bool color): color{color}, position{positionConverter.FEN_ToBitBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")}
 {
     positionFiller.fillBitBoard(position);
 }
-bool Play::setUserMove()
+bool PlayService::setUserMove()
 {
     setUserMoveCoord();
     return movement.makeMove(position, move);
 }
-    void Play::setUserMoveCoord()
+    void PlayService::setUserMoveCoord()
 {
     std::cout<<std::endl<<"RUSZASZ SIE  : ";
 
@@ -25,8 +25,7 @@ bool Play::setUserMove()
         move.to   = 63 - move.to;
     }
 }
-
-void Play::run()
+void PlayService::run()
 {
     system("pause");
     positionWriter.writeChessboard(positionConverter.bitBoardToString(position), color); yyy();
@@ -47,7 +46,7 @@ void Play::run()
 
 
 
-void Play::yyy()
+void PlayService::yyy()
 {
     std::ofstream file("txt/abc.txt", std::ios::app);
     file<<positionConverter.bitBoardToFEN(position);

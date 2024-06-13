@@ -1,11 +1,11 @@
-#ifndef PLAY_HPP
-#define PLAY_HPP
+#ifndef PLAY_SERVIVE_HPP
+#define PLAY_SERVIVE_HPP
 
 #include "SearchTree.hpp"
 #include "PositionWriter.hpp"
 
 
-class Play
+class PlayService
 {
 public:
         PositionConverter positionConverter;
@@ -18,7 +18,7 @@ public:
         gd::BitBoardPtr position;
         //********************
 
-        Play(bool color);
+        PlayService(bool color);
         bool setUserMove();
             void setUserMoveCoord();
 
@@ -30,5 +30,5 @@ void yyy();
 
 
 };
-#endif //PLAY_HPP
+#endif //PLAY_SERVIVE_HPP
 

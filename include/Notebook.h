@@ -2,7 +2,7 @@
 #define NOTEBOOK_H
 #include <iomanip>
 #include <sstream>
-#include "GlobalDefinitions.h"
+#include "GlobalDefinitionsPrevious.h"
 /**
  * @brief Class responsible for generating chess notation based on the moves made during the game.
  * It receives encoded information about the moves made by the user or the machine,
