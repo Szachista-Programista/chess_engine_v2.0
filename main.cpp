@@ -8,7 +8,7 @@ BlackChildren blackChildren;
 SearchTree searchTree;
 Movement movement;
 Polyglot polyglot("bin/codekiddy.bin");
-Play play(1);
+
 
 ////////////////////////////////////////////////////////////////
 
@@ -27,7 +27,7 @@ std::cout<<std::left<<std::setw(5)<<"3/2";
 countNumberOfMoves("rnbk1n2/1pP1p1pp/7r/R3q3/3Q4/5N2/pP1p1PPP/1NB1K2R w K - 0 1");//szach
 std::cout<<std::left<<std::setw(5)<<"8/8";
 countNumberOfMoves("2bk1bn1/ppp1pppp/2n1q2R/r7/7R/r2Q1N2/PPPP1PPP/1NB1KB2 w - - 0 1");//szach
-std::cout<<std::left<<std::setw(5)<<"45/47";
+std::cout<<std::left<<std::setw(5)<<"45/46";
 countNumberOfMoves("r3k1q1/1pppp2P/1nb5/8/8/5BN1/p2PPPP1/1Q2K2R w Kq - 0 1");//promocje/roszady
 }
 
@@ -35,7 +35,10 @@ countNumberOfMoves("r3k1q1/1pppp2P/1nb5/8/8/5BN1/p2PPPP1/1Q2K2R w Kq - 0 1");//p
 
 int main()
 {
-//play.run();
+int color;
+std::cin>>color;
+Play play(color);
+play.run();
 //testujDzieciaczki();
 
 

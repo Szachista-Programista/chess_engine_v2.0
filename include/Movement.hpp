@@ -2,9 +2,11 @@
 #define MOVEMENT_HPP
 
 #include "TranspositionTable.hpp"
+#include "PositionWriter.hpp"//////////////////////////////
 
 class Movement
 {
+        PositionWriter positionWriter;////////////////////
         WhiteChildren whiteChildren;
         BlackChildren blackChildren;
         PositionConverter positionConverter;

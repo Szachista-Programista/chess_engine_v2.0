@@ -25,7 +25,7 @@ bool Movement::makeMove(gd::BitBoardPtr &position, Move move)
 }
     void Movement::makeWhiteMove(gd::BitBoardPtr &position, Move move)
 {
-    if(position[gd::whiteKnight][move.from] == 1 && move.from == 3 && (move.to == 1 || move.to == 5))
+    if(position[gd::whiteKing][move.from] == 1 && move.from == 3 && (move.to == 1 || move.to == 5))
         makeWhiteCastle(position, move);
     else if(move.promotion != 0)
         makeWhitePromotion(position, move);
@@ -89,7 +89,7 @@ bool Movement::makeMove(gd::BitBoardPtr &position, Move move)
 }
     void Movement::makeBlackMove(gd::BitBoardPtr &position, Move move)
 {
-    if(position[gd::blackKnight][move.from] == 1 && move.from == 59 && (move.to == 57 || move.to == 61))
+    if(position[gd::blackKing][move.from] == 1 && move.from == 59 && (move.to == 57 || move.to == 61))
         makeBlackCastle(position, move);
     else if(move.promotion != 0)
         makeBlackPromotion(position, move);

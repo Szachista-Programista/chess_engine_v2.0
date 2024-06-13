@@ -13,13 +13,12 @@ bool Play::setUserMove()
 {
     std::cout<<std::endl<<"RUSZASZ SIE  : ";
 
-    int from, to;
-    std::cin>>from>>to;
+    int from, to, promotion;
+    std::cin>>from>>to>>promotion;
 
     move.from = from;
     move.to = to;
-
-    move.promotion = 0;
+    move.promotion = promotion;
     if(!color)
     {
         move.from = 63 - move.from;

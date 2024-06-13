@@ -30,7 +30,7 @@ gd::BitBoardPtr SearchTree::iterativeDeepening(gd::BitBoardPtr position, const b
         positionSorter.sortEvaluatedPositions(evaluedPositions, color);
         auto stop = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);  yyy(evaluedPositions, depth, duration);
-        if(duration.count() > 1500)
+        if(duration.count() > 1200)
             break;     
     }                                                                                         xxx();
     choosenChild = gd::copyBitBoard(evaluedPositions.front().position);
