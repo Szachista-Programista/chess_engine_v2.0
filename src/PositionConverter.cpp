@@ -277,9 +277,9 @@ gd::ChessBoardPtr PositionConverter::bitBoardTo8x8CharArray(gd::BitBoardPtr &ptr
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
         {
-            piece = getPieceChar(getPieceIndex(ptr, i*8+j));
+            piece = getPieceChar(getPieceIndex(ptr, (7-i)*8+(7-j)));
             if(piece == ' ')
-                CBPtr[i][j] = '.';
+                CBPtr[i][j] = ' ';
             else
                 CBPtr[i][j] = piece;
         }
@@ -292,6 +292,53 @@ std::string PositionConverter::bitBoardToString(gd::BitBoardPtr &ptr)//temporary
         content += getPieceChar(getPieceIndex(ptr, i));
     return content;
 }
-
-
-
+gd::BitBoardPtr PositionConverter::StringToBitBoard(std::string content)
+{
+    gd::BitBoardPtr bitBoard;
+    try {bitBoard = new std::bitset<64>[gd::bitBoardSize]{};}
+    catch(const std::bad_alloc &e)
+    {
+        gd::errorType x;
+        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
+        throw x;
+    }
+    try
+    {
+        for (int i = 0; i < 64; i++)
+            switch (content[63-i])
+            {
+                case '*': break;
+                case ' ': break;
+                case '-': break;
+                case '.': break;
+                case 'P': bitBoard[gd::whitePawn  ].set(i); break;
+                case 'N': bitBoard[gd::whiteKnight].set(i); break;
+                case 'B': bitBoard[gd::whiteBishop].set(i); break;
+                case 'R': bitBoard[gd::whiteRook  ].set(i); break;
+                case 'Q': bitBoard[gd::whiteQueen ].set(i); break;
+                case 'K': bitBoard[gd::whiteKing  ].set(i); break;
+                case 'p': bitBoard[gd::blackPawn  ].set(i); break;
+                case 'n': bitBoard[gd::blackKnight].set(i); break;
+                case 'b': bitBoard[gd::blackBishop].set(i); break;
+                case 'r': bitBoard[gd::blackRook  ].set(i); break;
+                case 'q': bitBoard[gd::blackQueen ].set(i); break;
+                case 'k': bitBoard[gd::blackKing  ].set(i); break;
+                default: throw std::runtime_error("Wrong 'chessboard.txt' content.");
+            }
+    }
+    catch(const std::runtime_error &e)
+    {
+        gd::errorType x;
+        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
+        throw x;
+    }
+    return bitBoard;
+}
+std::string PositionConverter::Char8x8ArrayToString(gd::ChessBoardPtr &CBPtr)//temporary
+{
+    std::string content;
+    for(int i=0; i<8; i++)
+        for(int j=0; j<8; j++)
+            content += CBPtr[i][j];
+    return content;
+}

@@ -12,6 +12,11 @@ class Engine{
 
     PlayService playService;
     PositionConverter positionConverter;
+    PositionFiller positionFiller;
+    PositionWriter positionWriter;
+    SearchTree searchTree;
+    Movement movement;
+    Movement::Move move;
     std::vector<globalType::chessboardPointer>arrangements;
     std::vector<uint64_t>controlNumbersOfArrangements;
 
@@ -26,17 +31,9 @@ private:    globalType::chessboardPointer loadPiecesArrangement();
 public:~Engine()noexcept;
 private:    void clearArrangements()noexcept;
 public: bool canUserMakeSuchMove(int userMoveCode);
-private:    void decipherUserMove(int userMoveCode);
-            bool isPieceOfUserOnStartingSquare();
-            bool isPieceOfUserOnFinalSquare();
-            bool isThisMoveExposesKingToCapture();
-            bool isAllowedMove();
-                bool isAllowedMoveByPawn();
-                bool isAllowedMoveByKnight();
-                bool isAllowedSlantMove();
-                bool isAllowedNonslantMove();
-                bool isAllowedMovebyKing();
+
 public: int makeMove(int userMoveCode);
+            void decipherUserMove(int userMoveCode);
 private:    void getEngineReadyForMove(int userMoveCode);
                 void markUserMoveOnChessboard(int userMoveCode);
             void arrangeServiceAfterUserMove(int userMoveCode);
@@ -45,28 +42,18 @@ private:    void getEngineReadyForMove(int userMoveCode);
                     bool isControlNumberRepeatedThirdTime();
                     bool compareChessboards(globalType::chessboardPointer ptr_A, globalType::chessboardPointer ptr_B);
             void arrangeServiceAfterEngineMove();
-            void makeOpeningMove()noexcept;
-                void blackOpeningMove()noexcept;
-                void whiteOpeningMove()noexcept;
-                int  randomChance(int liczba_opcji)noexcept;
-            void makeMiddlegameMove();
-                void isItEndgameTime()noexcept;
-                    void setUserKingSideLocation()noexcept;
-                    void setUserKingCornerLocation()noexcept;
-            void makeEndgameMove();
-                void setKindOfEndgame()noexcept;
-                void makeRooksAndQueensMateMove()noexcept;
-                void makeSingleRookOrQueenMateMove()noexcept;
-                void makeUnspecifiedMateMove()noexcept;
+
             int engineMoveCoding()noexcept;
                 void findEngineMove()noexcept;
                 int  encodeEngineMove()noexcept;
                 void markEngineMoveOnChessboard()noexcept;
                 int  isItGameOver()noexcept;
 
+gd::ChessBoardPtr flipBoard(gd::ChessBoardPtr ptr);
 
-int moveToCode(Movement::Move move);
 Movement::Move codeToMove(int code);
+globalType::chessboardPointer copyChessboard(const globalType::chessboardPointer oryginal);
+
 //********************************************************************************************
     struct Movement{
         int fromX,

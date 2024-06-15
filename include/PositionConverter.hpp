@@ -30,8 +30,8 @@ public:
 
         gd::ChessBoardPtr bitBoardTo8x8CharArray(gd::BitBoardPtr &ptr);
         std::string bitBoardToString(gd::BitBoardPtr &ptr);
-
-
+        gd::BitBoardPtr StringToBitBoard(std::string content);
+        std::string Char8x8ArrayToString(gd::ChessBoardPtr &CBPtr);
 
 
 };

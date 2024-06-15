@@ -2,7 +2,6 @@
 
 Engine::Engine(bool k): color{k}, playService{k}
 {
-    globalType::gameStage        = globalType::opening;
     comparativeChessboardPointer = loadPiecesArrangement();
     workingChessboardPointer     = loadPiecesArrangement();
     setArrangements(workingChessboardPointer);
@@ -74,33 +73,111 @@ Engine::~Engine()noexcept
 }
 bool Engine::canUserMakeSuchMove(int userMoveCode)
 {
-     Movement::Move move = codeToMove(userMoveCode)
-    positionConverter.
+    std::cout<<"userMoveCode = "<<userMoveCode<<std::endl;
 
+    move = codeToMove(userMoveCode);
+    std::cout<<"move.from = "<<(int)move.from<<std::endl;
+    std::cout<<"move.to = "<<(int)move.to<<std::endl;
+    std::cout<<"move.promotion = "<<(int)move.promotion<<std::endl;
 
+    if(color) workingChessboardPointer = flipBoard(workingChessboardPointer);
+    gd::BitBoardPtr BitBoard = positionConverter.StringToBitBoard(positionConverter.Char8x8ArrayToString(workingChessboardPointer));
+    positionFiller.fillBitBoard(BitBoard, 1, 1);
+    BitBoard[gd::extraInfo][63] = BitBoard[gd::extraInfo][56] = BitBoard[gd::extraInfo][7] = BitBoard[gd::extraInfo][0] = 1;
+    positionFiller.checkCastles(BitBoard);
+    if(color) BitBoard[gd::extraInfo][gd::isWhiteTurn] = 1;
 
+    if(positionConverter.getPieceIndex(BitBoard, move.from) == gd::whitePawn && 55 < move.to ||
+       positionConverter.getPieceIndex(BitBoard, move.from) == gd::blackPawn && 8 > move.to)
+        move.promotion = 4;
+
+    if(color) workingChessboardPointer = flipBoard(workingChessboardPointer);
+
+    positionWriter.writeBitBoard(BitBoard);
+    if(movement.makeMove(BitBoard, move))
+    {std::cout<<"true"<<std::endl;
+        delete[]BitBoard;
+        return true;
+    }
+    else
+    {std::cout<<"false"<<std::endl;
+        delete[]BitBoard;
+        return false;
+    }
 }
+    Movement::Move Engine::codeToMove(int code)
+{
+    move;
 
-int Engine::makeMove                         (int userMoveCode)
+    if(code == 10000)
+        u.toY = u.toX = u.fromY = u.fromX = promotionCode = 0;
+    else
+    {
+    u.toY = code    % 10;
+    code /=10;
+    u.toX = code    % 10;
+    code /=10;
+    u.fromY  = code % 10;
+    code /=10;
+    u.fromX  = code % 10;
+    code /=10;
+    move.promotion = code;
+    }
+
+    move.from = (color?(u.fromY):(7-u.fromY)) * 8 + (color?(u.fromX):(7-u.fromX));
+    move.to   = (color?(u.toY):(7-u.toY))     * 8 + (color?(u.toX):(7-u.toX));
+    return move;
+}
+int Engine::makeMove(int userMoveCode)
 {
     getEngineReadyForMove(userMoveCode);
     arrangeServiceAfterUserMove(userMoveCode);
-    if( ! movement.gameOver)
-        switch(globalType::gameStage)
-        {
-            case globalType::opening:     makeOpeningMove();    break;
-            case globalType::middlegame:  makeMiddlegameMove(); break;
-            case globalType::endgame:     makeEndgameMove();    break;
-        }
-    if( ! movement.gameOver)
+    if(color) workingChessboardPointer = flipBoard(workingChessboardPointer);
+    gd::BitBoardPtr BitBoard = positionConverter.StringToBitBoard(positionConverter.Char8x8ArrayToString(workingChessboardPointer));
+    positionFiller.fillBitBoard(BitBoard, 1, 1);
+    BitBoard[gd::extraInfo][63] = BitBoard[gd::extraInfo][56] = BitBoard[gd::extraInfo][7] = BitBoard[gd::extraInfo][0] = 1;
+    positionFiller.checkCastles(BitBoard);
+    BitBoard = searchTree.iterativeDeepening(BitBoard, !color);
+    delete[]workingChessboardPointer;
+    workingChessboardPointer = positionConverter.bitBoardTo8x8CharArray(BitBoard);
+    if(color) workingChessboardPointer = flipBoard(workingChessboardPointer);
+    //if( ! movement.gameOver)
         arrangeServiceAfterEngineMove();
     return engineMoveCoding();
 }
-    void Engine::getEngineReadyForMove       (int userMoveCode)
+    void Engine::getEngineReadyForMove(int userMoveCode)
 {
     movementNumber++;
     decipherUserMove(userMoveCode); // changes e.g. 4456 into u.fromY u.toY u.fromX u.toX
     markUserMoveOnChessboard(userMoveCode); // marks u.fromY u.toY u.fromX u.toX into comparativeChessboardPointer and workingChessboardPointer
+}
+        void Engine::decipherUserMove(int userMoveCode)
+{
+    if(userMoveCode == 10000)
+        u.toY = u.toX = u.fromY = u.fromX = promotionCode = 0;
+    else
+    {
+    u.toY = userMoveCode    % 10;
+    userMoveCode /=10;
+    u.toX = userMoveCode    % 10;
+    userMoveCode /=10;
+    u.fromY  = userMoveCode % 10;
+    userMoveCode /=10;
+    u.fromX  = userMoveCode % 10;
+    userMoveCode /=10;
+    promotionCode = userMoveCode;
+    }
+    try
+    {
+        if (u.fromX < 0 || 7 < u.fromX || u.fromY < 0 || 7 < u.fromY || u.toX < 0 || 7 < u.toX || u.toY < 0 || 7 < u.toY)
+            throw std::runtime_error("User movement coordinates out of range.");
+    }
+    catch(const std::runtime_error &e)
+    {
+        globalType::errorType x;
+        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
+        throw x;
+    }
 }
         void Engine::markUserMoveOnChessboard(int userMoveCode)
 {
@@ -168,10 +245,10 @@ int Engine::makeMove                         (int userMoveCode)
     setArrangements(workingChessboardPointer);
     if(isArrangementRepeatedThirdTime())
     {
-        movement.gameOver = true;
-        movement.gameOverStalemateByUser = true;
-        delete[]workingChessboardPointer;
-        workingChessboardPointer = nullptr;
+        //movement.gameOver = true;
+        //movement.gameOverStalemateByUser = true;
+        //delete[]workingChessboardPointer;
+        //workingChessboardPointer = nullptr;
     }
 }
         void Engine::setArrangements(globalType::chessboardPointer ptr_X)
@@ -201,7 +278,7 @@ int Engine::makeMove                         (int userMoveCode)
                 controlNumber <<= 1;
         }
     controlNumbersOfArrangements.push_back(controlNumber);
-    arrangements.push_back(movement.copyChessboard(ptr_X));
+    arrangements.push_back(copyChessboard(ptr_X));
 }
         bool Engine::isArrangementRepeatedThirdTime()
 {
@@ -278,10 +355,10 @@ int Engine::makeMove                         (int userMoveCode)
     void Engine::arrangeServiceAfterEngineMove()
 {
     setArrangements(workingChessboardPointer);
-    if(isArrangementRepeatedThirdTime())
+    //if(isArrangementRepeatedThirdTime())
     {
-        movement.gameOver = true;
-        movement.gameOverStalemateByEngine = true;
+        //movement.gameOver = true;
+        //movement.gameOverStalemateByEngine = true;
     }
 }
 
@@ -370,58 +447,68 @@ int Engine::makeMove                         (int userMoveCode)
 }
         int  Engine::isItGameOver()noexcept
 {
-    if(movement.gameOverUserWin)
+    /*if(movement.gameOverUserWin)
         return 100000;
     if(movement.gameOverStalemateByUser)
         return 200000;
     if(movement.gameOverEngineWin)
         return 300000;
     if(movement.gameOverStalemateByEngine)
-        return 400000;
+        return 400000;*/
     return 0;
 }
 
 
-
-int Engine::moveToCode( Movement::Move move)
+gd::ChessBoardPtr Engine::flipBoard(gd::ChessBoardPtr ptr)
 {
-    u.toY = 7-(move.to/8);
-    u.toX = 7-(move.to%8);
-    u.fromY = 7-(move.to/8);
-    u.fromX = 7-(move.to%8);
-
-    int code = move.promotion;
-    code *= 10;
-    code += u.fromX;
-    code *= 10;
-    code += u.fromY;
-    code *= 10;
-    code += u.toX;
-    code *= 10;
-    code += u.toY;
-
-    rerurn code;
+    gd::ChessBoardPtr flipped = new char[8][8];
+    for (int i = 0; i < 8; i++)
+        for (int j = 0; j < 8; j++)
+            switch(ptr[i][j])
+            {
+                case 'p': flipped[7-i][7-j] = 'P'; break;
+                case 'n': flipped[7-i][7-j] = 'N'; break;
+                case 'b': flipped[7-i][7-j] = 'B'; break;
+                case 'r': flipped[7-i][7-j] = 'R'; break;
+                case 'q': flipped[7-i][7-j] = 'Q'; break;
+                case 'k': flipped[7-i][7-j] = 'K'; break;
+                case 'P': flipped[7-i][7-j] = 'p'; break;
+                case 'N': flipped[7-i][7-j] = 'n'; break;
+                case 'B': flipped[7-i][7-j] = 'b'; break;
+                case 'R': flipped[7-i][7-j] = 'r'; break;
+                case 'Q': flipped[7-i][7-j] = 'q'; break;
+                case 'K': flipped[7-i][7-j] = 'k'; break;
+                default: flipped[7-i][7-j] = ptr[i][j]; break;
+            }
+    delete[]ptr;
+    return flipped;
 }
-Movement::Move Engine::codeToMove(int code)
+globalType::chessboardPointer Engine::copyChessboard(const globalType::chessboardPointer oryginal)
 {
- Movement::Move move;
-
-    if(code == 10000)
-        u.toY = u.toX = u.fromY = u.fromX = promotionCode = 0;
-    else
+    try
     {
-    u.toY = code    % 10;
-    code /=10;
-    u.toX = code    % 10;
-    code /=10;
-    u.fromY  = code % 10;
-    code /=10;
-    u.fromX  = code % 10;
-    code /=10;
-    move.promotion = code;
+        if (oryginal == nullptr)
+            throw std::invalid_argument("Attempting to copy the nullptr address of the chessboard.");
     }
-
-    move.from = (7 - u.fromY) * 8 + 7 - u.fromX;
-    move.to   =  (7 - u.toY) * 8 + 7 - u.toX;
-    return move;
+    catch(const std::invalid_argument &e)
+    {
+        globalType::errorType x;
+        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
+        throw x;
+    }
+    globalType::chessboardPointer cOpy;
+    try
+    {
+        cOpy = new char[8][8];
+    }
+    catch(const std::bad_alloc &e)
+    {
+        globalType::errorType x;
+        x.errorMessage = __PRETTY_FUNCTION__ + std::string(" >> error: ") + e.what();
+        throw x;
+    }
+    for(int i=0; i<8; i++)
+        for(int j=0; j<8; j++)
+            cOpy[i][j] = oryginal[i][j];
+    return cOpy;
 }

@@ -36,10 +36,10 @@ void PositionWriter::writeChessboard(gd::BitBoardPtr BBPtr)
     std::cout<<std::string(27,'\333')<<std::endl;
     std::cout<<std::string( 5,'\333')<<" 1 2 3 4 5 6 7 8 "<<std::string(5,'\333')<<std::endl;
     std::cout<<std::string(27,'\333')<<std::endl;
-    for(int i=7; i>=0; i--)
+    for(int i=0; i<8; i++)
     {
         std::cout<<std::string( 2,'\333')<<i+1<<std::string( 2,'\333');
-        for(int j=7; j>=0; j--)
+        for(int j=0; j<8; j++)
             std::cout<<' '<<CBPtr[i][j];
         std::cout<<' ';
         std::cout<<std::string( 2,'\333')<<i+1<<std::string( 2,'\333')<<std::endl;

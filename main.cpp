@@ -1,27 +1,5 @@
-/*
-#include "include/Game.h"
-
-int main() {
-    do
-    {
-        globalType::windowResized = false;
-        Game game;
-        try
-        {
-            game.run();
-        }
-        catch(globalType::errorType &e)
-        {
-            std::cout<<e.errorMessage;
-        }
-    }
-    while(globalType::windowResized);
-    return 0;
-}
-*/
-
-
 #include "include/PlayService.hpp"
+#include "include/Game.h"
 TranspositionTable transpositionTable;
 PositionConverter positionConverter;
 PositionEvaluator positionEvaluator;
@@ -58,20 +36,28 @@ countNumberOfMoves("r3k1q1/1pppp2P/1nb5/8/8/5BN1/p2PPPP1/1Q2K2R w Kq - 0 1");//p
 
 int main()
 {
-int color;
-std::cin>>color;
-PlayService playService(color);
-playService.run();
+
+    
+    do
+    {
+        globalType::windowResized = false;
+        Game game;
+        try
+        {
+            game.run();
+        }
+        catch(globalType::errorType &e)
+        {
+            std::cout<<e.errorMessage;
+        }
+    }
+    while(globalType::windowResized);
+
+
+
+//PlayService playService(color);
+//playService.run();
 //testujDzieciaczki();
-
-
-
-    //y = searchTree.iterativeDeepening(y, 0);
-
-
-
-
-
 
 
 
