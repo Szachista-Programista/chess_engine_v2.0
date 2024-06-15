@@ -1,4 +1,4 @@
-#include "../include/Menu.h"
+#include "../../include/GUI/Menu.h"
 
 Menu::Menu(bool k): color{k}
 {

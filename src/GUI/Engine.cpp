@@ -1,4 +1,4 @@
-#include "../include/Engine.h"
+#include "../../include/GUI/Engine.h"
 
 Engine::Engine(bool k): color{k}, playService{k}
 {
@@ -73,34 +73,24 @@ Engine::~Engine()noexcept
 }
 bool Engine::canUserMakeSuchMove(int userMoveCode)
 {
-    std::cout<<"userMoveCode = "<<userMoveCode<<std::endl;
-
     move = codeToMove(userMoveCode);
-    std::cout<<"move.from = "<<(int)move.from<<std::endl;
-    std::cout<<"move.to = "<<(int)move.to<<std::endl;
-    std::cout<<"move.promotion = "<<(int)move.promotion<<std::endl;
-
     if(color) workingChessboardPointer = flipBoard(workingChessboardPointer);
     gd::BitBoardPtr BitBoard = positionConverter.StringToBitBoard(positionConverter.Char8x8ArrayToString(workingChessboardPointer));
     positionFiller.fillBitBoard(BitBoard, 1, 1);
     BitBoard[gd::extraInfo][63] = BitBoard[gd::extraInfo][56] = BitBoard[gd::extraInfo][7] = BitBoard[gd::extraInfo][0] = 1;
     positionFiller.checkCastles(BitBoard);
     if(color) BitBoard[gd::extraInfo][gd::isWhiteTurn] = 1;
-
     if(positionConverter.getPieceIndex(BitBoard, move.from) == gd::whitePawn && 55 < move.to ||
        positionConverter.getPieceIndex(BitBoard, move.from) == gd::blackPawn && 8 > move.to)
         move.promotion = 4;
-
     if(color) workingChessboardPointer = flipBoard(workingChessboardPointer);
-
-    positionWriter.writeBitBoard(BitBoard);
     if(movement.makeMove(BitBoard, move))
-    {std::cout<<"true"<<std::endl;
+    {
         delete[]BitBoard;
         return true;
     }
     else
-    {std::cout<<"false"<<std::endl;
+    {
         delete[]BitBoard;
         return false;
     }
@@ -135,6 +125,7 @@ int Engine::makeMove(int userMoveCode)
     if(color) workingChessboardPointer = flipBoard(workingChessboardPointer);
     gd::BitBoardPtr BitBoard = positionConverter.StringToBitBoard(positionConverter.Char8x8ArrayToString(workingChessboardPointer));
     positionFiller.fillBitBoard(BitBoard, 1, 1);
+    if(!color) BitBoard[gd::extraInfo][gd::isWhiteTurn] = 1;
     BitBoard[gd::extraInfo][63] = BitBoard[gd::extraInfo][56] = BitBoard[gd::extraInfo][7] = BitBoard[gd::extraInfo][0] = 1;
     positionFiller.checkCastles(BitBoard);
     BitBoard = searchTree.iterativeDeepening(BitBoard, !color);

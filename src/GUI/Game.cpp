@@ -1,4 +1,4 @@
-#include "../include/Game.h"
+#include "../../include/GUI/Game.h"
 
 Game::Game(): window(sf::VideoMode(globalType::windowWidth, globalType::windowHeight), "Chess")
 {

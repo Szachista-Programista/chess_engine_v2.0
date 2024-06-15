@@ -1,4 +1,4 @@
-#include "../include/PlayPrevious.h"
+#include "../../include/GUI/PlayPrevious.h"
 
 Play::Play(bool k)noexcept:
 color{k}, chessboard{k}, engine{k}, notebook{k}, menu{k}
@@ -121,7 +121,7 @@ void Play::playWithUser()
     chessboard.drawChessboard();
 }
             bool Play::isUserMakesPromotion()noexcept
-{std::cout<<"x";
+{
     int fromX =  userMoveCode/1000;
     int fromY = (userMoveCode/ 100)%10;
     int toY   =  userMoveCode      %10;

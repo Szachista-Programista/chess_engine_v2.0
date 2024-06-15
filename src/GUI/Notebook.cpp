@@ -1,4 +1,4 @@
-#include "../include/Notebook.h"
+#include "../../include/GUI/Notebook.h"
 
 Notebook::Notebook(bool k): color{k}
 {

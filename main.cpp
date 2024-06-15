@@ -1,5 +1,5 @@
 #include "include/PlayService.hpp"
-#include "include/Game.h"
+#include "include/GUI/Game.h"
 TranspositionTable transpositionTable;
 PositionConverter positionConverter;
 PositionEvaluator positionEvaluator;
@@ -9,10 +9,7 @@ BlackChildren blackChildren;
 SearchTree searchTree;
 Movement movement;
 Polyglot polyglot("bin/codekiddy.bin");
-
-
 ////////////////////////////////////////////////////////////////
-
 void countNumberOfMoves(std::string FEN)
 {
     gd::BitBoardPtr x = positionConverter.FEN_ToBitBoard(FEN);
@@ -31,13 +28,8 @@ countNumberOfMoves("2bk1bn1/ppp1pppp/2n1q2R/r7/7R/r2Q1N2/PPPP1PPP/1NB1KB2 w - - 
 std::cout<<std::left<<std::setw(5)<<"45/46";
 countNumberOfMoves("r3k1q1/1pppp2P/1nb5/8/8/5BN1/p2PPPP1/1Q2K2R w Kq - 0 1");//promocje/roszady
 }
-
-////////////////////////////////////////////////////////////////
-
-int main()
+void GUI()
 {
-
-    
     do
     {
         globalType::windowResized = false;
@@ -52,19 +44,20 @@ int main()
         }
     }
     while(globalType::windowResized);
+}
+////////////////////////////////////////////////////////////////
 
+int main()
+{
 
+    GUI();
 
-//PlayService playService(color);
-//playService.run();
-//testujDzieciaczki();
-
-
-
+    //PlayService playService(color);
+    //playService.run();
+    //testujDzieciaczki();
 
     return 0;
 }
-
 ////////////////////////////////////////////////////////////////
 /*
 #include <iostream>

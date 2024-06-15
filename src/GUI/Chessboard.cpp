@@ -1,4 +1,4 @@
-#include "../include/Chessboard.h"
+#include "../../include/GUI/Chessboard.h"
 
 Chessboard::Chessboard(bool k): color{k}
 {
