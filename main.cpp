@@ -45,15 +45,20 @@ void GUI()
     }
     while(globalType::windowResized);
 }
+
+
+
+
+
+
+
+
 ////////////////////////////////////////////////////////////////
 
 int main()
 {
-
     GUI();
 
-    //PlayService playService(color);
-    //playService.run();
     //testujDzieciaczki();
 
     return 0;

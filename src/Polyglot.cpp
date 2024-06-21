@@ -1,6 +1,5 @@
 #include "../include/Polyglot.hpp"
 
-
 Polyglot::Polyglot(std::string filename): polyglotBookFileName{filename}
 {
     initPolyglotBook();

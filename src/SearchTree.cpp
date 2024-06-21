@@ -1,6 +1,6 @@
 #include "../include/SearchTree.hpp"
 
-SearchTree::SearchTree(): polyglot{"bin/book.bin"}
+SearchTree::SearchTree(): polyglott{"bin/book.bin"}
 {}
 gd::BitBoardPtr SearchTree::iterativeDeepening(gd::BitBoardPtr position, const bool color)
 {
@@ -11,7 +11,7 @@ gd::BitBoardPtr SearchTree::iterativeDeepening(gd::BitBoardPtr position, const b
     choosenChild = gd::copyBitBoard(position);
     if(polyglot.checkPolyglotBook(choosenChild))
         return choosenChild;
-    else 
+    else
         delete[]choosenChild;
 
     for(int depth=0;; depth++)
@@ -30,8 +30,8 @@ gd::BitBoardPtr SearchTree::iterativeDeepening(gd::BitBoardPtr position, const b
         positionSorter.sortEvaluatedPositions(evaluedPositions, color);
         auto stop = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);  yyy(evaluedPositions, depth, duration);
-        if(duration.count() > 1200 || depth > 10)
-            break;     
+        if(duration.count() > 1000 || depth > 10)
+            break;
     }                                                                                         xxx();
     choosenChild = gd::copyBitBoard(evaluedPositions.front().position);
     deletePositions(evaluedPositions);

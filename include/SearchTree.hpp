@@ -13,7 +13,7 @@ class SearchTree
         PositionFiller positionFiller;
         PositionSorter positionSorter;
         TranspositionTable transpositionTable;
-        Polyglot polyglot;
+        Polyglot polyglott;
         Movement movement;
         //********************
 public: SearchTree();

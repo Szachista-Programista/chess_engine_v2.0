@@ -233,6 +233,7 @@ public:
                     uint64_t generateCurrentTurnKey(const gd::BitBoardPtr &ptr);
                 Movement::Move getPolyglotMove(int index);
 };
+
 #endif //POLYGLOT_HPP
 
 

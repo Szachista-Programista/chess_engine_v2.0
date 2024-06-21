@@ -2,11 +2,9 @@
 #define MOVEMENT_HPP
 
 #include "TranspositionTable.hpp"
-#include "PositionWriter.hpp"//////////////////////////////
 
 class Movement
 {
-        PositionWriter positionWriter;////////////////////
         WhiteChildren whiteChildren;
         BlackChildren blackChildren;
         PositionConverter positionConverter;
@@ -27,11 +25,16 @@ private:    void makeWhiteMove(gd::BitBoardPtr &position, Move move);
                 void makeBlackEnPassant(gd::BitBoardPtr &position, Move move);
                 void makeBlackDoublePush(gd::BitBoardPtr &position, Move move);
                 void makeBlackCommonMove(gd::BitBoardPtr &position, Move move);
+public: Movement::Move getMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition);
+private:    Movement::Move getWhiteCastleMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition);
+            Movement::Move getBlackCastleMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition);
+            Movement::Move getWhitePromotionMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition);
+            Movement::Move getBlackPromotionMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition);
+            Movement::Move getWhiteEnPassantOrCommonMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition);
+            Movement::Move getBlackEnPassantOrCommonMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition);
+                uint8_t findTrueBitIndex(const std::bitset<64> &bitset);
 public: bool isMoveAllowed(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition);
-        void check50MovesCounter(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition);
-
-
-
+private:void check50MovesCounter(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition);
 };
 #endif //MOVEMENT_HPP
 
