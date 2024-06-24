@@ -152,7 +152,7 @@ bool Movement::makeMove(gd::BitBoardPtr &position, Move move)
     position[positionConverter.getPieceIndex(position, move.from)][move.to] = 1;
     position[positionConverter.getPieceIndex(position, move.from)][move.from] = 0;
 }
-Movement::Move Movement::getMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition)
+Movement::Move Movement::getMove(const gd::BitBoardPtr &startPosition, const gd::BitBoardPtr &movedPosition)
 {
     if(4 == (startPosition[gd::whitePiece] ^ movedPosition[gd::whitePiece]).count()) return getWhiteCastleMove(startPosition, movedPosition);
     if(4 == (startPosition[gd::blackPiece] ^ movedPosition[gd::blackPiece]).count()) return getBlackCastleMove(startPosition, movedPosition);
@@ -160,8 +160,9 @@ Movement::Move Movement::getMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr
     if(1 == (startPosition[gd::blackPawn ] ^ movedPosition[gd::blackPawn ]).count()) return getBlackPromotionMove(startPosition, movedPosition);
     if(2 == (startPosition[gd::whitePiece] ^ movedPosition[gd::whitePiece]).count()) return getWhiteEnPassantOrCommonMove(startPosition, movedPosition);
     if(2 == (startPosition[gd::blackPiece] ^ movedPosition[gd::blackPiece]).count()) return getBlackEnPassantOrCommonMove(startPosition, movedPosition);
+    return Movement::Move{0, 0, 0};
 }
-    Movement::Move Movement::getWhiteCastleMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition)
+    Movement::Move Movement::getWhiteCastleMove(const gd::BitBoardPtr &startPosition, const gd::BitBoardPtr &movedPosition)
 {
     Movement::Move move;
     move.from = 3;
@@ -172,7 +173,7 @@ Movement::Move Movement::getMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr
     move.promotion = 0;
     return move;
 }
-    Movement::Move Movement::getBlackCastleMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition)
+    Movement::Move Movement::getBlackCastleMove(const gd::BitBoardPtr &startPosition, const gd::BitBoardPtr &movedPosition)
 {
     Movement::Move move;
     move.from = 59;
@@ -183,7 +184,7 @@ Movement::Move Movement::getMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr
     move.promotion = 0;
     return move;
 }
-    Movement::Move Movement::getWhitePromotionMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition)
+    Movement::Move Movement::getWhitePromotionMove(const gd::BitBoardPtr &startPosition, const gd::BitBoardPtr &movedPosition)
 {
     Movement::Move move;
     move.from = findTrueBitIndex( startPosition[gd::whitePiece] & ~movedPosition[gd::whitePiece]);
@@ -197,7 +198,7 @@ Movement::Move Movement::getMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr
     }
     return move;
 }
-    Movement::Move Movement::getBlackPromotionMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition)
+    Movement::Move Movement::getBlackPromotionMove(const gd::BitBoardPtr &startPosition, const gd::BitBoardPtr &movedPosition)
 {
     Movement::Move move;
     move.from = findTrueBitIndex( startPosition[gd::blackPiece] & ~movedPosition[gd::blackPiece]);
@@ -211,7 +212,7 @@ Movement::Move Movement::getMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr
     }
     return move;
 }
-    Movement::Move Movement::getWhiteEnPassantOrCommonMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition)
+    Movement::Move Movement::getWhiteEnPassantOrCommonMove(const gd::BitBoardPtr &startPosition, const gd::BitBoardPtr &movedPosition)
 {
     Movement::Move move;
     move.from = findTrueBitIndex( startPosition[gd::whitePiece] & ~movedPosition[gd::whitePiece]);
@@ -219,7 +220,7 @@ Movement::Move Movement::getMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr
     move.promotion = 0;
     return move; 
 }
-    Movement::Move Movement::getBlackEnPassantOrCommonMove(gd::BitBoardPtr &startPosition, gd::BitBoardPtr &movedPosition)
+    Movement::Move Movement::getBlackEnPassantOrCommonMove(const gd::BitBoardPtr &startPosition, const gd::BitBoardPtr &movedPosition)
 {
     Movement::Move move;
     move.from = findTrueBitIndex( startPosition[gd::blackPiece] & ~movedPosition[gd::blackPiece]);
@@ -262,3 +263,4 @@ void Movement::check50MovesCounter(gd::BitBoardPtr &startPosition, gd::BitBoardP
     else if(startPosition[gd::whitePawn] != movedPosition[gd::whitePawn] || startPosition[gd::blackPawn] != movedPosition[gd::blackPawn])
         movedPosition[gd::extraInfo] &= gd::RULE_OF_50_MOVES_MASK;
 }
+

@@ -1,7 +1,7 @@
 #ifndef SEARCHTREE_HPP
 #define SEARCHTREE_HPP
 
-#include "Polyglot.hpp"
+#include "PositionSorter.hpp"
 
 class SearchTree
 {
@@ -13,7 +13,8 @@ class SearchTree
         PositionFiller positionFiller;
         PositionSorter positionSorter;
         TranspositionTable transpositionTable;
-        Polyglot polyglott;
+        KillerMoves killerMoves;
+        Polyglot polyglot;
         Movement movement;
         //********************
 public: SearchTree();

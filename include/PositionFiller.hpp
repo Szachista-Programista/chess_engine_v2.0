@@ -1,7 +1,7 @@
 #ifndef POSITIONFILLER_HPP
 #define POSITIONFILLER_HPP
 
-#include "GlobalDefinitions.hpp"
+#include "PositionEvaluator.hpp"
 
 class PositionFiller
 {

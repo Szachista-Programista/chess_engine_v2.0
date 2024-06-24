@@ -1,10 +1,9 @@
 #include "../include/SearchTree.hpp"
 
-SearchTree::SearchTree(): polyglott{"bin/book.bin"}
+SearchTree::SearchTree(): polyglot{"bin/book.bin"}
 {}
 gd::BitBoardPtr SearchTree::iterativeDeepening(gd::BitBoardPtr position, const bool color)
 {
-
     std::vector<gd::EvaluedPosition> evaluedPositions = getPositions(position, color);
     gd::BitBoardPtr choosenChild;
 
@@ -73,6 +72,8 @@ int SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth, i
     {
         int maxEval = -gd::INF;
         children = whiteChildren.generateChildren(position);
+        positionSorter.sortPositionsDescending(children);
+        positionSorter.extractKillerMoves(position, children, depth);
         if(children.size() == 0)
         {
             if((position[gd::whiteKing] & position[gd::blackCapturedSquare]).any())
@@ -80,13 +81,17 @@ int SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth, i
             else
                 return 0;
         }
-        for(int i=0; i<children.size(); i++)
+
+        for(uint8_t i=0; i<children.size(); i++)
         {
             eval = alphaBeta(children[i], depth-1, alpha, beta, black);
             maxEval = std::max(maxEval, eval);
             alpha = std::max(alpha, eval);
             if(alpha >= beta)
+            {
+                killerMoves.addKillerMove(movement.getMove(position, children[i]), depth);
                 break;
+            }
         }
         whiteChildren.deleteChildren(children);
         transpositionTable.storeTTEntry(zobristKey, depth, maxEval);
@@ -96,6 +101,8 @@ int SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth, i
     {
         int minEval = gd::INF;
         children = blackChildren.generateChildren(position);
+        positionSorter.sortPositionsAscending(children);
+        positionSorter.extractKillerMoves(position, children, depth);
         if(children.size() == 0)
         {
             if((position[gd::blackKing] & position[gd::whiteCapturedSquare]).any())
@@ -103,13 +110,17 @@ int SearchTree::alphaBeta(const gd::BitBoardPtr position, const uint8_t depth, i
             else
                 return 0;
         }
-        for(int i=0; i<children.size(); i++)
+
+        for(uint8_t i=0; i<children.size(); i++)
         {
             eval = alphaBeta(children[i], depth-1, alpha, beta, white);
             minEval = std::min(minEval, eval);
             beta = std::min(beta, eval);
             if(alpha >= beta)
+            {
+                killerMoves.addKillerMove(movement.getMove(position, children[i]), depth);
                 break;
+            }
         }
         blackChildren.deleteChildren(children);
         transpositionTable.storeTTEntry(zobristKey, depth, minEval);

@@ -1,7 +1,7 @@
 #ifndef POLYGLOT_HPP
 #define POLYGLOT_HPP
 
-#include "Movement.hpp"
+#include "KillerMoves.hpp"
 
 class Polyglot
 {

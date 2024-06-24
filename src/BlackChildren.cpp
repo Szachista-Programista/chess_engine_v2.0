@@ -9,7 +9,6 @@ std::vector<gd::BitBoardPtr> BlackChildren::generateChildren(gd::BitBoardPtr pos
         mother[gd::extraInfo][gd::isCheck] = 1;
     positionFiller.checkCastles(mother);
     getMoves();
-    positionSorter.sortPositionsAscending(children);
     delete[]mother;
     return children;
 }

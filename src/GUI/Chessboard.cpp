@@ -176,7 +176,7 @@ Chessboard::Chessboard(bool k): color{k}
     }
     try
     {
-        reading.open("resources/chessboard.txt");
+        reading.open("txt/chessboard.txt");
         if (!reading.is_open())
             throw std::ifstream::failure("The file 'chessboard.txt' cannot be opened .");
 

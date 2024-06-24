@@ -2,7 +2,6 @@
 #define BLACKCHILDREN_HPP
 
 #include "PositionFiller.hpp"
-#include "PositionSorter.hpp"
 
 class BlackChildren
 {
@@ -10,7 +9,6 @@ class BlackChildren
         std::vector<gd::BitBoardPtr> children;
         uint8_t bit;
         PositionFiller positionFiller;
-        PositionSorter positionSorter;
         //********************
 public: std::vector<gd::BitBoardPtr> generateChildren(gd::BitBoardPtr position);
 private:    void getMoves();

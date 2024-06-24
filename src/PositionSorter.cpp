@@ -21,6 +21,16 @@ void PositionSorter::sortPositionsAscending(std::vector<gd::BitBoardPtr> &positi
             {return positionEvaluator.evaluatePosition(ptrA) < positionEvaluator.evaluatePosition(ptrB);}
     );
 }
+void PositionSorter::extractKillerMoves(const gd::BitBoardPtr &startPosition, std::vector<gd::BitBoardPtr> &positions, uint8_t depth)
+{
+    std::stable_partition
+    (
+        positions.begin(),
+        positions.end(),
+        [&](const gd::BitBoardPtr &position)
+            {return killerMoves.isKiller(startPosition, position, depth);}
+    );
+}
 void PositionSorter::sortEvaluatedPositions(std::vector<gd::EvaluedPosition> &positions, bool color)
 {
     if(color)
@@ -28,7 +38,7 @@ void PositionSorter::sortEvaluatedPositions(std::vector<gd::EvaluedPosition> &po
     else
         sortEvaluatedPositionsAscending(positions);
 }
-void PositionSorter::sortEvaluatedPositionsDescending(std::vector<gd::EvaluedPosition> &positions)
+    void PositionSorter::sortEvaluatedPositionsDescending(std::vector<gd::EvaluedPosition> &positions)
 {
     std::sort
     (
@@ -37,7 +47,7 @@ void PositionSorter::sortEvaluatedPositionsDescending(std::vector<gd::EvaluedPos
         [](const gd::EvaluedPosition &ptrA, const gd::EvaluedPosition &ptrB) {return ptrA.eval > ptrB.eval;}
     );
 }
-void PositionSorter::sortEvaluatedPositionsAscending(std::vector<gd::EvaluedPosition> &positions)
+    void PositionSorter::sortEvaluatedPositionsAscending(std::vector<gd::EvaluedPosition> &positions)
 {
     std::sort
     (

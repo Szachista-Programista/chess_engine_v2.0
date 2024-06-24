@@ -57,10 +57,22 @@ void GUI()
 
 int main()
 {
+
+
+
+    /*gd::BitBoardPtr x = positionConverter.FEN_ToBitBoard("r1bq1b1r/pppk1pp1/8/np3p1p/1Q1nB1P1/N4N2/PPPPPP1P/R1B1K1R1 w Q - 0 1");
+    gd::BitBoardPtr y = positionConverter.FEN_ToBitBoard("r1bq1b1r/pppk1pp1/8/np3p1p/1Q1nB1P1/N4N2/PPPPPP1P/R1B1K1R1 w Q - 0 1");
+    gd::BitBoardPtr z = positionConverter.FEN_ToBitBoard("r1bq1b1r/pppk1pp1/8/np3p1p/1Q1nB1P1/N4N2/PPPPPP1P/R1B1K1R1 w Q - 0 1");
+    y = searchTree.iterativeDeepening(y, 1);
+
+    Movement::Move move =  movement.getMove(x, y);
+
+    movement.makeMove(z, move);
+
+    positionWriter.writeChessboard(x);
+    positionWriter.writeChessboard(y);
+    positionWriter.writeChessboard(z);*/
     GUI();
-
-    //testujDzieciaczki();
-
     return 0;
 }
 ////////////////////////////////////////////////////////////////

@@ -19,7 +19,7 @@ namespace globalType{
         std::string data;
         try
         {
-            reading.open("resources/config.txt");
+            reading.open("txt/config.txt");
             if (!reading.is_open())
                 throw std::ifstream::failure("The file 'config.txt' cannot be opened .");
             if (!getline(reading, data))
@@ -42,7 +42,7 @@ namespace globalType{
         data += static_cast<char>(numberOfButtonTexture     + '0');
         data += static_cast<char>(numberOfBoardTexture      + '0');
 
-        std::ofstream file("resources/config.txt");
+        std::ofstream file("txt/config.txt");
         try
         {
             if (!file.is_open())
